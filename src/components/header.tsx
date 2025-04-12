@@ -40,19 +40,19 @@ const Header: React.FC = () => {
               Home
             </Link>
             <Link
-              href="/categories"
+              href="/dashboard"
               className="text-neutral-700 hover:font-bold nav hover:text-neutral-950 hover:text-red-700 hover:-translate-y-1 ease-in-out duration-200"
             >
               Dashboard
             </Link>
             <Link
-              href="/trending"
+              href="/faqs"
               className="text-neutral-700 hover:font-bold nav hover:text-neutral-950 hover:text-red-700 hover:-translate-y-1 ease-in-out duration-200"
             >
               FAQ's
             </Link>
             <Link
-              href="/trending"
+              href="/contact"
               className="text-neutral-700 hover:font-bold nav hover:text-neutral-950 hover:text-red-700 hover:-translate-y-1 ease-in-out duration-200"
             >
               Contact
