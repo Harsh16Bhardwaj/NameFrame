@@ -120,3 +120,67 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+@layer utilities {
+  /* Smooth pulsing gradient background */
+  .animate-bgPulse {
+    animation: bgPulse 10s ease-in-out infinite;
+  }
+
+  /* Subtle floating text motion */
+  .animate-floatText {
+    animation: floatText 4s ease-in-out infinite;
+  }
+
+  /* Glowing headline text */
+  .animate-glowText {
+    animation: glow 2.5s ease-in-out infinite;
+  }
+
+  /* Slower, constant pulsing button */
+  .animate-pulseSlow {
+    animation: pulseSlow 2.5s ease-in-out infinite;
+  }
+
+  @keyframes bgPulse {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes floatText {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-2px);
+    }
+  }
+
+  @keyframes glow {
+    0%, 100% {
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.3),
+                   0 0 10px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.7),
+                   0 0 20px rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  @keyframes pulseSlow {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+}
