@@ -8,22 +8,22 @@ datasource db {
 }
 
 model User {
-  id         String    @id //clerk id
-  email      String    @unique
-  name       String
-  password   String? 
-  createdAt  DateTime  @default(now())
+  id        String   @id //clerk id
+  email     String   @unique
+  name      String
+  password  String?
+  createdAt DateTime @default(now())
 
-  events     Event[]
-  templates  CertificateTemplate[]
+  events    Event[]
+  templates CertificateTemplate[]
 }
 
 model Event {
-  id           String     @id @default(uuid())
-  title        String
-  userId       String
-  user         User       @relation(fields: [userId], references: [id])
-  createdAt    DateTime   @default(now())
+  id        String   @id @default(uuid())
+  title     String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 
   templateId   String?
   template     CertificateTemplate? @relation(fields: [templateId], references: [id])
@@ -37,17 +37,18 @@ model CertificateTemplate {
   userId        String
   user          User     @relation(fields: [userId], references: [id])
   createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  events        Event[]
+  events Event[]
 }
 
 model Participant {
-  id              String   @id @default(uuid())
-  name            String
-  email           String
-  eventId         String
-  event           Event    @relation(fields: [eventId], references: [id])
-  certificateUrl  String?  // Optional: generated cert link
-  emailed         Boolean  @default(false)
-  createdAt       DateTime @default(now())
+  id             String   @id @default(uuid())
+  name           String
+  email          String
+  eventId        String
+  event          Event    @relation(fields: [eventId], references: [id])
+  certificateUrl String? // Optional: generated cert link
+  emailed        Boolean  @default(false)
+  createdAt      DateTime @default(now())
 }
