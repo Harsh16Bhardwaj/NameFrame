@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id //clerk id
+  email      String    @unique
+  name       String
+  password   String? 
+  createdAt  DateTime  @default(now())
+
+  events     Event[]
+  templates  CertificateTemplate[]
+}
+
+model Event {
+  id           String     @id @default(uuid())
+  title        String
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  createdAt    DateTime   @default(now())
+
+  templateId   String?
+  template     CertificateTemplate? @relation(fields: [templateId], references: [id])
+  participants Participant[]
+}
+
+model CertificateTemplate {
+  id            String   @id @default(uuid())
+  name          String
+  backgroundUrl String
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  createdAt     DateTime @default(now())
+
+  events        Event[]
+}
+
+model Participant {
+  id              String   @id @default(uuid())
+  name            String
+  email           String
+  eventId         String
+  event           Event    @relation(fields: [eventId], references: [id])
+  certificateUrl  String?  // Optional: generated cert link
+  emailed         Boolean  @default(false)
+  createdAt       DateTime @default(now())
+}

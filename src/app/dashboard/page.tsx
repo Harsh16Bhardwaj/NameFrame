@@ -1,10 +1,11 @@
-import React from "react";
+import React, { use } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import example1 from "@/../public/ex1.jpg";
 import example2 from "@/../public/ex2.jpg";
 import example3 from "@/../public/ex3.jpg";
 import example4 from "@/../public/ex4.jpg";
+import UserSync from "@/components/userSync";
 
 function Dashboard() {
   return (
@@ -34,28 +35,40 @@ function Dashboard() {
             <div className="w-0.5 h-40 bg-gray-600"></div>
             <div className="flex gap-x-3">
               <div className="flex gap-x-4">
-                <Link href="https://www.canva.com/design/DAGkWil_Vyg/wiNDtxxM_xKlQq7UWqlBgw/edit" target="_blank">
+                <Link
+                  href="https://www.canva.com/design/DAGkWil_Vyg/wiNDtxxM_xKlQq7UWqlBgw/edit"
+                  target="_blank"
+                >
                   <Image
                     alt="example-certiifcate"
                     src={example1}
                     className="w-56 border-2 border-black rounded-2xl"
                   ></Image>
                 </Link>
-                <Link href="https://www.canva.com/design/DAGkWmb6UAk/JynLF__USGjcxEUqybwxFQ/edit"target="_blank">
+                <Link
+                  href="https://www.canva.com/design/DAGkWmb6UAk/JynLF__USGjcxEUqybwxFQ/edit"
+                  target="_blank"
+                >
                   <Image
                     alt="example-certiifcate"
                     src={example2}
                     className="w-56 border-2 border-black rounded-2xl"
                   ></Image>
                 </Link>
-                <Link href="https://www.canva.com/design/DAGkWqAHtkI/_huCVRAQHIrRmUaOTR337g/edit" target="_blank">
+                <Link
+                  href="https://www.canva.com/design/DAGkWqAHtkI/_huCVRAQHIrRmUaOTR337g/edit"
+                  target="_blank"
+                >
                   <Image
                     alt="example-certiifcate"
                     src={example3}
                     className="w-56 border-2 border-black rounded-2xl"
                   ></Image>
                 </Link>
-                <Link href="https://www.canva.com/design/DAGkWqAHtkI/_huCVRAQHIrRmUaOTR337g/edit" target="_blank">
+                <Link
+                  href="https://www.canva.com/design/DAGkWqAHtkI/_huCVRAQHIrRmUaOTR337g/edit"
+                  target="_blank"
+                >
                   <Image
                     alt="example-certiifcate"
                     src={example4}
