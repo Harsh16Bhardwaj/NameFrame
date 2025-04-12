@@ -67,13 +67,13 @@ const Header: React.FC = () => {
           <SignedOut>
             <div className="flex space-x-2">
               <SignUpButton signInForceRedirectUrl="/dashboard">
-                <button className="border-b-4 border-r-4 bg-gray-200 border-black cursor-pointer px-6 py-2 font-semibold rounded-2xl transition-all duration-300 ease-in-out transform hover:bg-gray-100 hover:text-black hover:scale-105 hover:shadow-lg active:scale-100">
+                <button className="border-b-3 border-r-3 bg-gray-200 border-black cursor-pointer px-6 py-2 font-semibold rounded-2xl transition-all duration-300 ease-in-out transform hover:bg-gray-100 hover:text-black hover:scale-105 hover:shadow-lg active:scale-100">
                   Sign Up
                 </button>
               </SignUpButton>
 
               <SignInButton signUpForceRedirectUrl="/dashboard">
-                <button className="bg-red-400 border-b-4 border-r-4 border-black cursor-pointer px-6 py-2 font-semibold rounded-2xl transition-all duration-300 ease-in-out transform hover:bg-red-500 hover:text-white hover:scale-105 hover:shadow-lg active:scale-100">
+                <button className="bg-red-400 border-b-3 border-r-3 border-black cursor-pointer px-6 py-2 font-semibold rounded-2xl transition-all duration-300 ease-in-out transform hover:bg-red-500 hover:text-white hover:scale-105 hover:shadow-lg active:scale-100">
                   Sign In
                 </button>
               </SignInButton>
