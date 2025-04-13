@@ -35,10 +35,12 @@ export async function GET() {
   }
 }
 
+
+//Obseolete in my opinion each event will have a new template we can directly upload it to cloudinary through another service
+//and append the link to formdata as backgrounduRL
 // Create a new certificate template
 export async function POST(req: Request) {
   try {
-    // Authenticate the user
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
@@ -57,15 +59,16 @@ export async function POST(req: Request) {
 
     // Return the newly created template
     return NextResponse.json({ success: true, data: newTemplate }, { status: 201 });
+
+    
   } catch (error) {
-    // Handle unexpected errors
     console.error("Error creating certificate template:", error);
     return NextResponse.json(
       { success: false, error: "An unexpected error occurred. Please try again later." },
       { status: 500 }
     );
+
   } finally {
-    // Ensure Prisma Client is properly disconnected
     await prisma.$disconnect();
   }
 }
