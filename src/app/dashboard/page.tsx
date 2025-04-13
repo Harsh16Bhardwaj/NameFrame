@@ -7,7 +7,6 @@ import example2 from "@/../public/ex2.jpg";
 import example3 from "@/../public/ex3.jpg";
 import example4 from "@/../public/ex4.jpg";
 import add from "@/../public/add.png";
-import UserSync from "@/components/userSync";
 
 function Dashboard() {
   return (
@@ -98,7 +97,7 @@ function Dashboard() {
                   href="https://www.canva.com/certificates/templates/"
                   target="_blank"
                 >
-                  <div className="w-56 h-40 rounded-2xl absolute  bg-amber-200 text-center p-3 font-semibold flex flex-col justify-center items-center">
+                  <div className="w-56 h-40 rounded-2xl absolute bg-amber-200 text-center p-3 font-semibold flex flex-col justify-center items-center">
                     <h2>Browse</h2>
                     <h2>All</h2>
                     <h2>Templates</h2>

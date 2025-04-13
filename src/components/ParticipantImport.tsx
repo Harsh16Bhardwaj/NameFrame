@@ -43,9 +43,7 @@ export default function ParticipantImport({ eventId, onSuccess }: ParticipantImp
     setError(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleUpload = async () => {
     if (!file) {
       setError("Please select a file to upload");
       return;
@@ -88,39 +86,38 @@ export default function ParticipantImport({ eventId, onSuccess }: ParticipantImp
     <div className="p-4 border rounded-lg">
       <h3 className="font-semibold text-lg mb-3">Import Participants</h3>
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="participantFile" className="block text-sm font-medium mb-1">
-            Upload CSV or Excel file
-          </label>
-          <input
-            id="participantFile"
-            type="file"
-            accept=".csv,.xlsx,.xls"
-            onChange={handleFileChange}
-            className="w-full p-2 border rounded"
-            disabled={loading}
-          />
-          {file && (
-            <p className="text-sm text-gray-700 mt-1">
-              📄 Selected file: <strong>{file.name}</strong>
-            </p>
-          )}
-          <p className="text-sm text-gray-500 mt-1">
-            Max 5MB. File must contain at least <code>name</code> and <code>email</code> columns.
+      <div className="mb-4">
+        <label htmlFor="participantFile" className="block text-sm font-medium mb-1">
+          Upload CSV or Excel file
+        </label>
+        <input
+          id="participantFile"
+          type="file"
+          accept=".csv,.xlsx,.xls"
+          onChange={handleFileChange}
+          className="w-full p-2 border rounded"
+          disabled={loading}
+        />
+        {file && (
+          <p className="text-sm text-gray-700 mt-1">
+            📄 Selected file: <strong>{file.name}</strong>
           </p>
-        </div>
+        )}
+        <p className="text-sm text-gray-500 mt-1">
+          Max 5MB. File must contain at least <code>name</code> and <code>email</code> columns.
+        </p>
+      </div>
 
-        <button
-          type="submit"
-          disabled={!file || loading}
-          className={`px-4 py-2 rounded bg-blue-600 text-white ${
-            !file || loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
-          }`}
-        >
-          {loading ? "Uploading..." : "Import Participants"}
-        </button>
-      </form>
+      <button
+        type="button"
+        onClick={handleUpload}
+        disabled={!file || loading}
+        className={`px-4 py-2 rounded bg-blue-600 text-white ${
+          !file || loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+        }`}
+      >
+        {loading ? "Uploading..." : "Import Participants"}
+      </button>
 
       {error && (
         <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded">
