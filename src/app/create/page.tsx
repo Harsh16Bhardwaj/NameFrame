@@ -1,36 +1,31 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import {
-  Controller,
   useForm,
   SubmitHandler,
 } from "react-hook-form";
-import { DatePickerWithPresets } from "@/components/datepicker";
 import { MdErrorOutline } from "react-icons/md";
 import { FaCloudUploadAlt } from "react-icons/fa";
-import ParticipantImport from "@/components/ParticipantImport"; // Import the ParticipantImport component
+import ParticipantImport from "@/components/ParticipantImport";
+import axios from "axios";
 
 interface FormData {
   title: string;
   certificateTemplate: FileList;
-  csvFile: FileList;
-  sendDate: Date | null;
 }
 
 const CertificateForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors, isSubmitting },
     watch,
   } = useForm<FormData>();
 
   const [templatePreview, setTemplatePreview] = useState<string | null>(null);
-  const [csvPreview, setCsvPreview] = useState<string | null>(null);
-  const [typeModle, setTypeModle] = useState<string>("");
   const [uploadedTemplateUrl, setUploadedTemplateUrl] = useState<string>("");
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [eventId, setEventId] = useState<string | null>(null);
 
   const certificateFile = watch("certificateTemplate");
 
@@ -70,10 +65,6 @@ const CertificateForm: React.FC = () => {
     return data.secure_url;
   };
 
-  const modeSet = (e: string) => {
-    setTypeModle(e);
-  };
-
   const handleUpload = async (e: React.MouseEvent) => {
     e.preventDefault();
     const files = certificateFile;
@@ -90,15 +81,20 @@ const CertificateForm: React.FC = () => {
       return;
     }
 
-    const fullFormData = {
-      ...data,
-      templateURL: uploadedTemplateUrl,
-    };
+    try {
+      const response = await axios.post("/api/events", {
+        title: data.title,
+        templateUrl: uploadedTemplateUrl,
+      });
 
-    console.log("Final Form Data with Cloudinary URL:", fullFormData);
-
-    // Send to backend if needed
-  };
+      const createdEvent = response.data.data;
+      setEventId(createdEvent.id);
+      console.log("Event created successfully:", createdEvent);
+    } catch (error) {
+      console.error("Error creating event:", error);
+      alert("Failed to create event. Please try again.");
+    }
+  };    
 
   return (
     <div className="z-30 -mt-16 fixed w-full bg-gray-300 h-[770px] rounded-2xl">
@@ -168,34 +164,12 @@ const CertificateForm: React.FC = () => {
                 )}
               </div>
 
-              <div className="flex gap-x-2">
-                {["direct", "link", "manual"].map((mode) => (
-                  <button
-                    key={mode}
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      modeSet(mode);
-                    }}
-                    className={`px-4 py-2 border-gray-400 hover:border-gray-200 border-2 border-dashed rounded-xl text-gray-100 font-medium cursor-pointer hover:bg-gray-700 bg-neutral-700 duration-200 ease-in-out ${
-                      typeModle === mode
-                        ? "bg-red-500 text-white border-white border-solid font-semibold"
-                        : ""
-                    }`}
-                  >
-                    {mode === "direct"
-                      ? "Direct Mail"
-                      : mode === "link"
-                      ? "via Link"
-                      : "Manual Forward"}
-                  </button>
-                ))}
-              </div>
-
-              <ParticipantImport
-                eventId="12345" // Replace with the actual event ID
-                onSuccess={(data) => console.log("Participants imported:", data)}
-              />
+              {eventId && (
+                <ParticipantImport
+                  eventId={eventId}
+                  onSuccess={(data) => console.log("Participants imported:", data)}
+                />
+              )}
 
               <div>
                 <button
@@ -203,7 +177,7 @@ const CertificateForm: React.FC = () => {
                   disabled={isSubmitting}
                   className="bg-teal-600 font-semibold text-white px-4 py-2 rounded-md hover:bg-teal-700 transition"
                 >
-                  {isSubmitting ? "Submitting..." : "Create Session"}
+                  {isSubmitting ? "Submitting..." : "Create Event"}
                 </button>
               </div>
             </div>
@@ -231,16 +205,6 @@ const CertificateForm: React.FC = () => {
                   </p>
                 </div>
               )}
-
-              <div className="h-60 w-full rounded-xl border border-gray-200 flex flex-col justify-center items-center">
-                <p className="text-gray-500 text-center">
-                  Your CSV Preview <br />
-                  <span className="text-xl flex justify-center items-center gap-x-1">
-                    <MdErrorOutline />
-                    Upload your CSV to see results
-                  </span>
-                </p>
-              </div>
             </div>
           </form>
         </div>
