@@ -7,12 +7,10 @@ import example2 from "@/../public/ex2.jpg";
 import example3 from "@/../public/ex3.jpg";
 import example4 from "@/../public/ex4.jpg";
 import add from "@/../public/add.png";
-import UserSync from "@/components/userSync";
 
 function Dashboard() {
   return (
     <>
-      <div className="p-4 pb-8 bg-gray-200">
       <div className="p-4 pb-8 bg-gray-200">
         {/* Banner */}
         <div className="border-black border-b-2 border-r-2 bg-gradient-to-r from-[#c31432] to-[#240b36] bg-[length:200%_200%] animate-bgPulse rounded-xl text-center font-semibold p-3 shadow-2xl drop-shadow-lg overflow-hidden">
@@ -30,7 +28,6 @@ function Dashboard() {
         </div>
 
         {/* Creation */}
-        <div className="mt-6 px-5">
         <div className="mt-6 px-5">
           <h2 className="m-1 text-lg font-bold">Create an Event :</h2>
           <div className="border-black border-2 rounded-2xl flex gap-x-4 p-3 py-4 bg-white border-r-6 border-b-6">
@@ -96,7 +93,7 @@ function Dashboard() {
                   href="https://www.canva.com/certificates/templates/"
                   target="_blank"
                 >
-                  <div className="w-56 h-40 rounded-2xl absolute  bg-amber-200 text-center p-3 font-semibold flex flex-col justify-center items-center">
+                  <div className="w-56 h-40 rounded-2xl absolute bg-amber-200 text-center p-3 font-semibold flex flex-col justify-center items-center">
                     <h2>Browse</h2>
                     <h2>All</h2>
                     <h2>Templates</h2>
@@ -231,6 +228,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
