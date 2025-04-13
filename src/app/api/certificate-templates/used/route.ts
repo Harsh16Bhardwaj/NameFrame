@@ -5,8 +5,21 @@ import { PrismaClient } from "@prisma/client";
 // Initialize Prisma Client
 const prisma = new PrismaClient();
 
+// Define the type for the response data structure
+interface TemplateResponse {
+  success: boolean;
+  data?: string[];  // Assuming template data is an array of strings
+  error?: string;
+}
+
+// Define the type for the event object
+interface Event {
+  template: string;
+  templateId: number;
+}
+
 // Fetch previously used certificate templates
-export async function GET() {
+export async function GET(): Promise<NextResponse<TemplateResponse>> {
   try {
     // Authenticate the user
     const { userId } = await auth();
@@ -19,12 +32,13 @@ export async function GET() {
       where: { userId },
       select: {
         template: true,
+        templateId: true,
       },
-      distinct: ["templateId"], // Ensure distinct templates
+      distinct: ["templateId"],  
     });
 
-    // Map the result to return only the template data
-    const templates = usedTemplates.map((event) => event.template);
+    // Ensure that `usedTemplates` is of type `Event[]`
+    const templates: string[] = usedTemplates.map((event: Event) => event.template);
 
     // Return the response
     return NextResponse.json({ success: true, data: templates });

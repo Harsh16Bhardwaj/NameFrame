@@ -21,7 +21,7 @@ export async function GET() {
       },
       orderBy: { createdAt: "desc" },
     });
-
+    console.log('Events data:',events)
     return NextResponse.json({ success: true, data: events });
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -42,9 +42,9 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, templateId } = body;
+    const { title, templateId, participants } = body;
 
-    if (!title || !templateId) {
+    if (!title || !templateId || participants) {
       return NextResponse.json({ success: false, error: "Missing fields" }, { status: 400 });
     }
 
