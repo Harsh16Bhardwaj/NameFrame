@@ -14,7 +14,7 @@ import UserSync from "./userSync";
 
 const Header: React.FC = () => {
   return (
-    <header className="w-full h-auto px-3">
+    <header className="w-full h-auto px-3 bg-neutral-900">
       <div className="flex justify-between py-2 items-center">
         <Link href="/" passHref>
           <div className="flex items-center gap-x-1 cursor-pointer">
@@ -67,7 +67,7 @@ const Header: React.FC = () => {
           <SignedOut>
             <div className="flex space-x-2">
               <SignUpButton signInForceRedirectUrl="/dashboard">
-                <button className="border-b-3 border-r-3 bg-gray-200 border-black cursor-pointer px-6 py-2 font-semibold rounded-2xl transition-all duration-300 ease-in-out transform hover:bg-gray-100 hover:text-black hover:scale-105 hover:shadow-lg active:scale-100">
+                <button className="border-b-3 border-r-3 text-neutral-600 bg-gray-200 border-black cursor-pointer px-6 py-2 font-semibold rounded-2xl transition-all duration-300 ease-in-out transform hover:bg-gray-100 hover:text-black hover:scale-105 hover:shadow-lg active:scale-100">
                   Sign Up
                 </button>
               </SignUpButton>

@@ -12,7 +12,8 @@ import UserSync from "@/components/userSync";
 function Dashboard() {
   return (
     <>
-      <div className="p-4 pb-8 bg-gray-200">
+    <div className="w-full bg-gray-200">
+
       <div className="p-4 pb-8 bg-gray-200">
         {/* Banner */}
         <div className="border-black border-b-2 border-r-2 bg-gradient-to-r from-[#c31432] to-[#240b36] bg-[length:200%_200%] animate-bgPulse rounded-xl text-center font-semibold p-3 shadow-2xl drop-shadow-lg overflow-hidden">
@@ -31,13 +32,14 @@ function Dashboard() {
 
         {/* Creation */}
         <div className="mt-6 px-5">
-        <div className="mt-6 px-5">
           <h2 className="m-1 text-lg font-bold">Create an Event :</h2>
           <div className="border-black border-2 rounded-2xl flex gap-x-4 p-3 py-4 bg-white border-r-6 border-b-6">
             {/* Add new Event */}
             <Link href="/create">
-              <div className="w-56 h-40 bg-red-200 rounded-2xl flex flex-col justify-center items-center cursor-pointer 
-                  hover:bg-red-300 hover:scale-105 hover:rotate-1 transition-all duration-300 ease-in-out">
+              <div
+                className="w-56 h-40 bg-red-200 rounded-2xl flex flex-col justify-center items-center cursor-pointer 
+                  hover:bg-red-300 hover:scale-105 hover:rotate-1 transition-all duration-300 ease-in-out"
+              >
                 <Image
                   src={add}
                   width={30}
@@ -231,6 +233,8 @@ function Dashboard() {
           </div>
         </div>
       </div>
+      </div>
+
     </>
   );
 }
