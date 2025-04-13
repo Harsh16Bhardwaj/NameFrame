@@ -39,10 +39,8 @@ export async function POST(req: Request) {
     if (!userId) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
-    console.log('User ID:', userId); // Log the userId for debugging
     const body = await req.json();
     const { title, templateUrl } = body;
-    console.log('Request body:', body); // Log the request body for debugging
     if (!title || !templateUrl) {
       return NextResponse.json(
         { success: false, error: "Missing required fields: title or templateUrl" },
@@ -59,7 +57,6 @@ export async function POST(req: Request) {
       },
     });
     
-    console.log('New template created:', newTemplate);
     
     // Then create the event with the new template ID
     const newEvent = await prisma.event.create({
@@ -70,7 +67,6 @@ export async function POST(req: Request) {
       },
     });
     
-    console.log('New event created:', newEvent);
     
     return NextResponse.json({ success: true, data: newEvent }, { status: 201 });
   } catch (error) {
