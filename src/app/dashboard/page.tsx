@@ -1,6 +1,6 @@
-import React, { use } from "react";
+import React from "react";
 import Link from "next/link";
-import Footer from "@/components/footer"
+import Footer from "@/components/footer";
 import Image from "next/image";
 import example1 from "@/../public/ex1.jpg";
 import example2 from "@/../public/ex2.jpg";
@@ -12,6 +12,7 @@ import UserSync from "@/components/userSync";
 function Dashboard() {
   return (
     <>
+      <div className="p-4 pb-8 bg-gray-200">
       <div className="p-4 pb-8 bg-gray-200">
         {/* Banner */}
         <div className="border-black border-b-2 border-r-2 bg-gradient-to-r from-[#c31432] to-[#240b36] bg-[length:200%_200%] animate-bgPulse rounded-xl text-center font-semibold p-3 shadow-2xl drop-shadow-lg overflow-hidden">
@@ -30,14 +31,13 @@ function Dashboard() {
 
         {/* Creation */}
         <div className="mt-6 px-5">
+        <div className="mt-6 px-5">
           <h2 className="m-1 text-lg font-bold">Create an Event :</h2>
           <div className="border-black border-2 rounded-2xl flex gap-x-4 p-3 py-4 bg-white border-r-6 border-b-6">
             {/* Add new Event */}
             <Link href="/create">
-              <div
-                className="w-56 h-40 bg-red-200 rounded-2xl flex flex-col justify-center items-center cursor-pointer 
-                      hover:bg-red-300 hover:scale-105 hover:rotate-1 transition-all duration-300 ease-in-out"
-              >
+              <div className="w-56 h-40 bg-red-200 rounded-2xl flex flex-col justify-center items-center cursor-pointer 
+                  hover:bg-red-300 hover:scale-105 hover:rotate-1 transition-all duration-300 ease-in-out">
                 <Image
                   src={add}
                   width={30}
@@ -124,9 +124,9 @@ function Dashboard() {
         </div>
 
         {/* History */}
-        <div className="mt-6  ">
-          <div className="flex  items-center gap-x-1 mt-4">
-            <h2 className="m-1 ml-6 text-lg font-bold ">Recent Events: </h2>
+        <div className="mt-6">
+          <div className="flex items-center gap-x-1 mt-4">
+            <h2 className="m-1 ml-6 text-lg font-bold">Recent Events: </h2>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               x="0px"
@@ -139,7 +139,7 @@ function Dashboard() {
             </svg>
           </div>
 
-          <div className="border-black border-2 rounded-2xl grid grid-cols-5 grid-row-5 mx-6  gap-x-5 gap-y-4 p-3 py-8 px-4  bg-white border-r-6 border-b-6 ">
+          <div className="border-black border-2 rounded-2xl grid grid-cols-5 grid-row-5 mx-6 gap-x-5 gap-y-4 p-3 py-8 px-4 bg-white border-r-6 border-b-6">
             <Link
               href="https://www.canva.com/design/DAGkWqAHtkI/_huCVRAQHIrRmUaOTR337g/edit"
               target="_blank"
@@ -148,7 +148,7 @@ function Dashboard() {
                 alt="example-certificate"
                 src={example4}
                 className="w-66 border-2 border-black rounded-2xl 
-                    hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
+                  hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
               />
             </Link>
             <Link
@@ -159,7 +159,7 @@ function Dashboard() {
                 alt="example-certificate"
                 src={example2}
                 className="w-66 border-2 border-black rounded-2xl 
-                    hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
+                  hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
               />
             </Link>
             <Link
@@ -170,7 +170,7 @@ function Dashboard() {
                 alt="example-certificate"
                 src={example3}
                 className="w-66 border-2 border-black rounded-2xl 
-                    hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
+                  hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
               />
             </Link>
             <Link
@@ -181,7 +181,7 @@ function Dashboard() {
                 alt="example-certificate"
                 src={example1}
                 className="w-66 border-2 border-black rounded-2xl 
-                    hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
+                  hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
               />
             </Link>
             <Link
@@ -192,7 +192,7 @@ function Dashboard() {
                 alt="example-certificate"
                 src={example4}
                 className="w-66 border-2 border-black rounded-2xl 
-                    hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
+                  hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
               />
             </Link>
             <Link
@@ -203,7 +203,7 @@ function Dashboard() {
                 alt="example-certificate"
                 src={example3}
                 className="w-66 border-2 border-black rounded-2xl 
-                    hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
+                  hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
               />
             </Link>
             <Link
@@ -214,7 +214,7 @@ function Dashboard() {
                 alt="example-certificate"
                 src={example4}
                 className="w-66 border-2 border-black rounded-2xl 
-                    hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
+                  hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
               />
             </Link>
             <Link
@@ -225,13 +225,11 @@ function Dashboard() {
                 alt="example-certificate"
                 src={example1}
                 className="w-66 border-2 border-black rounded-2xl 
-                    hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
+                  hover:scale-105 hover:shadow-lg hover:border-blue-500 transition-all duration-300 ease-in-out"
               />
             </Link>
-            
           </div>
         </div>
-
       </div>
     </>
   );
