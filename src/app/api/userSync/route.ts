@@ -20,7 +20,7 @@ export async function POST(): Promise<NextResponse> {
 
     if (existingUser) {
       console.log(`User already exists: ${user.id}`);
-      return NextResponse.json({ success: true });
+      return NextResponse.json({ success: true, user: existingUser });
     }
 
     // If the user doesn't exist, create the user
@@ -35,7 +35,6 @@ export async function POST(): Promise<NextResponse> {
 
     console.log(`User created: ${user.id}`);
     return NextResponse.json({ success: true });
-
   } catch (error: any) {
     console.error("User sync error:", error);
     return NextResponse.json(
