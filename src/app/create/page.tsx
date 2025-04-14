@@ -175,7 +175,7 @@ const CertificateForm: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-teal-600 font-semibold text-white px-4 py-2 rounded-md hover:bg-teal-700 transition"
+                  className="bg-teal-600 font-semibold cursor-pointer text-white px-4 py-2 rounded-md hover:bg-teal-700 transition"
                 >
                   {isSubmitting ? "Submitting..." : "Create Event"}
                 </button>

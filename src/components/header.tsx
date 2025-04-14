@@ -14,7 +14,7 @@ import UserSync from "./userSync";
 
 const Header: React.FC = () => {
   return (
-    <header className="w-full h-auto px-3 bg-neutral-900">
+    <header className="w-full h-auto z-30 px-3 bg-neutral-900">
       <div className="flex justify-between py-2 items-center">
         <Link href="/" passHref>
           <div className="flex items-center gap-x-1 cursor-pointer">
