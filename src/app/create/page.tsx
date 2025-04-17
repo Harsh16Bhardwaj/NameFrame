@@ -47,31 +47,44 @@ const CertificateForm: React.FC = () => {
   }, [certificateFile]);
 
   const uploadImageToCloudinary = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "PolyScribe");
     setIsUploading(true);
-
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dikc4f9ip/image/upload",
-      {
+    
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
+      });
+      
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || "Upload failed");
       }
-    );
-
-    const data = await response.json();
-    setIsUploading(false);
-    return data.secure_url;
+      
+      return data.url;
+    } catch (error) {
+      console.error("Error uploading template:", error);
+      alert("Failed to upload certificate template. Please try again.");
+      throw error;
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleUpload = async (e: React.MouseEvent) => {
     e.preventDefault();
     const files = certificateFile;
     if (files && files[0]) {
-      const url = await uploadImageToCloudinary(files[0]);
-      setUploadedTemplateUrl(url);
-      console.log("Uploaded image URL:", url);
+      try {
+        const url = await uploadImageToCloudinary(files[0]);
+        setUploadedTemplateUrl(url);
+        console.log("Uploaded image URL:", url);
+      } catch (error) {
+        console.log("Error uploading image:", error); 
+      }
     }
   };
 
@@ -94,7 +107,7 @@ const CertificateForm: React.FC = () => {
       console.error("Error creating event:", error);
       alert("Failed to create event. Please try again.");
     }
-  };    
+  };
 
   return (
     <div className="z-30 -mt-16 fixed w-full bg-gray-300 h-[770px] rounded-2xl">
@@ -162,6 +175,18 @@ const CertificateForm: React.FC = () => {
                     {errors.certificateTemplate.message}
                   </p>
                 )}
+                
+                {isUploading && (
+                  <p className="text-blue-500 text-sm mt-1">
+                    Uploading template to secure storage...
+                  </p>
+                )}
+                
+                {uploadedTemplateUrl && !isUploading && (
+                  <p className="text-green-500 text-sm mt-1">
+                    ✓ Certificate template uploaded successfully
+                  </p>
+                )}
               </div>
 
               {eventId && (
@@ -174,10 +199,14 @@ const CertificateForm: React.FC = () => {
               <div>
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className="bg-teal-600 font-semibold cursor-pointer text-white px-4 py-2 rounded-md hover:bg-teal-700 transition"
+                  disabled={isSubmitting || isUploading}
+                  className={`bg-teal-600 font-semibold text-white px-4 py-2 rounded-md transition ${
+                    isSubmitting || isUploading 
+                      ? "opacity-50 cursor-not-allowed" 
+                      : "hover:bg-teal-700 cursor-pointer"
+                  }`}
                 >
-                  {isSubmitting ? "Submitting..." : "Create Event"}
+                  {isSubmitting ? "Creating Event..." : "Create Event"}
                 </button>
               </div>
             </div>

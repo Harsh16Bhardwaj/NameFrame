@@ -35,9 +35,6 @@ export async function GET() {
   }
 }
 
-
-//Obseolete in my opinion each event will have a new template we can directly upload it to cloudinary through another service
-//and append the link to formdata as backgrounduRL
 // Create a new certificate template
 export async function POST(req: Request) {
   try {
