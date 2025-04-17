@@ -8,6 +8,7 @@ import { Manrope } from "next/font/google";
 import ParticipantImport from "@/components/ParticipantImport";
 import axios from "axios";
 import Tilt from "react-parallax-tilt";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   title: string;
@@ -34,11 +35,12 @@ const CertificateForm: React.FC = () => {
   const [eventId, setEventId] = useState<string | null>(null);
   const [imgUploaded, setImageUploaded] = useState<boolean>(false);
   const [error1, setError1] = useState<boolean>(false);
+  const [participantsImported, setParticipantsImported] = useState<boolean>(false);
 
   const certificateFile = watch("certificateTemplate");
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const router = useRouter();
 
-  // Particle animation logic
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -189,12 +191,18 @@ const CertificateForm: React.FC = () => {
     }
   };
 
+  const handleGoToDashboard = () => {
+    if (eventId) {
+      router.push(`/dashboard/${eventId}`);
+    }
+  };
+
   return (
     <div className={`${manrope.variable} font-sans min-h-screen bg-black relative overflow-hidden flex items-center justify-center p-6`}>
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
+      <canvas ref={canvasRef} className="absolute  inset-0 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-purple-900/30 to-pink-900/30 animate-holo-shift" />
-      <Tilt tiltMaxAngleX={15} tiltMaxAngleY={15} glareEnable={true} glareMaxOpacity={0.3} glareColor="#ffffff">
-        <div className="relative z-10 w-full max-w-6xl bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-2xl rounded-2xl shadow-2xl p-8 border border-white/10">
+      <Tilt tiltMaxAngleX={4} tiltMaxAngleY={4} glareEnable={true} glareMaxOpacity={0.3} glareColor="#ffffff">
+        <div className="relative -mt-10 z-10 w-full max-w-6xl bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-2xl rounded-2xl shadow-2xl p-8 border border-white/10">
           <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-pink-500 mb-10 tracking-tight animate-glow">
             Craft a Certificate Session
           </h2>
@@ -276,7 +284,10 @@ const CertificateForm: React.FC = () => {
                 <div className="mt-6 animate-slideIn">
                   <ParticipantImport
                     eventId={eventId}
-                    onSuccess={(data) => console.log("Participants imported:", data)}
+                    onSuccess={(data) => {
+                      console.log("Participants imported:", data);
+                      setParticipantsImported(true);
+                    }}
                   />
                 </div>
               )}
@@ -284,16 +295,16 @@ const CertificateForm: React.FC = () => {
               <div>
                 <button
                   type="submit"
-                  onClick={handleSubmit(onSubmit)}
+                  onClick={participantsImported ? handleGoToDashboard : handleSubmit(onSubmit)}
                   disabled={isSubmitting || isUploading}
                   className="w-full py-3 bg-gradient-to-r from-blue-600 to-pink-600 text-white rounded-lg font-semibold transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-105 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? "Creating Event..." : "Launch Event"}
+                  {participantsImported ? "Go to Event Dashboard" : isSubmitting ? "Creating Event..." : "Create Event"}
                 </button>
               </div>
             </div>
 
-            <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10}>
+            <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5}>
               <div className="bg-black/50 backdrop-blur-lg p-6 rounded-xl border border-blue-500/30 transition-all duration-300 hover:shadow-glow">
                 {isUploading ? (
                   <div className="h-64 w-full rounded-lg border border-blue-500/50 flex flex-col justify-center items-center animate-pulse">
@@ -325,7 +336,7 @@ const CertificateForm: React.FC = () => {
 
       {error1 && (
         <div className="fixed z-50 inset-0 flex justify-center items-center bg-black/80 backdrop-blur-md animate-fadeIn">
-          <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10}>
+          <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5}>
             <div className="w-full max-w-md bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-2xl p-6 rounded-lg shadow-2xl border border-blue-500/30">
               <div className="flex items-center mb-4 border-b border-blue-500/50">
                 <AiOutlineExclamationCircle className="text-pink-500 text-3xl mr-3" />
