@@ -2,11 +2,40 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { Signika_Negative } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Style_Script,
+  Bangers,
+  Titan_One,
+  Signika,
+  Raleway,
+  Josefin_Sans,
+} from "next/font/google";
 
 interface ParticipantImportProps {
   eventId: string;
   onSuccess?: (data: any) => void;
 }
+
+const signika = Signika({
+  variable: "--font-signika",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const raleway = Raleway({
+  variable: "--font-raleway",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const josefinSans = Josefin_Sans({
+  variable: "--font-josefin-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 const MAX_FILE_SIZE_MB = 50; // Maximum file size in MB
 const ALLOWED_MIME_TYPES = [
@@ -83,11 +112,11 @@ export default function ParticipantImport({ eventId, onSuccess }: ParticipantImp
   };
 
   return (
-    <div className="p-4 border rounded-lg">
-      <h3 className="font-semibold text-lg mb-3">Import Participants</h3>
+    <div className="px-6 py-2 pb-6 max-w-4xl mx-auto bg-gray-800 border-2 border-gray-400 rounded-lg shadow-lg">
+      <h3 className={`text-2xl font-bold text-gray-300 mb-4 ${raleway}`}>Import Participants</h3>
 
-      <div className="mb-4">
-        <label htmlFor="participantFile" className="block text-sm font-medium mb-1">
+      <div className="mb-6">
+        <label htmlFor="participantFile" className="text-sm  font-medium text-gray-400 block mb-2">
           Upload CSV or Excel file
         </label>
         <input
@@ -95,16 +124,16 @@ export default function ParticipantImport({ eventId, onSuccess }: ParticipantImp
           type="file"
           accept=".csv,.xlsx,.xls"
           onChange={handleFileChange}
-          className="w-full p-2 border rounded"
+          className="w-1/4 px-3 border cursor-pointer ml-4 h-8 p-0.5 text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
           disabled={loading}
         />
         {file && (
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-gray-700 mt-2">
             📄 Selected file: <strong>{file.name}</strong>
           </p>
         )}
-        <p className="text-sm text-gray-500 mt-1">
-          Max 5MB. File must contain at least <code>name</code> and <code>email</code> columns.
+        <p className="text-xs text-gray-400 -mb-5 mt-4">
+          Max 50MB. File must contain at least <code>name</code> and <code>email</code> columns.
         </p>
       </div>
 
@@ -112,24 +141,24 @@ export default function ParticipantImport({ eventId, onSuccess }: ParticipantImp
         type="button"
         onClick={handleUpload}
         disabled={!file || loading}
-        className={`px-4 py-2 rounded bg-blue-600 text-white ${
-          !file || loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
-        }`}
+        className={`w-full py-2 rounded-md c text-white font-semibold ${
+          !file || loading ? "bg-gray-400 cursor-not-allowed" : "bg-teal-700 hover:bg-teal-800"
+        } transition-all duration-200 ease-in-out`}
       >
         {loading ? "Uploading..." : "Import Participants"}
       </button>
 
       {error && (
-        <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded">
+        <div className="mt-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-md">
           {error}
         </div>
       )}
 
       {result && (
-        <div className="mt-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded">
+        <div className="mt-3 p-1 text-sm bg-gradient-to-b bg-green-50 border-l-4 border-green-500 text-green-700 rounded-md">
           <p>✅ Successfully imported <strong>{result.imported}</strong> participants.</p>
           {result.invalidRows?.length > 0 && (
-            <p className="mt-1">
+            <p className="mt-2">
               ⚠️ <strong>{result.invalidRows.length}</strong> rows were skipped due to missing or invalid data.
             </p>
           )}
