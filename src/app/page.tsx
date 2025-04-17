@@ -1,8 +1,37 @@
+"use client";
+import { useEffect } from "react";
+import { ArrowDown, Upload, FileSpreadsheet, Send, Star, ChevronRight, CheckCircle2, Sparkles, ArrowDownCircle } from 'lucide-react';
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function LandingPage() {
+  useEffect(() => {
+    const handleScroll = () => {
+      const reveals = document.querySelectorAll(".reveal");
+      reveals.forEach((element) => {
+        const windowHeight = window.innerHeight;
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+
+        if (elementTop < windowHeight - elementVisible) {
+          element.classList.add("active");
+        }
+      });
+    };
+
+    const container = document.querySelector(".scroll-container");
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      handleScroll(); // Initial check
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-r from-[#c31432] to-[#240b36] text-white flex flex-col items-center">
       {/* Hero Section */}
@@ -82,17 +111,35 @@ export default function LandingPage() {
       </main>
 
       {/* Call-to-Action Section */}
-      <section className="w-full py-16 px-8 bg-gradient-to-r from-[#240b36] to-[#c31432] text-center">
-        <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-        <p className="text-lg font-light mb-8">
-          Join thousands of users who trust NameFrame for their certificate
-          needs.
-        </p>
-        <Link href="/signup">
-          <button className="bg-gradient-to-r from-[#dca200] to-[#F37335] hover:from-red-500 hover:to-red-500 text-white font-semibold px-8 py-4 rounded-lg shadow-lg hover:scale-105 transition-all duration-300">
-            Sign Up Now
-          </button>
-        </Link>
+      <section className="section-height">
+        <div className="gradient-bg">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 to-indigo-900/50" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full filter blur-[120px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/20 rounded-full filter blur-[120px]" />
+        </div>
+        <div className="section-content">
+          <div className="w-full px-8">
+            <div className="max-w-5xl mx-auto text-center reveal">
+              <span className="inline-block px-6 py-2 rounded-full bg-white/10 backdrop-blur mb-8 text-lg font-medium">
+                Get Started Today
+              </span>
+              <h2 className="text-7xl font-bold mb-8 gradient-text">
+                Ready to Transform?
+              </h2>
+              <p className="text-3xl mb-12 text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                Join thousands of organizations automating their certificate
+                workflow. Start your journey today.
+              </p>
+              <button
+                className="glass-card px-16 py-8 rounded-full text-3xl font-semibold 
+                hover:scale-105 transition-all duration-500 group hover-glow gradient-shimmer"
+              >
+                Get Started Now
+                <ChevronRight className="inline ml-2 group-hover:translate-x-2 transition-transform" />
+              </button>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );
