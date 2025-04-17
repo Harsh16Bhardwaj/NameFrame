@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
 
@@ -32,6 +32,24 @@ export async function POST(req: Request) {
       );
     }
 
+    // First, get the event to find the associated certificate template
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      include: { template: true },
+    });
+
+    if (!event || !event.template) {
+      return NextResponse.json(
+        { success: false, error: "Event or template not found" },
+        { status: 404 }
+      );
+    }
+
+    // Extract the template URL and get just the public ID part
+    const templateUrl = event.template.backgroundUrl;
+    const publicIdMatch = templateUrl.match(/\/v\d+\/(.*?)\.(?:jpg|png|gif)/i);
+    const publicId = publicIdMatch ? publicIdMatch[1] : "certificate_templates/default";
+
     // Fetch participants who haven't been emailed yet
     const participants = await prisma.participant.findMany({
       where: { eventId, emailed: false },
@@ -45,30 +63,47 @@ export async function POST(req: Request) {
       );
     }
 
+    // Add this logging before the email promises
+    console.log("Participants to email:", participants.map(p => ({ id: p.id, email: p.email })));
+
     const emailPromises = participants.map(async (participant) => {
-      // Generate certificate URL using Cloudinary overlay
-      const certificateUrl = cloudinary.v2.url("certificate_template", {
-        overlay: {
-          font_family: "Arial",
-          font_size: 60,
-          text: participant.name,
-        },
-        transformation: [{ width: 800, crop: "scale" }],
-      });
-
-      // Send email
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: participant.email,
-        subject,
-        html: `
-          <p>${transcript}</p>
-          <p>Here is your certificate:</p>
-          <a href="${certificateUrl}" target="_blank">Download Certificate</a>
-        `,
-      });
-
-      return participant.id;
+      try {
+        // Generate certificate URL with proper text overlay positioning and formatting
+        const certificateUrl = cloudinary.v2.url(publicId, {
+          transformation: [
+            {
+              overlay: {
+                font_family: "Arial",
+                font_size: 90,
+                font_weight: "bold",
+                text: participant.name,
+              },
+              color: "black",
+              gravity: "south",
+              y: 700,
+            }
+          ]
+        });
+        console.log("Generated certificate URL:", certificateUrl);
+        
+        // Send email
+        await transporter.sendMail({
+          from: process.env.EMAIL_USER,
+          to: participant.email,
+          subject,
+          html: `
+            <p>${transcript}</p>
+            <p>Here is your certificate:</p>
+            <a href="${certificateUrl}" target="_blank">Download Certificate</a>
+          `,
+        });
+        
+        console.log(`Email sent successfully to ${participant.email}`);
+        return participant.id;
+      } catch (error) {
+        console.error(`Failed to send email to ${participant.email}:`, error);
+        throw error; // Re-throw to be caught by the main try/catch
+      }
     });
 
     // Wait for all emails to be sent
