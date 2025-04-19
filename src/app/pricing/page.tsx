@@ -65,12 +65,17 @@ const pricingTiers: PricingTier[] = [
     buyLink: '/signup/premium',
   },
 ];
-
 const PricingPage: React.FC = () => {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const [showConfetti, setShowConfetti] = useState(false);
   const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  // Mouse move handler defined outside of useEffect
+  const handleMouseMove = (e: MouseEvent) => {
+    setMousePosition({ x: e.clientX, y: e.clientY });
+  };
 
   useEffect(() => {
     // Window size for confetti
@@ -112,12 +117,6 @@ const PricingPage: React.FC = () => {
           });
         }
 
-        let mouseX = 0;
-        let mouseY = 0;
-        const handleMouseMove = (e: MouseEvent) => {
-          mouseX = e.clientX;
-          mouseY = e.clientY;
-        };
         canvas.addEventListener('mousemove', handleMouseMove);
 
         const animate = () => {
@@ -128,8 +127,8 @@ const PricingPage: React.FC = () => {
             if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
             if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
-            const dx = p.x - mouseX;
-            const dy = p.y - mouseY;
+            const dx = p.x - mousePosition.x;
+            const dy = p.y - mousePosition.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < 150) {
               p.vx += dx * 0.02;
@@ -176,7 +175,7 @@ const PricingPage: React.FC = () => {
       window.removeEventListener('resize', updateSize);
       canvas?.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [mousePosition, windowSize]);
 
   const handleBuyClick = (tier: string) => {
     setShowConfetti(true);
