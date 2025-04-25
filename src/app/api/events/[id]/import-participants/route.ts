@@ -132,7 +132,6 @@ export async function POST(req: Request, { params }: Params) {
       { status: 500 }
     );
   } finally {
-    // Ensure Prisma Client is properly disconnected
     await prisma.$disconnect();
   }
 }
