@@ -24,7 +24,7 @@ export const Hero: React.FC<HeroProps> = ({
   currentTemplate
 }) => {
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative h-screen flex items-center justify-center overflow-hidden ">
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#2d1a54] via-[#1f1d36] to-[#1a1a2e] animate-gradient-slow">
         {/* Gradient orbs */}
@@ -37,7 +37,7 @@ export const Hero: React.FC<HeroProps> = ({
       
       <div className="container mx-auto px-4 z-10 flex flex-col lg:flex-row gap-12 items-center">
         {/* Hero content */}
-        <div className="lg:w-1/2 space-y-6 text-center lg:text-left">
+        <div className="lg:w-1/2 space-y-6 text-center lg:text-left mx-4">
           <motion.h1 
             className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-300"
             initial={{ opacity: 0, y: 20 }}
