@@ -52,8 +52,8 @@ const Dashboard = () => {
       opacity: number;
 
       constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
+        this.x = Math.random() * (canvas?.width || 0);
+        this.y = Math.random() * (canvas?.height || 0);
         this.size = Math.random() * 2 + 0.5;
         this.speedX = Math.random() * 0.3 - 0.15;
         this.speedY = Math.random() * 0.3 - 0.15;
@@ -72,8 +72,8 @@ const Dashboard = () => {
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+        if (canvas && (this.x < 0 || this.x > canvas.width)) this.speedX *= -1;
+        if (canvas && (this.y < 0 || this.y > canvas.height)) this.speedY *= -1;
         this.draw();
       }
     }
@@ -194,7 +194,7 @@ const Dashboard = () => {
                 />
                 <linearGradient id="amberGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" style={{ stopColor: "#f59e0b", stopOpacity: 1 }} />
-                  <stop offset="100%" cover={{ stopColor: "#06b6d4", stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: "#06b6d4", stopOpacity: 1 }} />
                 </linearGradient>
               </svg>
             </div>
