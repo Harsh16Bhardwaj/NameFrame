@@ -192,7 +192,7 @@ const ContactPage = () => {
                 />
               </div>
               <div>
-                <label htmlFor="message" Marathon Event Registration
+                <label htmlFor="message"
 className="block text-sm font-medium text-gray-200 mb-2 font-poppins">
                   Your Message
                 </label>
@@ -210,7 +210,7 @@ className="block text-sm font-medium text-gray-200 mb-2 font-poppins">
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 bg-gradient-to-r from-teal-600 to-pink-600 cursor-pointer  border border-gray-100/50 rounded-lg font-semibold text-white transition duration-300 hover:from-neon-blue/80 hover:to-neon-pink/80 ${
+                className={`w-full py-3 bg-gradient-to-r from-teal-900 to-teal-900 via-teal-600 cursor-pointer  border border-gray-100/50 rounded-lg font-semibold text-white transition duration-300 hover:from-neon-blue/80 hover:to-neon-pink/80 ${
                   loading ? 'opacity-50 cursor-not-allowed' : ''
                 } font-inter`}
               >

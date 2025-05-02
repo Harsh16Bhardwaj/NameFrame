@@ -1,10 +1,13 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { MdErrorOutline } from "react-icons/md";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { Manrope } from "next/font/google";
+import { Loader2, Move } from "lucide-react";
+import { SignIn } from "@clerk/nextjs";
 import ParticipantImport from "@/components/ParticipantImport";
 import axios from "axios";
 import Tilt from "react-parallax-tilt";
@@ -13,6 +16,12 @@ import { useRouter } from "next/navigation";
 interface FormData {
   title: string;
   certificateTemplate: FileList;
+  textPosition: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
 }
 
 const manrope = Manrope({
@@ -22,11 +31,13 @@ const manrope = Manrope({
 });
 
 const CertificateForm: React.FC = () => {
+  const { isLoaded, userId } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
+    setValue,
   } = useForm<FormData>();
 
   const [templatePreview, setTemplatePreview] = useState<string | null>(null);
@@ -35,7 +46,12 @@ const CertificateForm: React.FC = () => {
   const [eventId, setEventId] = useState<string | null>(null);
   const [imgUploaded, setImageUploaded] = useState<boolean>(false);
   const [error1, setError1] = useState<boolean>(false);
+  const [showUploadError, setShowUploadError] = useState<boolean>(false);
   const [participantsImported, setParticipantsImported] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [textPosition, setTextPosition] = useState({ x: 50, y: 50, width: 80, height: 15 });
+  const previewRef = useRef<HTMLDivElement>(null);
 
   const certificateFile = watch("certificateTemplate");
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -63,14 +79,15 @@ const CertificateForm: React.FC = () => {
     const particleCount = 100;
 
     class Particle {
-      x: number;
-      y: number;
-      size: number;
-      speedX: number;
-      speedY: number;
-      opacity: number;
+      x: number = 0;
+      y: number = 0;
+      size: number = 0;
+      speedX: number = 0;
+      speedY: number = 0;
+      opacity: number = 0;
 
       constructor() {
+        if (!canvas) return;
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 2 + 1;
@@ -89,6 +106,7 @@ const CertificateForm: React.FC = () => {
       }
 
       update() {
+        if (!canvas) return;
         this.x += this.speedX;
         this.y += this.speedY;
         if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
@@ -161,16 +179,55 @@ const CertificateForm: React.FC = () => {
   const handleUpload = async (e: React.MouseEvent) => {
     e.preventDefault();
     const files = certificateFile;
-    if (files && files[0]) {
-      try {
-        const url = await uploadImageToCloudinary(files[0]);
-        setUploadedTemplateUrl(url);
-        console.log("Uploaded image URL:", url);
-      } catch (error) {
-        console.log("Error uploading image:", error);
-      }
+    if (!files || !files[0]) {
+      setShowUploadError(true);
+      return;
+    }
+    try {
+      const url = await uploadImageToCloudinary(files[0]);
+      setUploadedTemplateUrl(url);
+      console.log("Uploaded image URL:", url);
+    } catch (error) {
+      console.log("Error uploading image:", error);
     }
   };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX - textPosition.x,
+      y: e.clientY - textPosition.y,
+    });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !previewRef.current) return;
+
+    const previewRect = previewRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(100, ((e.clientX - dragStart.x) / previewRect.width) * 100));
+    const y = Math.max(0, Math.min(100, ((e.clientY - dragStart.y) / previewRect.height) * 100));
+
+    setTextPosition(prev => ({
+      ...prev,
+      x,
+      y
+    }));
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove as any);
+      window.addEventListener("mouseup", handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove as any);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging]);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     if (!uploadedTemplateUrl) {
@@ -181,6 +238,12 @@ const CertificateForm: React.FC = () => {
       const response = await axios.post("/api/events", {
         title: data.title,
         templateUrl: uploadedTemplateUrl,
+        textPosition: {
+          x: textPosition.x,
+          y: textPosition.y,
+          width: textPosition.width,
+          height: textPosition.height,
+        },
       });
       const createdEvent = response.data.data;
       setEventId(createdEvent.id);
@@ -257,7 +320,7 @@ const CertificateForm: React.FC = () => {
                   </label>
                   <button
                     onClick={handleUpload}
-                    className="p-3 bg-gradient-to-r from-blue-600 to-pink-600 rounded-full text-white transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-110 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-3 bg-gradient-to-r cursor-pointer from-blue-600 to-pink-600 rounded-full text-white transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-110 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isUploading}
                   >
                     <FaCloudUploadAlt className="text-xl" />
@@ -297,39 +360,54 @@ const CertificateForm: React.FC = () => {
                   type="submit"
                   onClick={participantsImported ? handleGoToDashboard : handleSubmit(onSubmit)}
                   disabled={isSubmitting || isUploading}
-                  className="w-full py-3 bg-gradient-to-r from-blue-600 to-pink-600 text-white rounded-lg font-semibold transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-105 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 bg-gradient-to-r cursor-pointer from-blue-600 to-pink-600 text-white rounded-lg font-semibold transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-105 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {participantsImported ? "Go to Event Dashboard" : isSubmitting ? "Creating Event..." : "Create Event"}
                 </button>
               </div>
             </div>
 
-            <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5}>
-              <div className="bg-black/50 backdrop-blur-lg p-6 rounded-xl border border-blue-500/30 transition-all duration-300 hover:shadow-glow">
-                {isUploading ? (
-                  <div className="h-64 w-full rounded-lg border border-blue-500/50 flex flex-col justify-center items-center animate-pulse">
-                    <div className="w-8 h-8 border-4 border-t-4 border-blue-400 rounded-full animate-spin" />
-                    <span className="text-blue-200 mt-2">Uploading...</span>
-                  </div>
-                ) : templatePreview ? (
+            <div className="bg-[#1f1d36] rounded-xl p-6 border border-gray-800">
+              <h3 className="text-lg font-semibold text-white mb-4">Template Preview</h3>
+              {templatePreview ? (
+                <div 
+                  ref={previewRef}
+                  className="relative w-full aspect-[1.414/1] bg-white rounded-lg overflow-hidden"
+                  onMouseMove={handleMouseMove}
+                >
                   <img
                     src={templatePreview}
-                    alt="Certificate Template Preview"
-                    className="max-w-full h-auto rounded-lg border border-blue-500/50 transition-transform duration-300 hover:scale-105"
+                    alt="Certificate template"
+                    className="w-full h-full object-contain"
                   />
-                ) : (
-                  <div className="h-64 w-full rounded-lg border border-blue-500/50 flex flex-col justify-center items-center bg-black/30">
-                    <p className="text-blue-300 text-center">
-                      Template Preview <br />
-                      <span className="text-lg flex justify-center items-center gap-x-1">
-                        <MdErrorOutline />
-                        No template selected
-                      </span>
-                    </p>
+                  <div
+                    className="absolute cursor-move flex items-center justify-center bg-white/20 backdrop-blur-sm border-2 border-solid border-blue-500 rounded-lg p-2 shadow-lg"
+                    style={{
+                      left: `${textPosition.x}%`,
+                      top: `${textPosition.y}%`,
+                      width: `${textPosition.width}%`,
+                      height: `${textPosition.height}%`,
+                      transform: "translate(-50%, -50%)",
+                    }}
+                    onMouseDown={handleMouseDown}
+                  >
+                    <div className="text-center">
+                      <Move className="w-4 h-4 text-black mx-auto" />
+                      <span className="text-black text-sm block">Drag to position</span>
+                    </div>
                   </div>
-                )}
+                </div>
+              ) : (
+                <div className="w-full aspect-[1.414/1] bg-gray-800 rounded-lg flex items-center justify-center">
+                  <p className="text-gray-400">Upload a template to preview</p>
+                </div>
+              )}
+              <div className="mt-4 text-sm text-gray-400">
+                <p>• Drag the text box to position where names should appear</p>
+                <p>• The position will be saved as a percentage of the template size</p>
+                <p>• The text box is full-width by default for better visibility</p>
               </div>
-            </Tilt>
+            </div>
           </div>
         </div>
       </Tilt>
@@ -353,6 +431,32 @@ const CertificateForm: React.FC = () => {
                   onClick={() => setError1(false)}
                 >
                   Understood
+                </button>
+              </div>
+            </div>
+          </Tilt>
+        </div>
+      )}
+
+      {showUploadError && (
+        <div className="fixed z-50 inset-0 flex justify-center items-center bg-black/80 backdrop-blur-md animate-fadeIn">
+          <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5}>
+            <div className="w-full max-w-md bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-2xl p-6 rounded-lg shadow-2xl border border-blue-500/30">
+              <div className="flex items-center mb-4 border-b border-blue-500/50">
+                <AiOutlineExclamationCircle className="text-pink-500 text-3xl mr-3" />
+                <h2 className="text-xl text-white font-semibold">
+                  No File Selected
+                </h2>
+              </div>
+              <p className="text-blue-200 mb-4">
+                Please select a certificate template file before uploading.
+              </p>
+              <div className="flex justify-end">
+                <button
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-pink-600 text-white rounded-md transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-105 hover:shadow-glow"
+                  onClick={() => setShowUploadError(false)}
+                >
+                  Okay
                 </button>
               </div>
             </div>

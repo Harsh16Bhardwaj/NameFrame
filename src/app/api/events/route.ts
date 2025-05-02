@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
     const body = await req.json();
-    const { title, templateUrl } = body;
+    const { title, templateUrl, textPosition } = body;
     if (!title || !templateUrl) {
       return NextResponse.json(
         { success: false, error: "Missing required fields: title or templateUrl" },
@@ -53,20 +53,22 @@ export async function POST(req: Request) {
       data: {
         name: `Template for ${title}`,
         backgroundUrl: templateUrl,
-        userId: userId, // Make sure userId is a valid user ID in your database
+        userId: userId,
+        textPositionX: textPosition?.x ?? 50,
+        textPositionY: textPosition?.y ?? 50,
+        textWidth: textPosition?.width ?? 80,
+        textHeight: textPosition?.height ?? 15,
       },
     });
-    
     
     // Then create the event with the new template ID
     const newEvent = await prisma.event.create({
       data: {
         title,
-        userId: userId, // Ensure consistent userId here too
+        userId: userId,
         templateId: newTemplate.id,
       },
     });
-    
     
     return NextResponse.json({ success: true, data: newEvent }, { status: 201 });
   } catch (error) {
@@ -76,7 +78,6 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   } finally {
-    // Note: You're disconnecting here but not in the GET route
     await prisma.$disconnect();
   }
 }

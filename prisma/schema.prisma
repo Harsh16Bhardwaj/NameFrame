@@ -38,6 +38,10 @@ model CertificateTemplate {
   user          User     @relation(fields: [userId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  textPositionX Float    @default(50)  // X position as percentage (0-100)
+  textPositionY Float    @default(50)  // Y position as percentage (0-100)
+  textWidth     Float    @default(80)  // Width as percentage (0-100)
+  textHeight    Float    @default(15)  // Height as percentage (0-100)
 
   events Event[]
 }

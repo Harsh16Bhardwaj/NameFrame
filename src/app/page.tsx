@@ -10,10 +10,10 @@ import { CTA } from "@/components/landing/CTA";
 import { CustomStyles } from "@/components/ui/CustomStyles";
 
 // Certificate template images - these are imported in the Hero component
-import template1 from '@/../public/ex1.jpg';
-import template2 from '@/../public/ex2.jpg';
-import template3 from '@/../public/ex3.jpg';
-import template4 from '@/../public/ex4.jpg';
+import template1 from '@/../public/1.png';
+import template2 from '@/../public/2.png';
+import template3 from '@/../public/3.png';
+import template4 from '@/../public/4.png';
 
 // Throttle function
 const throttle = (func: Function, delay: number) => {
