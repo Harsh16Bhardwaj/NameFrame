@@ -27,7 +27,7 @@ export const Testimonials: React.FC = () => {
         </div>
         
         {/* Partner logos with gradient placeholders */}
-        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 mb-16 max-w-4xl mx-auto">
+        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 mb-16 max-w-5xl mx-auto">
           {partners.map((partner, index) => (
             <motion.div 
               key={index}

@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
-import { Signika_Negative } from "next/font/google";
 import {
-  Geist,
-  Geist_Mono,
-  Style_Script,
-  Bangers,
-  Titan_One,
   Signika,
   Raleway,
   Josefin_Sans,

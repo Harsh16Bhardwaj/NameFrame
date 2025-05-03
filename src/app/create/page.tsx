@@ -260,11 +260,11 @@ const CertificateForm: React.FC = () => {
     }
   };
 
-  return (
-    <div className={`${manrope.variable} font-sans min-h-screen bg-black relative overflow-hidden flex items-center justify-center p-6`}>
+  return (<>
+  
+    <div className={`${manrope.variable} font-sans min-h-screen bg-black relative overflow-hidden flex items-center justify-center p-6 pt-[10rem]`}>
       <canvas ref={canvasRef} className="absolute  inset-0 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-purple-900/30 to-pink-900/30 animate-holo-shift" />
-      <Tilt tiltMaxAngleX={4} tiltMaxAngleY={4} glareEnable={true} glareMaxOpacity={0.3} glareColor="#ffffff">
         <div className="relative -mt-10 z-10 w-full max-w-6xl bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-2xl rounded-2xl shadow-2xl p-8 border border-white/10">
           <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-pink-500 mb-10 tracking-tight animate-glow">
             Craft a Certificate Session
@@ -410,7 +410,6 @@ const CertificateForm: React.FC = () => {
             </div>
           </div>
         </div>
-      </Tilt>
 
       {error1 && (
         <div className="fixed z-50 inset-0 flex justify-center items-center bg-black/80 backdrop-blur-md animate-fadeIn">
@@ -463,7 +462,7 @@ const CertificateForm: React.FC = () => {
           </Tilt>
         </div>
       )}
-    </div>
+    </div></>
   );
 };
 

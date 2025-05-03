@@ -67,8 +67,8 @@ const Header: React.FC = () => {
       opacity: number;
 
       constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
+        this.x = Math.random() * (canvas?.width || 0);
+        this.y = Math.random() * (canvas?.height || 0);
         this.size = Math.random() * 1.2 + 0.4;
         this.speedX = Math.random() * 0.25 - 0.125;
         this.speedY = Math.random() * 0.25 - 0.125;
@@ -87,8 +87,8 @@ const Header: React.FC = () => {
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+        if (this.x < 0 || this.x > (canvas?.width ?? 0)) this.speedX *= -1;
+        if (this.y < 0 || this.y > (canvas?.height ?? 0)) this.speedY *= -1;
         this.draw();
       }
     }
