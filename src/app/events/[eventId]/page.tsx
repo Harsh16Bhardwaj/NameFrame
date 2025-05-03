@@ -80,6 +80,10 @@ export default function EventDashboard() {
   // New state to track individual email sending status
   const [sendingStatus, setSendingStatus] = useState<SendingStatus>({});
   const [emailProgress, setEmailProgress] = useState({ sent: 0, total: 0 });
+  const [dummyName, setDummyName] = useState("John Doe");
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Fetch event data
   useEffect(() => {
@@ -91,7 +95,7 @@ export default function EventDashboard() {
           const eventData = response.data.data;
           setEvent(eventData);
           
-          // Set position data
+          // Set position data from the database
           setTextPosition({
             x: eventData.textPositionX || 50,
             y: eventData.textPositionY || 50,
@@ -105,13 +109,11 @@ export default function EventDashboard() {
             size: eventData.fontSize || 48,
             color: eventData.fontColor || "#000000"
           });
-        } else {
-          setError("Failed to load event data");
+
+          setLoading(false);
         }
       } catch (error) {
         console.error("Error fetching event:", error);
-        setError("An error occurred while loading the event");
-      } finally {
         setLoading(false);
       }
     };
@@ -137,9 +139,25 @@ export default function EventDashboard() {
     }));
   };
 
+  // Add a new handler for template URL changes
+  const handleTemplateChange = (newTemplateUrl: string) => {
+    if (!event) return;
+    
+    setEvent(prevEvent => {
+      if (!prevEvent) return null;
+      return {
+        ...prevEvent,
+        templateUrl: newTemplateUrl
+      };
+    });
+  };
+
   // Save position and font changes
   const savePositionChanges = async () => {
     if (!event) return;
+    
+    setIsSaving(true);
+    setSaveSuccess(false);
 
     try {
       const response = await axios.patch(`/api/events/${eventId}/template`, {
@@ -153,6 +171,9 @@ export default function EventDashboard() {
       });
 
       if (response.data.success) {
+        // Show success message
+        setSaveSuccess(true);
+        
         // Update the event with new positions
         setEvent((prev) => {
           if (!prev) return null;
@@ -167,9 +188,14 @@ export default function EventDashboard() {
             fontColor: fontSettings.color
           };
         });
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => setSaveSuccess(false), 3000);
       }
     } catch (error) {
       console.error("Error saving position changes:", error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -351,7 +377,47 @@ export default function EventDashboard() {
           onPositionChange={handlePositionChange}
           onFontChange={handleFontChange}
           onSavePositions={savePositionChanges}
+          onTemplateChange={handleTemplateChange} // Add this line
         />
+
+        {/* Save Button */}
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={savePositionChanges}
+            disabled={isSaving}
+            className={`rounded-md bg-[#4b3a70] px-4 py-2 text-white transition-all hover:bg-[#5d4b82] ${
+              isSaving ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          >
+            {isSaving ? 'Saving...' : 'Save Position Settings'}
+          </button>
+          
+          {saveSuccess && (
+            <span className="ml-3 text-green-400 text-sm">
+              Settings saved successfully!
+            </span>
+          )}
+        </div>
+
+        {/* Dummy Name Input */}
+        <div className="mb-4">
+          <label htmlFor="dummyName" className="block text-sm font-medium text-[#c5c3c4]">
+            Preview Name
+          </label>
+          <div className="mt-1">
+            <input
+              type="text"
+              id="dummyName"
+              value={dummyName}
+              onChange={(e) => setDummyName(e.target.value)}
+              className="w-full rounded-md border border-[#4b3a70]/30 bg-[#272936] px-3 py-2 text-white focus:border-[#b7a2c9] focus:outline-none focus:ring-1 focus:ring-[#b7a2c9]"
+              placeholder="Enter a name for preview"
+            />
+          </div>
+          <p className="mt-1 text-xs text-[#c5c3c4]/70">
+            This name will be shown on the certificate preview.
+          </p>
+        </div>
       </div>
 
       {/* Certificate Preview Modal */}

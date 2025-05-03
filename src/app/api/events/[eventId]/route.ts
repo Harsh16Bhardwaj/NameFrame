@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 
 interface Params {
-  params: { id: string };
+  params: { eventId: string }; // Changed from id to eventId
 }
 
 export async function GET(_: Request, { params }: Params) {
@@ -20,7 +20,7 @@ export async function GET(_: Request, { params }: Params) {
     // Fetch the event with the specified ID for the authenticated user
     const event = await prisma.event.findUnique({
       where: {
-        id: params.id,
+        id: params.eventId, // Changed from params.id to params.eventId
         userId,
       },
       include: {

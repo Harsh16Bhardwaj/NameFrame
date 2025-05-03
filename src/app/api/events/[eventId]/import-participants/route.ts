@@ -5,7 +5,7 @@ import { parse } from "papaparse"; // For CSV parsing
 import * as XLSX from 'xlsx';
 
 interface Params { 
-  params: { id: string };
+  params: { eventId: string };  // Changed from id to eventId
 }
 
 const prisma = new PrismaClient();
@@ -17,11 +17,11 @@ export async function POST(req: Request, { params }: Params) {
     if (!userId) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
-
+ 
     // Verify the event exists and belongs to the user
     const event = await prisma.event.findUnique({
       where: {
-        id: params.id,
+        id: params.eventId,  // Changed from params.id to params.eventId
         userId,
       },
     });
@@ -92,7 +92,7 @@ export async function POST(req: Request, { params }: Params) {
         participants.push({
           name,
           email,
-          eventId: params.id,
+          eventId: params.eventId,  // Changed from params.id to params.eventId
         });
       } else {
         invalidRows.push(row);

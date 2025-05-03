@@ -256,7 +256,7 @@ const CertificateForm: React.FC = () => {
 
   const handleGoToDashboard = () => {
     if (eventId) {
-      router.push(`/dashboard/${eventId}`);
+      router.push(`/events/${eventId}`);
     }
   };
 

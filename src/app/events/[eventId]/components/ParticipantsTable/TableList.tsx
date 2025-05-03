@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, Download, Mail, ArrowUpDown, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Eye, Download, Mail, ArrowUpDown, CheckCircle, XCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import axios from 'axios';
 
 interface Participant {
   id: string;
@@ -20,6 +21,8 @@ interface TableListProps {
   sendingStatus: SendingStatus;
   onSendCertificate: (participantId: string) => Promise<void>;
   isSending: boolean;
+  eventId: string;
+  itemsPerPage?: number; // Optional prop for customizing page size
 }
 
 export default function TableList({ 
@@ -27,8 +30,55 @@ export default function TableList({
   onShowPreview, 
   sendingStatus,
   onSendCertificate,
-  isSending
+  isSending,
+  eventId,
+  itemsPerPage = 10 // Default to 10 items per page
 }: TableListProps) {
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Calculate total pages
+  const totalPages = Math.ceil(participants.length / itemsPerPage);
+  
+  // Get current page items
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentParticipants = participants.slice(indexOfFirstItem, indexOfLastItem);
+  
+  // Page change handlers
+  const goToNextPage = () => {
+    setCurrentPage(page => Math.min(page + 1, totalPages));
+  };
+  
+  const goToPrevPage = () => {
+    setCurrentPage(page => Math.max(page - 1, 1));
+  };
+  
+  const handleDownloadCertificate = async (participant: Participant) => {
+    try {
+      // If certificate URL exists, download directly
+      if (participant.certificateUrl) {
+        window.open(participant.certificateUrl, '_blank');
+        return;
+      }
+      
+      // Otherwise generate and download
+      const response = await axios.get(`/api/events/${eventId}/certificate/${participant.id}`, {
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${participant.name}_certificate.png`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading certificate:", error);
+    }
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
@@ -58,7 +108,7 @@ export default function TableList({
         
         <tbody>
           <AnimatePresence mode="wait">
-            {participants.map((participant, index) => {
+            {currentParticipants.map((participant, index) => {
               const status = sendingStatus[participant.id];
               
               return (
@@ -110,6 +160,7 @@ export default function TableList({
                       </button>
                       
                       <button
+                        onClick={() => handleDownloadCertificate(participant)}
                         className="p-1.5 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors"
                         title="Download Certificate"
                       >
@@ -135,7 +186,7 @@ export default function TableList({
             })}
           </AnimatePresence>
           
-          {participants.length === 0 && (
+          {currentParticipants.length === 0 && (
             <tr>
               <td colSpan={4} className="py-8 text-center text-[#c5c3c4]/60">
                 No participants match your search criteria
@@ -144,6 +195,47 @@ export default function TableList({
           )}
         </tbody>
       </table>
+      
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-6 px-2">
+          <div className="text-sm text-[#c5c3c4]/70">
+            Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{" "}
+            <span className="font-medium">
+              {Math.min(indexOfLastItem, participants.length)}
+            </span>{" "}
+            of <span className="font-medium">{participants.length}</span> participants
+          </div>
+          
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={goToPrevPage}
+              disabled={currentPage === 1}
+              className={`p-2 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors ${
+                currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              aria-label="Previous page"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            
+            <div className="text-[#c5c3c4] font-medium px-2">
+              {currentPage} / {totalPages}
+            </div>
+            
+            <button
+              onClick={goToNextPage}
+              disabled={currentPage === totalPages}
+              className={`p-2 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors ${
+                currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              aria-label="Next page"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

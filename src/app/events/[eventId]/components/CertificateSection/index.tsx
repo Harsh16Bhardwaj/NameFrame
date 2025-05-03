@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CertificatePreview from './CertificatePreview';
 import TextPositionControls from './TextPositionControls';
 
@@ -18,6 +18,7 @@ interface CertificateSectionProps {
   onPositionChange: (property: string, value: number) => void;
   onFontChange: (property: string, value: string | number) => void;
   onSavePositions: () => Promise<void>;
+  onTemplateChange?: (newUrl: string) => void;
 }
 
 export default function CertificateSection({ 
@@ -29,8 +30,9 @@ export default function CertificateSection({
     color: "#000000"
   },
   onPositionChange,
-  onFontChange, 
-  onSavePositions 
+  onFontChange,
+  onSavePositions,
+  onTemplateChange
 }: CertificateSectionProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -39,6 +41,8 @@ export default function CertificateSection({
         templateUrl={templateUrl}
         textPosition={textPosition}
         fontSettings={fontSettings}
+        onPositionChange={onPositionChange}
+        onTemplateChange={onTemplateChange}
       />
       
       {/* Text Position and Font Customization */}

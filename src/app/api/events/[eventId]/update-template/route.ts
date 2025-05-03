@@ -20,7 +20,7 @@ export async function PATCH(
 
     // Get the event ID from the URL params
     const { eventId } = params;
-
+    
     // Parse the body of the request
     const { templateUrl } = await request.json();
 
@@ -51,7 +51,7 @@ export async function PATCH(
       );
     }
 
-    // Update the template background URL
+    // Update the template 
     if (!event.templateId) {
       return NextResponse.json(
         { success: false, error: "Template ID is missing" },
@@ -59,24 +59,27 @@ export async function PATCH(
       );
     }
 
-    const updated = await prisma.certificateTemplate.update({
+    const updatedTemplate = await prisma.certificateTemplate.update({
       where: { id: event.templateId },
       data: {
-        backgroundUrl: templateUrl
+        backgroundUrl: templateUrl,
       },
     });
 
-    // Also update the event's templateUrl field if it exists
-    await prisma.event.update({
+    // Also update the event record for convenience
+    const updatedEvent = await prisma.event.update({
       where: { id: eventId },
       data: {
-        template: templateUrl
-      }
+        template: templateUrl,
+      },
     });
 
     return NextResponse.json({
       success: true,
-      data: updated,
+      data: {
+        template: updatedTemplate,
+        event: updatedEvent
+      },
     });
   } catch (error) {
     console.error("Error updating template URL:", error);
