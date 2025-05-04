@@ -16,12 +16,7 @@ import { useRouter } from "next/navigation";
 interface FormData {
   title: string;
   certificateTemplate: FileList;
-  textPosition: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
+
 }
 
 const manrope = Manrope({
@@ -238,12 +233,7 @@ const CertificateForm: React.FC = () => {
       const response = await axios.post("/api/events", {
         title: data.title,
         templateUrl: uploadedTemplateUrl,
-        textPosition: {
-          x: textPosition.x,
-          y: textPosition.y,
-          width: textPosition.width,
-          height: textPosition.height,
-        },
+        
       });
       const createdEvent = response.data.data;
       setEventId(createdEvent.id);
@@ -380,22 +370,7 @@ const CertificateForm: React.FC = () => {
                     alt="Certificate template"
                     className="w-full h-full object-contain"
                   />
-                  <div
-                    className="absolute cursor-move flex items-center justify-center bg-white/20 backdrop-blur-sm border-2 border-solid border-blue-500 rounded-lg p-2 shadow-lg"
-                    style={{
-                      left: `${textPosition.x}%`,
-                      top: `${textPosition.y}%`,
-                      width: `${textPosition.width}%`,
-                      height: `${textPosition.height}%`,
-                      transform: "translate(-50%, -50%)",
-                    }}
-                    onMouseDown={handleMouseDown}
-                  >
-                    <div className="text-center">
-                      <Move className="w-4 h-4 text-black mx-auto" />
-                      <span className="text-black text-sm block">Drag to position</span>
-                    </div>
-                  </div>
+                  
                 </div>
               ) : (
                 <div className="w-full aspect-[1.414/1] bg-gray-800 rounded-lg flex items-center justify-center">
@@ -403,9 +378,7 @@ const CertificateForm: React.FC = () => {
                 </div>
               )}
               <div className="mt-4 text-sm text-gray-400">
-                <p>• Drag the text box to position where names should appear</p>
-                <p>• The position will be saved as a percentage of the template size</p>
-                <p>• The text box is full-width by default for better visibility</p>
+                <p>• Make sure the template is in the correct format 4:3</p>
               </div>
             </div>
           </div>

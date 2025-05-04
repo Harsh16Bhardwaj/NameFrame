@@ -8,9 +8,16 @@ import Link from "next/link";
 interface Template {
   id: string;
   name: string;
-  imageUrl: string;
-  eventName: string;
+  backgroundUrl: string;
   createdAt: string;
+  userId: string;
+  textPositionX: number;
+  textPositionY: number;
+  textWidth: number;
+  textHeight: number;
+  fontFamily: string;
+  fontSize: number;
+  fontColor: string;
 }
 
 export default function TemplatesPage() {
@@ -20,19 +27,29 @@ export default function TemplatesPage() {
   const fetchTemplates = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/templates");
+      const response = await fetch("/api/certificate-templates");
       const data = await response.json();
+      console.log("API Response:", data); // Debug log
       
       if (data.success && Array.isArray(data.data)) {
         const transformedTemplates = data.data.map((template: any) => ({
           id: template?.id || "",
           name: template?.name || "Unnamed Template",
-          imageUrl: template?.imageUrl || "",
-          eventName: template?.eventName || "Unnamed Event",
-          createdAt: template?.createdAt || new Date().toISOString()
+          backgroundUrl: template?.backgroundUrl || "",
+          createdAt: template?.createdAt || new Date().toISOString(),
+          userId: template?.userId || "",
+          textPositionX: template?.textPositionX || 50,
+          textPositionY: template?.textPositionY || 50,
+          textWidth: template?.textWidth || 80,
+          textHeight: template?.textHeight || 15,
+          fontFamily: template?.fontFamily || "Arial",
+          fontSize: template?.fontSize || 16,
+          fontColor: template?.fontColor || "#000000"
         }));
+        console.log("Transformed templates:", transformedTemplates); // Debug log
         setTemplates(transformedTemplates);
       } else {
+        console.error("Invalid data format:", data); // Debug log
         setTemplates([]);
       }
     } catch (error) {
@@ -146,9 +163,9 @@ export default function TemplatesPage() {
               >
                 {/* Template Image */}
                 <div className="relative aspect-video mb-4 rounded-lg overflow-hidden bg-gray-100">
-                  {template.imageUrl ? (
+                  {template.backgroundUrl ? (
                     <img
-                      src={template.imageUrl}
+                      src={template.backgroundUrl}
                       alt={template.name}
                       className="w-full h-full object-cover"
                     />
@@ -165,14 +182,14 @@ export default function TemplatesPage() {
                     {template.name}
                   </h3>
                   <p className="text-[#464646] mb-4">
-                    Event: {template.eventName}
+                    Created: {new Date(template.createdAt).toLocaleDateString()}
                   </p>
 
                   {/* Download Button */}
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => handleDownload(template.imageUrl, template.name)}
+                    onClick={() => handleDownload(template.backgroundUrl, template.name)}
                     className="w-full px-4 py-2 bg-gradient-to-r from-[#4b3a70] to-[#2a2f3d] text-white rounded-lg flex items-center justify-center gap-2 hover:from-[#5c4b80] hover:to-[#3a3f4d] transition-all"
                   >
                     <Download className="w-4 h-4" />
