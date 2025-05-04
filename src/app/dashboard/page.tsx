@@ -24,6 +24,8 @@ import {
   Home,
   LogOut,
   FileType, // Add this import to use instead of Templates
+  Plus,
+  RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -233,6 +235,31 @@ const LineChart2 = ({ data, color, height = 200, width = 300 }) => {
   );
 };
 
+type SearchResult = {
+  id: string;
+  name: string;
+  date?: string;
+  participants?: number;
+  template?: string;
+  status?: string;
+  preview?: string;
+};
+
+interface Event {
+  id: string;
+  title: string;
+  createdAt: string;
+  template?: {
+    name: string;
+  };
+  participants: {
+    id: string;
+    name: string;
+    email: string;
+    emailed: boolean;
+  }[];
+}
+
 export default function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -240,6 +267,89 @@ export default function Dashboard() {
   const [namePosition, setNamePosition] = useState({ x: 50, y: 60 }); // % values
   const [zoom, setZoom] = useState(1);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [stats, setStats] = useState({
+    totalEvents: 0,
+    totalParticipants: 0,
+    recentParticipants: 0,
+    totalCertificates: 0,
+    totalEmailsSent: 0,
+    recentEmailsSent: 0
+  });
+  const [loading, setLoading] = useState(true);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  
+  // Fetch dashboard statistics
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/dashboard/stats');
+        const data = await response.json();
+        
+        if (data.success) {
+          setStats(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  // Fetch events data
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoadingEvents(true);
+        const response = await fetch('/api/events');
+        const data = await response.json();
+        
+        if (data.success) {
+          setEvents(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      } finally {
+        setLoadingEvents(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  // Search handler function
+  const handleSearch = () => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    // Search through events and templates
+    const results: SearchResult[] = [
+      ...dashboardData.events.filter(event => 
+        event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.template.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+      ...dashboardData.certificateTemplates.filter(template =>
+        template.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    ];
+
+    setSearchResults(results);
+  };
+
+  // Handle Enter key press
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   // For demo purposes - resize sidebar on smaller screens
   useEffect(() => {
@@ -260,8 +370,6 @@ export default function Dashboard() {
     { icon: Calendar, label: "Events", href: "/events" },
     { icon: FileType, label: "Templates", href: "/templates" }, // Changed Templates to FileType
     { icon: Users, label: "Participants", href: "/participants" },
-    { icon: Award, label: "Certificates", href: "/certificates" },
-    { icon: Settings, label: "Settings", href: "/settings" },
   ];
 
   return (
@@ -281,10 +389,10 @@ export default function Dashboard() {
 
       {/* Sidebar */}
       <motion.div
-        className={`bg-[#322f42] fixed lg:relative z-40 h-full shadow-xl flex flex-col`}
+        className={`bg-[#322f42] fixed lg:relative z-40 mr-2 h-full shadow-xl flex flex-col`}
         initial={false}
         animate={{
-          width: isSidebarCollapsed ? "80px" : "240px",
+          width: isSidebarCollapsed ? "80px" : "220px",
           x: isMobileNavOpen || !isSidebarCollapsed ? 0 : -80,
         }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -368,18 +476,19 @@ export default function Dashboard() {
       </motion.div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden pr-20">
         {/* Top Bar */}
-        <div className="h-16 bg-[#322f42]/90 backdrop-blur-sm border-b border-[#4b3a70]/30 flex items-center justify-between px-4 gap-4">
+        <div className="h-20 py-4 bg-[#322f42]/90 mt-24 rounded-2xl backdrop-blur-sm border-b border-[#4b3a70]/30 flex items-center justify-between px-4 gap-4">
           {/* Left section */}
           <div className="flex items-center gap-3">
             <button
-              className="p-2 rounded-lg lg:hidden"
+              className="p-2 rounded-lg lg:hidden hover:bg-[#4b3a70]/20 transition-colors"
               onClick={() => setIsMobileNavOpen(true)}
+              title="Open Menu"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <h1 className="text-xl font-semibold text-white hidden sm:block">
+            <h1 className="text-3xl font-bold text-white hidden sm:block">
               Dashboard
             </h1>
           </div>
@@ -392,95 +501,185 @@ export default function Dashboard() {
                 type="text"
                 placeholder="Search events, templates..."
                 className="bg-transparent border-none focus:outline-none focus:ring-0 w-full px-2 text-sm text-[#c5c3c4]"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
               />
+              <button
+                onClick={handleSearch}
+                className="ml-2 p-1.5 rounded-md hover:bg-[#4b3a70]/20 text-[#c5c3c4] transition-colors"
+                title="Search"
+              >
+                <Search className="w-4 h-4" />
+              </button>
             </div>
           </div>
 
           {/* Right section */}
           <div className="flex items-center gap-3">
             <button
-              className="p-2 rounded-full hover:bg-[#4b3a70]/20"
+              className="p-2 rounded-lg hover:bg-[#4b3a70]/20 transition-colors"
               onClick={() => setIsDarkMode(!isDarkMode)}
+              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
-              {isDarkMode ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
+              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            <div className="relative">
-              <button className="p-2 rounded-full hover:bg-[#4b3a70]/20">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-red-500"></span>
-              </button>
-            </div>
-            <div className="h-8 w-px bg-[#4b3a70]/30"></div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full overflow-hidden bg-[#4b3a70] flex items-center justify-center">
-                <span className="text-xs font-medium text-white">AM</span>
-              </div>
-              <div className="hidden md:block">
-                <p className="text-sm font-medium">Alex Morgan</p>
-                <p className="text-xs text-[#c5c3c4]/70">Admin</p>
-              </div>
-              <ChevronDown className="w-4 h-4 hidden md:block" />
-            </div>
+            <button
+              className="p-2 rounded-lg hover:bg-[#4b3a70]/20 transition-colors"
+              title="Notifications"
+            >
+              <Bell className="w-5 h-5" />
+            </button>
+            <Link
+              href="/create"
+              className="px-4 py-2 bg-[#b7a2c9] hover:bg-[#c9b8d7] text-[#212531] font-medium rounded-lg transition-colors flex items-center gap-2"
+              title="Create New Event"
+            >
+              <Plus className="w-4 h-4" />
+              <span className="hidden sm:inline">New Event</span>
+            </Link>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 p-6 space-y-6">
           {/* KPI Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-            {dashboardData.kpis.map((kpi, index) => (
-              <motion.div
-                key={index}
-                className="bg-[#322f42] rounded-2xl p-5 shadow-lg border border-[#4b3a70]/30"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div className="p-2 rounded-lg bg-[#4b3a70]/20">
-                    <kpi.icon className="w-5 h-5 text-[#b7a2c9]" />
-                  </div>
-                  <div className="flex items-center space-x-1 text-xs">
-                    <ArrowUpRight
-                      className={`w-3 h-3 ${
-                        kpi.change > 0
-                          ? "text-green-500"
-                          : "text-red-500 rotate-90"
-                      }`}
-                    />
-                    <span
-                      className={`${
-                        kpi.change > 0 ? "text-green-500" : "text-red-500"
-                      }`}
-                    >
-                      {kpi.change > 0 ? "+" : ""}
-                      {kpi.change}
-                    </span>
-                  </div>
+            <motion.div
+              className="bg-[#322f42] rounded-2xl p-5 shadow-lg border border-[#4b3a70]/30"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className="p-2 rounded-lg bg-[#4b3a70]/20">
+                  <Calendar className="w-5 h-5 text-[#b7a2c9]" />
                 </div>
-                <h3 className="text-[#c5c3c4]/70 text-sm font-medium mb-1">
-                  {kpi.title}
-                </h3>
-                <div className="flex items-end justify-between">
-                  <span className="text-2xl font-bold text-white">
-                    {kpi.value.toLocaleString()}
-                  </span>
-                  <div className="h-8 flex items-end">
-                    <Sparkline
-                      data={[5, 15, 8, 12, 18, 10, 18, 5, 20, 8, 12, 10]}
-                      color="#b7a2c9"
-                      height={30}
-                      width={80}
-                    />
-                  </div>
+                <div className="flex items-center space-x-1 text-xs">
+                  <ArrowUpRight className="w-3 h-3 text-green-500" />
+                  <span className="text-green-500">+{stats.recentParticipants}</span>
                 </div>
-              </motion.div>
-            ))}
+              </div>
+              <h3 className="text-[#c5c3c4]/70 text-sm font-medium mb-1">
+                Total Events
+              </h3>
+              <div className="flex items-end justify-between">
+                <span className="text-2xl font-bold text-white">
+                  {loading ? '...' : stats.totalEvents.toLocaleString()}
+                </span>
+                <div className="h-8 flex items-end">
+                  <Sparkline
+                    data={[5, 15, 8, 12, 18, 10, 18, 5, 20, 8, 12, 10]}
+                    color="#b7a2c9"
+                    height={30}
+                    width={80}
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="bg-[#322f42] rounded-2xl p-5 shadow-lg border border-[#4b3a70]/30"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className="p-2 rounded-lg bg-[#4b3a70]/20">
+                  <Users className="w-5 h-5 text-[#b7a2c9]" />
+                </div>
+                <div className="flex items-center space-x-1 text-xs">
+                  <ArrowUpRight className="w-3 h-3 text-green-500" />
+                  <span className="text-green-500">+{stats.recentParticipants}</span>
+                </div>
+              </div>
+              <h3 className="text-[#c5c3c4]/70 text-sm font-medium mb-1">
+                Total Participants
+              </h3>
+              <div className="flex items-end justify-between">
+                <span className="text-2xl font-bold text-white">
+                  {loading ? '...' : stats.totalParticipants.toLocaleString()}
+                </span>
+                <div className="h-8 flex items-end">
+                  <Sparkline
+                    data={[5, 15, 8, 12, 18, 10, 18, 5, 20, 8, 12, 10]}
+                    color="#b7a2c9"
+                    height={30}
+                    width={80}
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="bg-[#322f42] rounded-2xl p-5 shadow-lg border border-[#4b3a70]/30"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className="p-2 rounded-lg bg-[#4b3a70]/20">
+                  <Award className="w-5 h-5 text-[#b7a2c9]" />
+                </div>
+                <div className="flex items-center space-x-1 text-xs">
+                  <ArrowUpRight className="w-3 h-3 text-green-500" />
+                  <span className="text-green-500">+{stats.recentParticipants}</span>
+                </div>
+              </div>
+              <h3 className="text-[#c5c3c4]/70 text-sm font-medium mb-1">
+                Certificates Generated
+              </h3>
+              <div className="flex items-end justify-between">
+                <span className="text-2xl font-bold text-white">
+                  {loading ? '...' : stats.totalCertificates.toLocaleString()}
+                </span>
+                <div className="h-8 flex items-end">
+                  <Sparkline
+                    data={[5, 15, 8, 12, 18, 10, 18, 5, 20, 8, 12, 10]}
+                    color="#b7a2c9"
+                    height={30}
+                    width={80}
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="bg-[#322f42] rounded-2xl p-5 shadow-lg border border-[#4b3a70]/30"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className="p-2 rounded-lg bg-[#4b3a70]/20">
+                  <Mail className="w-5 h-5 text-[#b7a2c9]" />
+                </div>
+                <div className="flex items-center space-x-1 text-xs">
+                  <ArrowUpRight className="w-3 h-3 text-green-500" />
+                  <span className="text-green-500">+{stats.recentEmailsSent}</span>
+                </div>
+              </div>
+              <h3 className="text-[#c5c3c4]/70 text-sm font-medium mb-1">
+                Emails Sent
+              </h3>
+              <div className="flex items-end justify-between">
+                <span className="text-2xl font-bold text-white">
+                  {loading ? '...' : stats.totalEmailsSent.toLocaleString()}
+                </span>
+                <div className="h-8 flex items-end">
+                  <Sparkline
+                    data={[5, 15, 8, 12, 18, 10, 18, 5, 20, 8, 12, 10]}
+                    color="#b7a2c9"
+                    height={30}
+                    width={80}
+                  />
+                </div>
+              </div>
+            </motion.div>
           </div>
 
           {/* Second Row - Tables and Charts */}
@@ -488,7 +687,7 @@ export default function Dashboard() {
             {/* Events Table */}
             <div className="lg:col-span-2">
               <motion.div
-                className="bg-[#322f42] rounded-2xl p-5 shadow-lg border border-[#4b3a70]/30 h-full"
+                className="bg-[#322f42] rounded-2xl p-5 shadow-lg border border-[#4b3a70]/30 h-full min-h-[384px]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -497,12 +696,22 @@ export default function Dashboard() {
                   <h2 className="text-lg font-semibold text-white">
                     Recent Events
                   </h2>
-                  <Link
-                    href="/events"
-                    className="text-sm font-medium flex items-center gap-1 text-[#b7a2c9] hover:text-[#c9b8d7] transition-colors"
-                  >
-                    View All <ChevronRight className="w-4 h-4" />
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href="/events"
+                      className="text-sm font-medium flex items-center gap-1 text-[#b7a2c9] hover:text-[#c9b8d7] transition-colors"
+                      title="View All Events"
+                    >
+                      View All <ChevronRight className="w-4 h-4" />
+                    </Link>
+                    <button
+                      className="p-2 rounded-lg hover:bg-[#4b3a70]/20 transition-colors"
+                      title="Refresh Events"
+                      onClick={() => fetchEvents()}
+                    >
+                      <RefreshCw className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
@@ -529,60 +738,88 @@ export default function Dashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {dashboardData.events.map((event, index) => (
-                        <tr
-                          key={index}
-                          className={`hover:bg-[#3a3c4a] transition-colors ${
-                            index % 2 === 0 ? "bg-[#2d2f3d]" : "bg-[#272936]"
-                          }`}
-                        >
-                          <td className="py-3 pl-1 text-sm font-medium">
-                            {event.name}
-                          </td>
-                          <td className="py-3 text-sm hidden sm:table-cell">
-                            {new Date(event.date).toLocaleDateString()}
-                          </td>
-                          <td className="py-3 text-sm hidden sm:table-cell">
-                            {event.participants}
-                          </td>
-                          <td className="py-3 text-sm hidden md:table-cell">
-                            {event.template}
-                          </td>
-                          <td className="py-3 text-sm">
-                            <span
-                              className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                event.status === "Completed"
-                                  ? "bg-green-900/20 text-green-400"
-                                  : event.status === "In Progress"
-                                  ? "bg-blue-900/20 text-blue-400"
-                                  : "bg-orange-900/20 text-orange-400"
-                              }`}
-                            >
-                              {event.status}
-                            </span>
-                          </td>
-                          <td className="py-3 text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              <button className="p-1.5 rounded-md hover:bg-[#4b3a70]/20 text-[#c5c3c4]">
-                                <FileText className="w-4 h-4" />
-                              </button>
-                              <button className="p-1.5 rounded-md hover:bg-[#4b3a70]/20 text-[#c5c3c4]">
-                                <Mail className="w-4 h-4" />
-                              </button>
-                              <button className="p-1.5 rounded-md hover:bg-[#4b3a70]/20 text-[#c5c3c4]">
-                                <Sliders className="w-4 h-4" />
-                              </button>
-                            </div>
+                      {loadingEvents ? (
+                        <tr>
+                          <td colSpan={6} className="py-4 text-center text-[#c5c3c4]/70">
+                            Loading events...
                           </td>
                         </tr>
-                      ))}
+                      ) : events.length === 0 ? (
+                        <tr>
+                          <td colSpan={6} className="py-4 text-center text-[#c5c3c4]/70">
+                            No events found
+                          </td>
+                        </tr>
+                      ) : (
+                        events.slice(0, 5).map((event) => {
+                          const totalParticipants = event.participants.length;
+                          const emailsSent = event.participants.filter(p => p.emailed).length;
+                          const status = totalParticipants === emailsSent ? 'Completed' :
+                                       emailsSent > 0 ? 'In Progress' : 'Scheduled';
+
+                          return (
+                            <tr
+                              key={event.id}
+                              className="hover:bg-[#3a3c4a] transition-colors"
+                            >
+                              <td className="py-3 pl-1 text-sm font-medium">
+                                {event.title}
+                              </td>
+                              <td className="py-3 text-sm hidden sm:table-cell">
+                                {new Date(event.createdAt).toLocaleDateString()}
+                              </td>
+                              <td className="py-3 text-sm hidden sm:table-cell">
+                                {totalParticipants}
+                              </td>
+                              <td className="py-3 text-sm hidden md:table-cell">
+                                {event.template?.name?.slice(0, 10) || 'No template'}
+                              </td>
+                              <td className="py-3 text-sm">
+                                <span
+                                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                    status === "Completed"
+                                      ? "bg-green-900/20 text-green-400"
+                                      : status === "In Progress"
+                                      ? "bg-blue-900/20 text-blue-400"
+                                      : "bg-orange-900/20 text-orange-400"
+                                  }`}
+                                >
+                                  {status}
+                                </span>
+                              </td>
+                              <td className="py-3 text-right">
+                                <div className="flex items-center justify-end gap-2">
+                                  <Link
+                                    href={`/events/${event.id}`}
+                                    className="p-1.5 rounded-md hover:bg-[#4b3a70]/20 text-[#c5c3c4]"
+                                  >
+                                    <FileText className="w-4 h-4" />
+                                  </Link>
+                                  <button
+                                    className="p-1.5 rounded-md hover:bg-[#4b3a70]/20 text-[#c5c3c4]"
+                                    onClick={() => {/* Handle email action */}}
+                                  >
+                                    <Mail className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    className="p-1.5 rounded-md hover:bg-[#4b3a70]/20 text-[#c5c3c4]"
+                                    onClick={() => {/* Handle settings action */}}
+                                  >
+                                    <Sliders className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
                     </tbody>
                   </table>
                 </div>
               </motion.div>
             </div>
 
-            {/* Charts */}
+            {/* Analytics */}
             <div>
               <motion.div
                 className="bg-[#322f42] rounded-2xl p-5 shadow-lg border border-[#4b3a70]/30 h-full"
@@ -595,62 +832,89 @@ export default function Dashboard() {
                     Analytics
                   </h2>
                   <div className="flex items-center gap-2">
-                    <button className="text-xs bg-[#4b3a70]/30 text-[#c5c3c4] px-2 py-1 rounded-md">
+                    <button
+                      className="text-xs bg-[#4b3a70]/30 text-[#c5c3c4] px-2 py-1 rounded-md hover:bg-[#4b3a70]/40 transition-colors"
+                      title="View Weekly Analytics"
+                    >
                       Week
                     </button>
-                    <button className="text-xs hover:bg-[#4b3a70]/20 text-[#c5c3c4]/70 px-2 py-1 rounded-md">
+                    <button
+                      className="text-xs hover:bg-[#4b3a70]/20 text-[#c5c3c4]/70 px-2 py-1 rounded-md transition-colors"
+                      title="View Monthly Analytics"
+                    >
                       Month
                     </button>
-                    <button className="text-xs hover:bg-[#4b3a70]/20 text-[#c5c3c4]/70 px-2 py-1 rounded-md">
+                    <button
+                      className="text-xs hover:bg-[#4b3a70]/20 text-[#c5c3c4]/70 px-2 py-1 rounded-md transition-colors"
+                      title="View Yearly Analytics"
+                    >
                       Year
                     </button>
                   </div>
                 </div>
 
-                {/* Weekly Upload Chart */}
+                {/* Event Completion Rate */}
                 <div className="mb-6 space-y-2">
-                  <h3 className="text-sm font-medium text-[#c5c3c4]/70 flex items-center gap-1">
-                    <BarChart3 className="w-4 h-4" /> Weekly Uploads
-                  </h3>
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-sm font-medium text-[#c5c3c4]/70 flex items-center gap-1">
+                      <BarChart3 className="w-4 h-4" /> Event Completion Rate
+                    </h3>
+                    <span className="text-xs text-[#c5c3c4]/70">
+                      {events.reduce((sum, event) => {
+                        const total = event.participants.length;
+                        const completed = event.participants.filter(p => p.emailed).length;
+                        return sum + (total > 0 ? Math.round((completed / total) * 100) : 0);
+                      }, 0) / events.length || 0}% Avg
+                    </span>
+                  </div>
                   <div className="px-3">
                     <BarChart
-                      data={dashboardData.weeklyUploads}
+                      data={events.map(event => {
+                        const total = event.participants.length;
+                        const completed = event.participants.filter(p => p.emailed).length;
+                        return total > 0 ? Math.round((completed / total) * 100) : 0;
+                      })}
                       color="#b7a2c9"
                       height={120}
                       width={300}
                     />
                     <div className="flex justify-between mt-1 text-xs text-[#c5c3c4]/70">
-                      <span>Mon</span>
-                      <span>Tue</span>
-                      <span>Wed</span>
-                      <span>Thu</span>
-                      <span>Fri</span>
-                      <span>Sat</span>
-                      <span>Sun</span>
+                      {events.slice(0, 5).map((event, index) => (
+                        <span key={index} title={event.title}>{event.title.slice(0, 3)}</span>
+                      ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Email Delivery Chart */}
+                {/* Email Delivery Success Rate */}
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium text-[#c5c3c4]/70 flex items-center gap-1">
-                    <LineChart className="w-4 h-4" /> Email Delivery Success
-                  </h3>
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-sm font-medium text-[#c5c3c4]/70 flex items-center gap-1">
+                      <LineChart className="w-4 h-4" /> Email Delivery Success
+                    </h3>
+                    <span className="text-xs text-[#c5c3c4]/70">
+                      {events.reduce((sum, event) => {
+                        const total = event.participants.length;
+                        const sent = event.participants.filter(p => p.emailed).length;
+                        return sum + (total > 0 ? Math.round((sent / total) * 100) : 0);
+                      }, 0) / events.length || 0}% Avg
+                    </span>
+                  </div>
                   <div className="px-3">
                     <LineChart2
-                      data={dashboardData.emailDelivery.success}
+                      data={events.map(event => {
+                        const total = event.participants.length;
+                        const sent = event.participants.filter(p => p.emailed).length;
+                        return total > 0 ? Math.round((sent / total) * 100) : 0;
+                      })}
                       color="#7dc896"
                       height={120}
                       width={300}
                     />
                     <div className="flex justify-between mt-1 text-xs text-[#c5c3c4]/70">
-                      <span>Mon</span>
-                      <span>Tue</span>
-                      <span>Wed</span>
-                      <span>Thu</span>
-                      <span>Fri</span>
-                      <span>Sat</span>
-                      <span>Sun</span>
+                      {events.slice(0, 5).map((event, index) => (
+                        <span key={index} title={event.title}>{event.title.slice(0, 3)}</span>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -658,160 +922,89 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Third Row - Template Preview */}
-          <motion.div
-            className="bg-[#322f42] rounded-2xl p-5 shadow-lg border border-[#4b3a70]/30"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <div className="flex justify-between items-center mb-5">
-              <h2 className="text-lg font-semibold text-white">
-                Certificate Preview
+          {/* Third Row - Quick Actions and Recent Activity */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Quick Actions */}
+            <motion.div
+              className="bg-[#322f42] rounded-2xl p-5 shadow-lg border border-[#4b3a70]/30"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <h2 className="text-lg font-semibold text-white mb-5">
+                Quick Actions
               </h2>
-              <div className="flex items-center gap-2">
-                <button
-                  className="text-xs bg-[#4b3a70]/30 px-2 py-1 rounded-md text-[#c5c3c4]"
-                  onClick={() => setZoom(1)}
+              <div className="grid grid-cols-2 gap-4">
+                <Link
+                  href="/events/new"
+                  className="p-4 bg-[#4b3a70]/20 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2"
+                  title="Create a New Event"
                 >
-                  Reset View
-                </button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Template Selector */}
-              <div className="p-3 bg-[#272936] rounded-xl space-y-3">
-                <h3 className="text-sm font-medium text-[#c5c3c4]/70">
-                  Choose Template
-                </h3>
-                <div className="space-y-2 max-h-64 overflow-y-auto scrollbar-thin pr-2">
-                  {dashboardData.certificateTemplates.map((template) => (
-                    <button
-                      key={template.id}
-                      onClick={() => setSelectedTemplate(template.id)}
-                      className={`w-full p-2 rounded-lg text-left flex items-center gap-2 text-sm ${
-                        selectedTemplate === template.id
-                          ? "bg-[#4b3a70]/40 text-[#b7a2c9]"
-                          : "hover:bg-[#4b3a70]/20"
-                      }`}
-                    >
-                      <div className="w-8 h-8 rounded bg-[#212531]/50 flex-shrink-0"></div>
-                      <span className="truncate">{template.name}</span>
-                    </button>
-                  ))}
-                </div>
-
-                <div className="pt-3 border-t border-[#4b3a70]/30 space-y-3">
-                  <h3 className="text-sm font-medium text-[#c5c3c4]/70">
-                    Text Position
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs text-[#c5c3c4]/70 mb-1 block">
-                        Horizontal (%)
-                      </label>
-                      <input
-                        type="range"
-                        min="10"
-                        max="90"
-                        value={namePosition.x}
-                        onChange={(e) =>
-                          setNamePosition({
-                            ...namePosition,
-                            x: Number(e.target.value),
-                          })
-                        }
-                        className="w-full accent-[#b7a2c9]"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-[#c5c3c4]/70 mb-1 block">
-                        Vertical (%)
-                      </label>
-                      <input
-                        type="range"
-                        min="10"
-                        max="90"
-                        value={namePosition.y}
-                        onChange={(e) =>
-                          setNamePosition({
-                            ...namePosition,
-                            y: Number(e.target.value),
-                          })
-                        }
-                        className="w-full accent-[#b7a2c9]"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs text-[#c5c3c4]/70 mb-1 block">
-                      Zoom
-                    </label>
-                    <input
-                      type="range"
-                      min="0.5"
-                      max="2"
-                      step="0.1"
-                      value={zoom}
-                      onChange={(e) => setZoom(Number(e.target.value))}
-                      className="w-full accent-[#b7a2c9]"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Certificate Preview */}
-              <div className="lg:col-span-3 relative rounded-xl overflow-hidden bg-[#272936]">
-                <div
-                  className="w-full h-64 flex items-center justify-center overflow-hidden"
-                  style={{
-                    transform: `scale(${zoom})`,
-                    transformOrigin: "center center",
-                  }}
+                  <Calendar className="w-6 h-6 text-[#b7a2c9]" />
+                  <span className="text-sm font-medium">New Event</span>
+                </Link>
+                <Link
+                  href="/templates"
+                  className="p-4 bg-[#4b3a70]/20 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2"
+                  title="Manage Templates"
                 >
-                  {/* This would be replaced by the actual certificate template */}
-                  <div className="relative w-full h-full px-8 py-10">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#322f42] to-[#272936] opacity-50"></div>
-                    <div className="relative h-full border-8 border-[#4b3a70]/30 flex items-center justify-center">
-                      <div
-                        className="absolute text-white text-xl font-serif"
-                        style={{
-                          left: `${namePosition.x}%`,
-                          top: `${namePosition.y}%`,
-                          transform: "translate(-50%, -50%)",
-                        }}
-                      >
-                        John Doe
-                      </div>
-                      {/* Certificate Design Elements - Simplified for the mockup */}
-                      <div className="absolute top-8 left-0 right-0 text-center">
-                        <h3 className="text-[#b7a2c9] text-xs tracking-widest">
-                          CERTIFICATE OF COMPLETION
-                        </h3>
-                      </div>
-                      <div className="absolute bottom-8 left-0 right-0 flex justify-between px-12 text-xs text-[#c5c3c4]/70">
-                        <span>Date: May 1, 2024</span>
-                        <span>CEO: Jane Smith</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-[#212531] to-transparent">
-                  <div className="flex items-center justify-between">
-                    <button className="text-xs bg-[#b7a2c9] hover:bg-[#c9b8d7] text-[#212531] font-medium px-3 py-1.5 rounded-md transition-all transform hover:scale-105 flex items-center gap-1">
-                      <Mail className="w-3 h-3" /> Send Certificates
-                    </button>
-                    <div className="text-xs text-[#c5c3c4]/70">
-                      Position: {namePosition.x}% × {namePosition.y}%
-                    </div>
-                  </div>
-                </div>
+                  <FileType className="w-6 h-6 text-[#b7a2c9]" />
+                  <span className="text-sm font-medium">Templates</span>
+                </Link>
+                <Link
+                  href="/participants"
+                  className="p-4 bg-[#4b3a70]/20 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2"
+                  title="Manage Participants"
+                >
+                  <Users className="w-6 h-6 text-[#b7a2c9]" />
+                  <span className="text-sm font-medium">Participants</span>
+                </Link>
+                <Link
+                  href="/settings"
+                  className="p-4 bg-[#4b3a70]/20 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2"
+                  title="Settings"
+                >
+                  <Settings className="w-6 h-6 text-[#b7a2c9]" />
+                  <span className="text-sm font-medium">Settings</span>
+                </Link>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            {/* Recent Activity */}
+            <motion.div
+              className="bg-[#322f42] rounded-2xl p-5 shadow-lg border border-[#4b3a70]/30"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <h2 className="text-lg font-semibold text-white mb-5">
+                Recent Activity
+              </h2>
+              <div className="space-y-4">
+                {events.slice(0, 3).map((event) => (
+                  <div
+                    key={event.id}
+                    className="flex items-start gap-3 p-3 bg-[#4b3a70]/10 rounded-lg hover:bg-[#4b3a70]/20 transition-colors"
+                  >
+                    <div className="p-2 rounded-lg bg-[#4b3a70]/20">
+                      <Calendar className="w-4 h-4 text-[#b7a2c9]" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <h3 className="text-sm font-medium text-white">{event.title}</h3>
+                        <span className="text-xs text-[#c5c3c4]/70">
+                          {new Date(event.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#c5c3c4]/70 mt-1">
+                        {event.participants.length} participants • {event.participants.filter(p => p.emailed).length} certificates sent
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </div>

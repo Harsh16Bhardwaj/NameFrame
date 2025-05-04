@@ -8,23 +8,29 @@ import ErrorState from "./components/ErrorState";
 import EventHeader from "./components/EventHeader";
 
 // Dynamic imports for code splitting
-const ParticipantsTable = dynamic(() => 
-  import("./components/ParticipantsTable"), { 
-    ssr: false, 
-    loading: () => <div className="h-64 animate-pulse bg-[#322f42]/50 rounded-2xl"></div> 
+const ParticipantsTable = dynamic(
+  () => import("./components/ParticipantsTable"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-64 animate-pulse bg-[#322f42]/50 rounded-2xl"></div>
+    ),
   }
 );
 
-const CertificateSection = dynamic(() => 
-  import("./components/CertificateSection"), { 
-    ssr: false, 
-    loading: () => <div className="h-64 animate-pulse bg-[#322f42]/50 rounded-2xl"></div> 
+const CertificateSection = dynamic(
+  () => import("./components/CertificateSection"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-64 animate-pulse bg-[#322f42]/50 rounded-2xl"></div>
+    ),
   }
 );
 
-const PreviewModal = dynamic(() => 
-  import("./components/PreviewModal"), { ssr: false }
-);
+const PreviewModal = dynamic(() => import("./components/PreviewModal"), {
+  ssr: false,
+});
 
 interface Participant {
   id: string;
@@ -50,7 +56,7 @@ interface EventDetails {
 }
 
 interface SendingStatus {
-  [participantId: string]: 'pending' | 'sending' | 'success' | 'error';
+  [participantId: string]: "pending" | "sending" | "success" | "error";
 }
 
 export default function EventDashboard() {
@@ -58,7 +64,7 @@ export default function EventDashboard() {
   const [event, setEvent] = useState<EventDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  
+
   // Position and font settings
   const [textPosition, setTextPosition] = useState({
     x: 50,
@@ -66,17 +72,18 @@ export default function EventDashboard() {
     width: 80,
     height: 15,
   });
-  
+
   const [fontSettings, setFontSettings] = useState({
     family: "Arial",
     size: 48,
-    color: "#000000"
+    color: "#000000",
   });
-  
-  const [previewParticipant, setPreviewParticipant] = useState<Participant | null>(null);
+
+  const [previewParticipant, setPreviewParticipant] =
+    useState<Participant | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  
+
   // New state to track individual email sending status
   const [sendingStatus, setSendingStatus] = useState<SendingStatus>({});
   const [emailProgress, setEmailProgress] = useState({ sent: 0, total: 0 });
@@ -94,7 +101,7 @@ export default function EventDashboard() {
         if (response.data.success) {
           const eventData = response.data.data;
           setEvent(eventData);
-          
+
           // Set position data from the database
           setTextPosition({
             x: eventData.textPositionX || 50,
@@ -102,12 +109,12 @@ export default function EventDashboard() {
             width: eventData.textWidth || 80,
             height: eventData.textHeight || 15,
           });
-          
+
           // Set font settings
           setFontSettings({
             family: eventData.fontFamily || "Arial",
             size: eventData.fontSize || 48,
-            color: eventData.fontColor || "#000000"
+            color: eventData.fontColor || "#000000",
           });
 
           setLoading(false);
@@ -130,7 +137,7 @@ export default function EventDashboard() {
       [property]: value,
     }));
   };
-  
+
   // Handle font settings change
   const handleFontChange = (property: string, value: string | number) => {
     setFontSettings((prev) => ({
@@ -142,12 +149,12 @@ export default function EventDashboard() {
   // Add a new handler for template URL changes
   const handleTemplateChange = (newTemplateUrl: string) => {
     if (!event) return;
-    
-    setEvent(prevEvent => {
+
+    setEvent((prevEvent) => {
       if (!prevEvent) return null;
       return {
         ...prevEvent,
-        templateUrl: newTemplateUrl
+        templateUrl: newTemplateUrl,
       };
     });
   };
@@ -155,7 +162,7 @@ export default function EventDashboard() {
   // Save position and font changes
   const savePositionChanges = async () => {
     if (!event) return;
-    
+
     setIsSaving(true);
     setSaveSuccess(false);
 
@@ -167,13 +174,13 @@ export default function EventDashboard() {
         textHeight: textPosition.height,
         fontFamily: fontSettings.family,
         fontSize: fontSettings.size,
-        fontColor: fontSettings.color
+        fontColor: fontSettings.color,
       });
 
       if (response.data.success) {
         // Show success message
         setSaveSuccess(true);
-        
+
         // Update the event with new positions
         setEvent((prev) => {
           if (!prev) return null;
@@ -185,10 +192,10 @@ export default function EventDashboard() {
             textHeight: textPosition.height,
             fontFamily: fontSettings.family,
             fontSize: fontSettings.size,
-            fontColor: fontSettings.color
+            fontColor: fontSettings.color,
           };
         });
-        
+
         // Hide success message after 3 seconds
         setTimeout(() => setSaveSuccess(false), 3000);
       }
@@ -204,15 +211,15 @@ export default function EventDashboard() {
     if (!event) return;
 
     // Find unsent participants
-    const unsentParticipants = event.participants.filter(p => !p.emailed);
+    const unsentParticipants = event.participants.filter((p) => !p.emailed);
     if (unsentParticipants.length === 0) return;
-    
+
     // Initialize sending status for all unsent participants
     const initialStatus: SendingStatus = {};
-    unsentParticipants.forEach(p => {
-      initialStatus[p.id] = 'pending';
+    unsentParticipants.forEach((p) => {
+      initialStatus[p.id] = "pending";
     });
-    
+
     setSendingStatus(initialStatus);
     setEmailProgress({ sent: 0, total: unsentParticipants.length });
     setIsSending(true);
@@ -220,7 +227,7 @@ export default function EventDashboard() {
     // Process participants in small batches for smoother UI updates
     const batchSize = 3;
     const participantGroups = [];
-    
+
     for (let i = 0; i < unsentParticipants.length; i += batchSize) {
       participantGroups.push(unsentParticipants.slice(i, i + batchSize));
     }
@@ -228,58 +235,74 @@ export default function EventDashboard() {
     try {
       for (const group of participantGroups) {
         // Mark current batch as "sending"
-        setSendingStatus(prev => {
-          const updated = {...prev};
-          group.forEach(p => { updated[p.id] = 'sending'; });
+        setSendingStatus((prev) => {
+          const updated = { ...prev };
+          group.forEach((p) => {
+            updated[p.id] = "sending";
+          });
           return updated;
         });
-        
-        // Process this batch
-        await Promise.all(group.map(async (participant) => {
-          try {
-            // Make individual API call for real-time updates
-            const response = await axios.post(`/api/send-email/single`, {
-              participantId: participant.id,
-              eventId: eventId,
-              subject: `Your Certificate for ${event.title}`,
-              transcript: `Dear ${participant.name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`,
-              fontFamily: fontSettings.family,
-              fontSize: fontSettings.size,
-              fontColor: fontSettings.color
-            });
 
-            // Update status based on response
-            if (response.data.success) {
-              setSendingStatus(prev => ({...prev, [participant.id]: 'success'}));
-              setEmailProgress(prev => ({...prev, sent: prev.sent + 1}));
-              
-              // Update the participant in the event state
-              setEvent(prevEvent => {
-                if (!prevEvent) return null;
-                return {
-                  ...prevEvent,
-                  participants: prevEvent.participants.map(p => 
-                    p.id === participant.id ? {...p, emailed: true} : p
-                  )
-                };
+        // Process this batch
+        await Promise.all(
+          group.map(async (participant) => {
+            try {
+              // Make individual API call for real-time updates
+              const response = await axios.post(`/api/send-email/single`, {
+                participantId: participant.id,
+                eventId: eventId,
+                subject: `Your Certificate for ${event.title}`,
+                transcript: `Dear ${participant.name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`,
+                fontFamily: fontSettings.family,
+                fontSize: fontSettings.size,
+                fontColor: fontSettings.color,
               });
-            } else {
-              setSendingStatus(prev => ({...prev, [participant.id]: 'error'}));
+
+              // Update status based on response
+              if (response.data.success) {
+                setSendingStatus((prev) => ({
+                  ...prev,
+                  [participant.id]: "success",
+                }));
+                setEmailProgress((prev) => ({ ...prev, sent: prev.sent + 1 }));
+
+                // Update the participant in the event state
+                setEvent((prevEvent) => {
+                  if (!prevEvent) return null;
+                  return {
+                    ...prevEvent,
+                    participants: prevEvent.participants.map((p) =>
+                      p.id === participant.id ? { ...p, emailed: true } : p
+                    ),
+                  };
+                });
+              } else {
+                setSendingStatus((prev) => ({
+                  ...prev,
+                  [participant.id]: "error",
+                }));
+              }
+            } catch (error) {
+              console.error(
+                `Error sending certificate to ${participant.email}:`,
+                error
+              );
+              setSendingStatus((prev) => ({
+                ...prev,
+                [participant.id]: "error",
+              }));
             }
-          } catch (error) {
-            console.error(`Error sending certificate to ${participant.email}:`, error);
-            setSendingStatus(prev => ({...prev, [participant.id]: 'error'}));
-          }
-        }));
-        
+          })
+        );
+
         // Small delay between batches to prevent overwhelming the API
-        await new Promise(resolve => setTimeout(resolve, 300));
+        await new Promise((resolve) => setTimeout(resolve, 300));
       }
     } catch (error) {
       console.error("Error in certificate sending process:", error);
     } finally {
       setIsSending(false);
-      
+
       // Refresh event data to ensure UI is in sync with backend
       try {
         const updatedEvent = await axios.get(`/api/events/${eventId}`);
@@ -295,14 +318,14 @@ export default function EventDashboard() {
   // Individual certificate sending function
   const sendSingleCertificate = async (participantId: string) => {
     if (!event) return;
-    
+
     // Find participant
-    const participant = event.participants.find(p => p.id === participantId);
+    const participant = event.participants.find((p) => p.id === participantId);
     if (!participant || participant.emailed) return;
-    
+
     // Update status
-    setSendingStatus(prev => ({...prev, [participantId]: 'sending'}));
-    
+    setSendingStatus((prev) => ({ ...prev, [participantId]: "sending" }));
+
     try {
       const response = await axios.post(`/api/send-email/single`, {
         participantId,
@@ -311,28 +334,28 @@ export default function EventDashboard() {
         transcript: `Dear ${participant.name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`,
         fontFamily: fontSettings.family,
         fontSize: fontSettings.size,
-        fontColor: fontSettings.color
+        fontColor: fontSettings.color,
       });
-      
+
       if (response.data.success) {
-        setSendingStatus(prev => ({...prev, [participantId]: 'success'}));
-        
+        setSendingStatus((prev) => ({ ...prev, [participantId]: "success" }));
+
         // Update the participant in the event state
-        setEvent(prevEvent => {
+        setEvent((prevEvent) => {
           if (!prevEvent) return null;
           return {
             ...prevEvent,
-            participants: prevEvent.participants.map(p => 
-              p.id === participantId ? {...p, emailed: true} : p
-            )
+            participants: prevEvent.participants.map((p) =>
+              p.id === participantId ? { ...p, emailed: true } : p
+            ),
           };
         });
       } else {
-        setSendingStatus(prev => ({...prev, [participantId]: 'error'}));
+        setSendingStatus((prev) => ({ ...prev, [participantId]: "error" }));
       }
     } catch (error) {
       console.error(`Error sending certificate:`, error);
-      setSendingStatus(prev => ({...prev, [participantId]: 'error'}));
+      setSendingStatus((prev) => ({ ...prev, [participantId]: "error" }));
     }
   };
 
@@ -358,16 +381,29 @@ export default function EventDashboard() {
         {/* Top Section: Event Overview */}
         <EventHeader event={event} />
 
-        {/* Middle Section: Participants Table */}
-        <ParticipantsTable
-          participants={event.participants}
-          sendCertificates={sendCertificates}
-          sendSingleCertificate={sendSingleCertificate}
-          isSending={isSending}
-          sendingStatus={sendingStatus}
-          emailProgress={emailProgress}
-          onShowPreview={handleShowPreview}
-        />
+        
+        {/* Dummy Name Input */}
+        <div className="mb-4">
+          <label
+            htmlFor="dummyName"
+            className="block text-sm font-medium text-[#c5c3c4]"
+          >
+            Preview Name
+          </label>
+          <div className="mt-1">
+            <input
+              type="text"
+              id="dummyName"
+              value={dummyName}
+              onChange={(e) => setDummyName(e.target.value)}
+              className="w-full rounded-md border border-[#4b3a70]/30 bg-[#272936] px-3 py-2 text-white focus:border-[#b7a2c9] focus:outline-none focus:ring-1 focus:ring-[#b7a2c9]"
+              placeholder="Enter a name for preview"
+            />
+          </div>
+          <p className="mt-1 text-xs text-[#c5c3c4]/70">
+            This name will be shown on the certificate preview.
+          </p>
+        </div>
 
         {/* Bottom Section: Certificate Preview & Customization */}
         <CertificateSection
@@ -386,38 +422,27 @@ export default function EventDashboard() {
             onClick={savePositionChanges}
             disabled={isSaving}
             className={`rounded-md bg-[#4b3a70] px-4 py-2 text-white transition-all hover:bg-[#5d4b82] ${
-              isSaving ? 'opacity-50 cursor-not-allowed' : ''
+              isSaving ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {isSaving ? 'Saving...' : 'Save Position Settings'}
+            {isSaving ? "Saving..." : "Save Position Settings"}
           </button>
-          
+
           {saveSuccess && (
             <span className="ml-3 text-green-400 text-sm">
               Settings saved successfully!
             </span>
           )}
         </div>
-
-        {/* Dummy Name Input */}
-        <div className="mb-4">
-          <label htmlFor="dummyName" className="block text-sm font-medium text-[#c5c3c4]">
-            Preview Name
-          </label>
-          <div className="mt-1">
-            <input
-              type="text"
-              id="dummyName"
-              value={dummyName}
-              onChange={(e) => setDummyName(e.target.value)}
-              className="w-full rounded-md border border-[#4b3a70]/30 bg-[#272936] px-3 py-2 text-white focus:border-[#b7a2c9] focus:outline-none focus:ring-1 focus:ring-[#b7a2c9]"
-              placeholder="Enter a name for preview"
-            />
-          </div>
-          <p className="mt-1 text-xs text-[#c5c3c4]/70">
-            This name will be shown on the certificate preview.
-          </p>
-        </div>
+        <ParticipantsTable
+          participants={event.participants}
+          sendCertificates={sendCertificates}
+          sendSingleCertificate={sendSingleCertificate}
+          isSending={isSending}
+          sendingStatus={sendingStatus}
+          emailProgress={emailProgress}
+          onShowPreview={handleShowPreview}
+        />
       </div>
 
       {/* Certificate Preview Modal */}
