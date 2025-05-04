@@ -128,6 +128,7 @@ const themeConfig = {
     gradient: {
       text: "bg-gradient-to-r from-[#b7a2c9] to-[#8b7ba1]",
       button: "bg-gradient-to-r from-[#b7a2c9] to-[#8b7ba1]",
+      idk: "bg-gradient-to-r from-neutral-900 to-neutral-800",
     },
   },
   light: {
@@ -877,8 +878,8 @@ export default function Dashboard() {
               </h2>
               <div className="grid grid-cols-2 gap-4">
                 <Link
-                  href="/events/new"
-                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.button} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
+                  href="/create"
+                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.idk} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
                   title="Create a New Event"
                 >
                   <Calendar className="w-6 h-6 text-[#b7a2c9]" />
@@ -886,7 +887,7 @@ export default function Dashboard() {
                 </Link>
                 <Link
                   href="/templates"
-                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.button} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
+                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.idk} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
                   title="Manage Templates"
                 >
                   <FileType className="w-6 h-6 text-[#b7a2c9]" />
@@ -894,19 +895,19 @@ export default function Dashboard() {
                 </Link>
                 <Link
                   href="/participants"
-                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.button} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
+                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.idk} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
                   title="Manage Participants"
                 >
                   <Users className="w-6 h-6 text-[#b7a2c9]" />
                   <span className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-sm font-medium`}>Participants</span>
                 </Link>
                 <Link
-                  href="/settings"
-                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.button} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
-                  title="Settings"
+                  href="/contact"
+                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.idk} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
+                  title="Help"
                 >
                   <Settings className="w-6 h-6 text-[#b7a2c9]" />
-                  <span className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-sm font-medium`}>Settings</span>
+                  <span className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-sm font-medium`}>Help</span>
                 </Link>
               </div>
             </motion.div>
