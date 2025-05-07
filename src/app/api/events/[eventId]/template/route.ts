@@ -89,3 +89,89 @@ export async function PATCH(
     await prisma.$disconnect();
   }
 }
+
+// Handle GET request to fetch template settings
+export async function GET(
+  request: Request,
+  { params }: { params: { eventId: string } }
+) {
+  try {
+    // Authenticate the user
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Get the event ID from the URL params
+    const { eventId } = params;
+
+    // Find the event and include its template
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      select: {
+        userId: true,
+        template: {
+          select: {
+            textPositionX: true,
+            textPositionY: true,
+            textWidth: true,
+            textHeight: true,
+            fontFamily: true,
+            fontSize: true,
+            fontColor: true,
+          },
+        },
+      },
+    });
+
+    if (!event) {
+      return NextResponse.json(
+        { success: false, error: "Event not found" },
+        { status: 404 }
+      );
+    }
+
+    if (event.userId !== userId) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    if (!event.template) {
+      return NextResponse.json(
+        { success: false, error: "Template not found" },
+        { status: 404 }
+      );
+    }
+
+    // Return the template settings
+    return NextResponse.json({
+      success: true,
+      textPosition: {
+        x: event.template.textPositionX,
+        y: event.template.textPositionY,
+        width: event.template.textWidth,
+        height: event.template.textHeight,
+      },
+      fontSettings: {
+        family: event.template.fontFamily,
+        size: event.template.fontSize,
+        color: event.template.fontColor,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching template settings:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch template settings" },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+
