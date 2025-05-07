@@ -6,7 +6,7 @@ import { MdErrorOutline } from "react-icons/md";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { Manrope } from "next/font/google";
-import { Loader2, Move } from "lucide-react";
+import { Calendar, Loader2, Move, Package } from "lucide-react";
 import { SignIn } from "@clerk/nextjs";
 import ParticipantImport from "@/components/ParticipantImport";
 import axios from "axios";
@@ -16,7 +16,6 @@ import { useRouter } from "next/navigation";
 interface FormData {
   title: string;
   certificateTemplate: FileList;
-
 }
 
 const manrope = Manrope({
@@ -42,10 +41,17 @@ const CertificateForm: React.FC = () => {
   const [imgUploaded, setImageUploaded] = useState<boolean>(false);
   const [error1, setError1] = useState<boolean>(false);
   const [showUploadError, setShowUploadError] = useState<boolean>(false);
-  const [participantsImported, setParticipantsImported] = useState<boolean>(false);
+  const [eventCreated, setEventCreated] = useState<boolean>(false);
+  const [participantsImported, setParticipantsImported] =
+    useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [textPosition, setTextPosition] = useState({ x: 50, y: 50, width: 80, height: 15 });
+  const [textPosition, setTextPosition] = useState({
+    x: 50,
+    y: 50,
+    width: 80,
+    height: 15,
+  });
   const previewRef = useRef<HTMLDivElement>(null);
 
   const certificateFile = watch("certificateTemplate");
@@ -71,7 +77,7 @@ const CertificateForm: React.FC = () => {
       draw: () => void;
       update: () => void;
     }[] = [];
-    const particleCount = 100;
+    const particleCount = 10;
 
     class Particle {
       x: number = 0;
@@ -199,13 +205,19 @@ const CertificateForm: React.FC = () => {
     if (!isDragging || !previewRef.current) return;
 
     const previewRect = previewRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.min(100, ((e.clientX - dragStart.x) / previewRect.width) * 100));
-    const y = Math.max(0, Math.min(100, ((e.clientY - dragStart.y) / previewRect.height) * 100));
+    const x = Math.max(
+      0,
+      Math.min(100, ((e.clientX - dragStart.x) / previewRect.width) * 100)
+    );
+    const y = Math.max(
+      0,
+      Math.min(100, ((e.clientY - dragStart.y) / previewRect.height) * 100)
+    );
 
-    setTextPosition(prev => ({
+    setTextPosition((prev) => ({
       ...prev,
       x,
-      y
+      y,
     }));
   };
 
@@ -233,10 +245,10 @@ const CertificateForm: React.FC = () => {
       const response = await axios.post("/api/events", {
         title: data.title,
         templateUrl: uploadedTemplateUrl,
-        
       });
       const createdEvent = response.data.data;
       setEventId(createdEvent.id);
+      setEventCreated(true);
       console.log("Event created successfully:", createdEvent);
     } catch (error) {
       console.error("Error creating event:", error);
@@ -250,19 +262,28 @@ const CertificateForm: React.FC = () => {
     }
   };
 
-  return (<>
-  
-    <div className={`${manrope.variable} font-sans min-h-screen bg-black relative overflow-hidden flex items-center justify-center p-6 pt-[10rem]`}>
-      <canvas ref={canvasRef} className="absolute  inset-0 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-purple-900/30 to-pink-900/30 animate-holo-shift" />
-        <div className="relative -mt-10 z-10 w-full max-w-6xl bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-2xl rounded-2xl shadow-2xl p-8 border border-white/10">
-          <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-pink-500 mb-10 tracking-tight animate-glow">
+  return (
+    <>
+      <div
+        className={`${manrope.variable} font-sans min-h-screen bg-black relative overflow-hidden flex items-center justify-center p-6 pt-[10rem]`}
+      >
+        <canvas
+          ref={canvasRef}
+          className="absolute  inset-0 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-950/80 via-purple-900/30 to-pink-900/20 animate-holo-shift" />
+        <div className="relative -mt-10 z-10 w-full max-w-6xl bg-gradient-to-br from-gray-900/20  to-black/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-gray-400/60">
+          <h2 className="text-4xl text-center underline-offset-8 unerline- decoration-white decoration-1 font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-neutral-300 mb-10 tracking-tight animate-glow">
             Craft a Certificate Session
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div>
-                <label className="block text-blue-200 mb-2 font-semibold" htmlFor="title">
+                <label
+                  className="flex gap-x-2 text-lg text-blue-200 mb-2 font-semibold"
+                  htmlFor="title"
+                >
+                  <Calendar></Calendar>
                   Event Title
                 </label>
                 <input
@@ -280,7 +301,11 @@ const CertificateForm: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-blue-200 mb-2 font-semibold" htmlFor="certificateTemplate">
+                <label
+                  className=" text-blue-200 flex gap-x-2 mb-2 font-semibold"
+                  htmlFor="certificateTemplate"
+                >
+                  <Package></Package>
                   Certificate Template (PNG/JPG)
                 </label>
                 <div className="flex gap-x-4 items-center">
@@ -294,8 +319,9 @@ const CertificateForm: React.FC = () => {
                       validate: {
                         fileType: (files) =>
                           files && files[0]
-                            ? ["image/png", "image/jpeg"].includes(files[0].type) ||
-                              "Only PNG or JPG files are allowed"
+                            ? ["image/png", "image/jpeg"].includes(
+                                files[0].type
+                              ) || "Only PNG or JPG files are allowed"
                             : true,
                       },
                     })}
@@ -310,7 +336,7 @@ const CertificateForm: React.FC = () => {
                   </label>
                   <button
                     onClick={handleUpload}
-                    className="p-3 bg-gradient-to-r cursor-pointer from-blue-600 to-pink-600 rounded-full text-white transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-110 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-3 bg-gradient-to-br  ease-in-out hover:ease-in-out duration-150 cursor-pointer from-blue-600 to-purple-900 rounded-full text-white transition-all duration-300 hover:from-blue-900 hover:to-pruple-950 hover:scale-110 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isUploading}
                   >
                     <FaCloudUploadAlt className="text-xl" />
@@ -348,19 +374,31 @@ const CertificateForm: React.FC = () => {
               <div>
                 <button
                   type="submit"
-                  onClick={participantsImported ? handleGoToDashboard : handleSubmit(onSubmit)}
+                  onClick={
+                    participantsImported
+                      ? handleGoToDashboard
+                      : handleSubmit(onSubmit)
+                  }
                   disabled={isSubmitting || isUploading}
-                  className="w-full py-3 bg-gradient-to-r cursor-pointer from-blue-600 to-pink-600 text-white rounded-lg font-semibold transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-105 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-2/5 py-3 px-2 text-xs md:text-lg bg-gradient-to-r cursor-pointer from-[#136a8a]  to-blue-950 text-white rounded-lg font-semibold transition-all duration-300 hover:from-[#0c475c] hover:to-[#06202a] hover:scale-105 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {participantsImported ? "Go to Event Dashboard" : isSubmitting ? "Creating Event..." : "Create Event"}
+                  {eventCreated
+                    ? participantsImported
+                      ? "Go to Event"
+                      : "Import Participants"
+                    : isSubmitting
+                    ? "Creating Event..."
+                    : "Create Event"}
                 </button>
               </div>
             </div>
 
             <div className="bg-[#1f1d36] rounded-xl p-6 border border-gray-800">
-              <h3 className="text-lg font-semibold text-white mb-4">Template Preview</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">
+                Template Preview
+              </h3>
               {templatePreview ? (
-                <div 
+                <div
                   ref={previewRef}
                   className="relative w-full aspect-[1.414/1] bg-white rounded-lg overflow-hidden"
                   onMouseMove={handleMouseMove}
@@ -370,7 +408,6 @@ const CertificateForm: React.FC = () => {
                     alt="Certificate template"
                     className="w-full h-full object-contain"
                   />
-                  
                 </div>
               ) : (
                 <div className="w-full aspect-[1.414/1] bg-gray-800 rounded-lg flex items-center justify-center">
@@ -384,58 +421,59 @@ const CertificateForm: React.FC = () => {
           </div>
         </div>
 
-      {error1 && (
-        <div className="fixed z-50 inset-0 flex justify-center items-center bg-black/80 backdrop-blur-md animate-fadeIn">
-          <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5}>
-            <div className="w-full max-w-md bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-2xl p-6 rounded-lg shadow-2xl border border-blue-500/30">
-              <div className="flex items-center mb-4 border-b border-blue-500/50">
-                <AiOutlineExclamationCircle className="text-pink-500 text-3xl mr-3" />
-                <h2 className="text-xl text-white font-semibold">
-                  Template Required
-                </h2>
+        {error1 && (
+          <div className="fixed z-50 inset-0 flex justify-center items-center bg-black/80 backdrop-blur-md animate-fadeIn">
+            <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5}>
+              <div className="w-full max-w-md bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-2xl p-6 rounded-lg shadow-2xl border border-blue-500/30">
+                <div className="flex items-center mb-4 border-b border-blue-500/50">
+                  <AiOutlineExclamationCircle className="text-pink-500 text-3xl mr-3" />
+                  <h2 className="text-xl text-white font-semibold">
+                    Template Required
+                  </h2>
+                </div>
+                <p className="text-blue-200 mb-4">
+                  Please upload a certificate template before proceeding.
+                </p>
+                <div className="flex justify-end">
+                  <button
+                    className="px-6 py-2 bg-gradient-to-r from-blue-600 to-pink-600 text-white rounded-md transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-105 hover:shadow-glow"
+                    onClick={() => setError1(false)}
+                  >
+                    Understood
+                  </button>
+                </div>
               </div>
-              <p className="text-blue-200 mb-4">
-                Please upload a certificate template before proceeding.
-              </p>
-              <div className="flex justify-end">
-                <button
-                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-pink-600 text-white rounded-md transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-105 hover:shadow-glow"
-                  onClick={() => setError1(false)}
-                >
-                  Understood
-                </button>
-              </div>
-            </div>
-          </Tilt>
-        </div>
-      )}
+            </Tilt>
+          </div>
+        )}
 
-      {showUploadError && (
-        <div className="fixed z-50 inset-0 flex justify-center items-center bg-black/80 backdrop-blur-md animate-fadeIn">
-          <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5}>
-            <div className="w-full max-w-md bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-2xl p-6 rounded-lg shadow-2xl border border-blue-500/30">
-              <div className="flex items-center mb-4 border-b border-blue-500/50">
-                <AiOutlineExclamationCircle className="text-pink-500 text-3xl mr-3" />
-                <h2 className="text-xl text-white font-semibold">
-                  No File Selected
-                </h2>
+        {showUploadError && (
+          <div className="fixed z-50 inset-0 flex justify-center items-center bg-black/80 backdrop-blur-md animate-fadeIn">
+            <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5}>
+              <div className="w-full max-w-md bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-2xl p-6 rounded-lg shadow-2xl border border-blue-500/30">
+                <div className="flex items-center mb-4 border-b border-blue-500/50">
+                  <AiOutlineExclamationCircle className="text-pink-500 text-3xl mr-3" />
+                  <h2 className="text-xl text-white font-semibold">
+                    No File Selected
+                  </h2>
+                </div>
+                <p className="text-blue-200 mb-4">
+                  Please select a certificate template file before uploading.
+                </p>
+                <div className="flex justify-end">
+                  <button
+                    className="px-6 py-2 bg-gradient-to-r from-blue-600 to-pink-600 text-white rounded-md transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-105 hover:shadow-glow"
+                    onClick={() => setShowUploadError(false)}
+                  >
+                    Okay
+                  </button>
+                </div>
               </div>
-              <p className="text-blue-200 mb-4">
-                Please select a certificate template file before uploading.
-              </p>
-              <div className="flex justify-end">
-                <button
-                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-pink-600 text-white rounded-md transition-all duration-300 hover:from-blue-700 hover:to-pink-700 hover:scale-105 hover:shadow-glow"
-                  onClick={() => setShowUploadError(false)}
-                >
-                  Okay
-                </button>
-              </div>
-            </div>
-          </Tilt>
-        </div>
-      )}
-    </div></>
+            </Tilt>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
@@ -443,27 +481,58 @@ export default CertificateForm;
 
 <style jsx global>{`
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   @keyframes slideIn {
-    from { opacity: 0; transform: translateX(-30px); }
-    to { opacity: 1; transform: translateX(0); }
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
   @keyframes glow {
-    0% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
-    50% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(59, 130, 246, 0.5); }
-    100% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+    0% {
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    50% {
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+        0 0 30px rgba(59, 130, 246, 0.5);
+    }
+    100% {
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
   }
   @keyframes holoShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
   @keyframes pulseBorder {
-    0% { border-color: rgba(59, 130, 246, 0.5); }
-    50% { border-color: rgba(59, 130, 246, 1); }
-    100% { border-color: rgba(59, 130, 246, 0.5); }
+    0% {
+      border-color: rgba(59, 130, 246, 0.5);
+    }
+    50% {
+      border-color: rgba(59, 130, 246, 1);
+    }
+    100% {
+      border-color: rgba(59, 130, 246, 0.5);
+    }
   }
   .animate-fadeIn {
     animation: fadeIn 0.5s ease-out;
@@ -482,9 +551,11 @@ export default CertificateForm;
     animation: pulseBorder 2s infinite ease-in-out;
   }
   .shadow-glow {
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 30px rgba(236, 72, 153, 0.3);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5),
+      0 0 30px rgba(236, 72, 153, 0.3);
   }
   .hover\:shadow-glow:hover {
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 30px rgba(236, 72, 153, 0.3);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5),
+      0 0 30px rgba(236, 72, 153, 0.3);
   }
-`}</style>
+`}</style>;
