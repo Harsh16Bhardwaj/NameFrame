@@ -245,7 +245,7 @@ export default function CertificatePreview({
   }, [templateUrl]);
   
   return (
-    <div className="lg:col-span-3 overflow-hidden rounded-2xl bg-[#322f42]/90 backdrop-blur-md shadow-lg border border-[#4b3a70]/30">
+    <div className="lg:col-span-3 overflow-hidden rounded-2xl bg-[#322f42]/40 backdrop-blur-md shadow-lg border border-[#4b3a70]/30">
       <div className="p-6">
         {/* Status indicator while loading template */}
         {loadingTemplates && (
@@ -261,7 +261,7 @@ export default function CertificatePreview({
           <div className="flex gap-2">
             <button 
               onClick={() => setShowUploadModal(true)}
-              className="flex items-center gap-1 rounded-lg border border-[#b7a2c9]/30 bg-[#4b3a70]/30 px-3 py-1 text-xs font-medium text-[#b7a2c9] transition-all hover:bg-[#4b3a70]/50"
+              className="flex cursor-pointer items-center gap-1 rounded-lg border border-[#b7a2c9]/30 bg-[#4b3a70]/30 px-3 py-1 text-xs font-medium text-[#b7a2c9] transition-all hover:bg-[#4b3a70]/50"
             >
               <FileUp size={14} />
               <span>Update Template</span>

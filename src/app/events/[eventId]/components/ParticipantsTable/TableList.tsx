@@ -1,6 +1,19 @@
+'use client';
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, Download, Mail, ArrowUpDown, CheckCircle, XCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Eye,
+  Download,
+  Mail,
+  ArrowUpDown,
+  CheckCircle,
+  XCircle,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+  Send
+} from 'lucide-react';
 import axios from 'axios';
 
 interface Participant {
@@ -22,60 +35,66 @@ interface TableListProps {
   onSendCertificate: (participantId: string) => Promise<void>;
   isSending: boolean;
   eventId: string;
-  itemsPerPage?: number; // Optional prop for customizing page size
+  itemsPerPage?: number;
 }
 
-export default function TableList({ 
-  participants, 
-  onShowPreview, 
+export default function TableList({
+  participants,
+  onShowPreview,
   sendingStatus,
   onSendCertificate,
   isSending,
   eventId,
-  itemsPerPage = 10 // Default to 10 items per page
+  itemsPerPage = 10
 }: TableListProps) {
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  
-  // Calculate total pages
+
   const totalPages = Math.ceil(participants.length / itemsPerPage);
-  
-  // Get current page items
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentParticipants = participants.slice(indexOfFirstItem, indexOfLastItem);
-  
-  // Page change handlers
-  const goToNextPage = () => {
-    setCurrentPage(page => Math.min(page + 1, totalPages));
-  };
-  
-  const goToPrevPage = () => {
-    setCurrentPage(page => Math.max(page - 1, 1));
-  };
-  
+
+  const goToNextPage = () => setCurrentPage((page) => Math.min(page + 1, totalPages));
+  const goToPrevPage = () => setCurrentPage((page) => Math.max(page - 1, 1));
+
   const handleDownloadCertificate = async (participant: Participant) => {
     try {
-      // If certificate URL exists, download directly
       if (participant.certificateUrl) {
-        window.open(participant.certificateUrl, '_blank');
+        const link = document.createElement('a');
+        link.href = participant.certificateUrl;
+        link.setAttribute('download', `${participant.name}_certificate.png`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         return;
       }
-      
-      // Otherwise generate and download
-      const response = await axios.get(`/api/events/${eventId}/certificate/${participant.id}`, {
-        responseType: 'blob'
-      });
-      
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const response = await axios.get(
+        `/api/events/${eventId}/certificate/${participant.id}`,
+        {
+          responseType: 'blob'
+        }
+      );
+
+      const blob = new Blob([response.data], { type: 'image/png' });
+      const url = window.URL.createObjectURL(blob);
+
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `${participant.name}_certificate.png`);
+
+      const disposition = response.headers['content-disposition'];
+      const match = disposition?.match(/filename="?([^"]+)"?/);
+      const filename = match?.[1] || `${participant.name}_certificate.png`;
+
+      link.setAttribute('download', filename);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Error downloading certificate:", error);
+      console.error('Error downloading certificate:', error);
+      alert('Failed to download certificate. Please try again.');
     }
   };
 
@@ -105,12 +124,12 @@ export default function TableList({
             <th className="pb-3 text-right text-sm font-medium text-[#c5c3c4]/70">Actions</th>
           </tr>
         </thead>
-        
+
         <tbody>
           <AnimatePresence mode="wait">
             {currentParticipants.map((participant, index) => {
               const status = sendingStatus[participant.id];
-              
+
               return (
                 <motion.tr
                   key={participant.id}
@@ -119,11 +138,13 @@ export default function TableList({
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2, delay: index * 0.03 }}
                   className={`group border-b border-[#4b3a70]/20 hover:bg-[#3a3c4a]/50 transition-colors ${
-                    index % 2 === 0 ? "bg-[#272936]/50" : "bg-transparent"
+                    index % 2 === 0 ? 'bg-[#272936]/50' : 'bg-transparent'
                   }`}
                 >
                   <td className="py-3 pl-4 pr-2">
-                    <div className="font-medium text-white group-hover:text-[#b7a2c9]">{participant.name}</div>
+                    <div className="font-medium text-white group-hover:text-[#b7a2c9]">
+                      {participant.name}
+                    </div>
                   </td>
                   <td className="py-3 px-2 text-sm text-[#c5c3c4]/80">{participant.email}</td>
                   <td className="py-3 px-2">
@@ -158,7 +179,7 @@ export default function TableList({
                       >
                         <Eye size={16} />
                       </button>
-                      
+
                       <button
                         onClick={() => handleDownloadCertificate(participant)}
                         className="p-1.5 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors"
@@ -166,7 +187,7 @@ export default function TableList({
                       >
                         <Download size={16} />
                       </button>
-                      
+
                       {!participant.emailed && status !== 'sending' && (
                         <button
                           onClick={() => onSendCertificate(participant.id)}
@@ -176,7 +197,7 @@ export default function TableList({
                           }`}
                           title="Send Email"
                         >
-                          <Mail size={16} />
+                          <Send size={16} />
                         </button>
                       )}
                     </div>
@@ -185,7 +206,7 @@ export default function TableList({
               );
             })}
           </AnimatePresence>
-          
+
           {currentParticipants.length === 0 && (
             <tr>
               <td colSpan={4} className="py-8 text-center text-[#c5c3c4]/60">
@@ -195,18 +216,17 @@ export default function TableList({
           )}
         </tbody>
       </table>
-      
-      {/* Pagination Controls */}
+
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-6 px-2">
           <div className="text-sm text-[#c5c3c4]/70">
-            Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{" "}
+            Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{' '}
             <span className="font-medium">
               {Math.min(indexOfLastItem, participants.length)}
-            </span>{" "}
+            </span>{' '}
             of <span className="font-medium">{participants.length}</span> participants
           </div>
-          
+
           <div className="flex gap-2 items-center">
             <button
               onClick={goToPrevPage}
@@ -218,11 +238,11 @@ export default function TableList({
             >
               <ChevronLeft size={18} />
             </button>
-            
+
             <div className="text-[#c5c3c4] font-medium px-2">
               {currentPage} / {totalPages}
             </div>
-            
+
             <button
               onClick={goToNextPage}
               disabled={currentPage === totalPages}

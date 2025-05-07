@@ -1,7 +1,8 @@
-import React from 'react';
-import Image from 'next/image';
+'use client';
+
+import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { X, Download, Mail } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 
 interface PreviewModalProps {
   participant: {
@@ -31,12 +32,55 @@ export default function PreviewModal({
   fontSettings, 
   onClose 
 }: PreviewModalProps) {
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  const handleDownload = () => {
+    const image = imageRef.current;
+    if (!image) return;
+
+    // Wait until image is fully loaded
+    if (!image.complete) {
+      image.onload = () => handleDownload();
+      return;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Draw the certificate background
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    // Apply font
+    ctx.font = `${fontSettings.size}px ${fontSettings.family}, Arial, sans-serif`;
+    ctx.fillStyle = fontSettings.color;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Calculate absolute position
+    const x = (textPosition.x / 100) * canvas.width;
+    const y = (textPosition.y / 100) * canvas.height;
+    const maxWidth = (textPosition.width / 100) * canvas.width;
+
+    // Draw participant name
+    ctx.fillText(participant.name, x, y, maxWidth);
+
+    // Create download link
+    const link = document.createElement('a');
+    link.download = `${participant.name}-certificate.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 p-4 flex items-center justify-center bg-black/50 backdrop-blur-xs"
     >
       <motion.div
         initial={{ scale: 0.95 }}
@@ -58,21 +102,21 @@ export default function PreviewModal({
             Certificate Preview for {participant.name}
           </h3>
           
-          <div className="relative rounded-lg overflow-hidden border border-[#4b3a70]/30">
+          <div className="relative rounded-lg overflow-hidden border border-[#4b3a70]/30 bg-white">
             <div className="aspect-[1.414/1] w-full relative">
-              {/* Certificate Image */}
+              {/* Image for canvas rendering */}
               {templateUrl && (
-                <Image 
+                <img
+                  ref={imageRef}
                   src={templateUrl}
+                  crossOrigin="anonymous"
                   alt="Certificate preview"
-                  fill
+                  style={{ width: '100%', height: 'auto', display: 'block' }}
                   className="object-contain"
-                  sizes="(max-width: 768px) 100vw, 80vw"
-                  priority={false}
                 />
               )}
-              
-              {/* Name Overlay */}
+
+              {/* Name overlay for preview */}
               <div 
                 className="absolute flex items-center justify-center pointer-events-none"
                 style={{
@@ -87,7 +131,8 @@ export default function PreviewModal({
                   fontFamily: fontSettings.family,
                   fontSize: `${fontSettings.size}px`,
                   color: fontSettings.color,
-                  textAlign: 'center'
+                  textAlign: 'center',
+                  whiteSpace: 'nowrap'
                 }}>
                   {participant.name}
                 </span>
@@ -103,17 +148,13 @@ export default function PreviewModal({
               Close
             </button>
             
-            <button className="flex items-center gap-2 rounded-lg bg-[#b7a2c9] px-5 py-2 text-sm font-medium text-[#212531] transition-all hover:bg-[#c9b8d7]">
+            <button 
+              onClick={handleDownload}
+              className="flex items-center gap-2 rounded-lg bg-[#b7a2c9] px-5 py-2 text-sm font-medium text-[#212531] transition-all hover:bg-[#c9b8d7]"
+            >
               <Download size={16} />
               <span>Download</span>
             </button>
-            
-            {!participant.emailed && (
-              <button className="flex items-center gap-2 rounded-lg bg-[#4b3a70] px-5 py-2 text-sm font-medium text-white transition-all hover:bg-[#5d4b82]">
-                <Mail size={16} />
-                <span>Send Email</span>
-              </button>
-            )}
           </div>
         </div>
       </motion.div>
