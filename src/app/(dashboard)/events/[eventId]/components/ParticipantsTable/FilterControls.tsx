@@ -37,10 +37,6 @@ export default function FilterControls({ activeFilter, onFilterChange }: FilterC
         </button>
       </div>
       
-      <button className="flex items-center gap-1 rounded-lg border border-[#4b3a70]/30 bg-[#272936] px-3 py-1.5 text-xs text-[#c5c3c4]/80">
-        <Filter size={12} />
-        <span>More Filters</span>
-      </button>
     </div>
   );
 }
