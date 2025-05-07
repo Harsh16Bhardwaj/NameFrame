@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import { Resend } from "resend";
 import { v2 as cloudinary } from "cloudinary";
 import { generateCertificateEmail } from "../emailTemplate";
+import { extractPublicId } from 'cloudinary-build-url';
 
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -72,11 +73,13 @@ export async function POST(req: Request) {
 
     // Extract public ID from the template URL
     const templateUrl = event.template.backgroundUrl;
-    const publicIdMatch = templateUrl.match(/\/v\d+\/([^/]+)\.\w+$/);
-    const publicId = publicIdMatch
-      ? publicIdMatch[1]
-      : "certificate_templates/default";
-
+    const publicId = extractPublicId(templateUrl);
+    if (!publicId) {
+      return NextResponse.json(
+        { success: false, error: "Invalid template URL" },
+        { status: 400 }
+      );
+    }
     // Use template settings from DB for Cloudinary transformations
     const certificateUrl = cloudinary.url(publicId, {
       transformation: [
@@ -88,8 +91,8 @@ export async function POST(req: Request) {
             text: participant.name,
           },
           color: event.template.fontColor || "#000000",
-          width: event.template.textWidth || 800,
-          height: event.template.textHeight || 150,
+          width: event.template.textWidth*10 || 800,
+          height: event.template.textHeight*10 || 150,
           gravity: "center",
           y: typeof event.template.textPositionY === "number"
             ? Math.round((event.template.textPositionY - 50) * 10)
@@ -98,7 +101,7 @@ export async function POST(req: Request) {
             ? Math.round((event.template.textPositionX - 50) * 10)
             : 0,
         },
-      ],
+      ],  
       format: "png",
       quality: "auto:best",
     });
@@ -161,7 +164,7 @@ export async function POST(req: Request) {
       return NextResponse.json({
         success: true,
         message: `Email sent successfully to ${participant.email}`,
-        emailId: emailResult.id,
+        emailId: emailResult,
       });
     } catch (emailError) {
       console.error("Error sending email:", emailError);

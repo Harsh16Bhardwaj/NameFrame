@@ -7,9 +7,12 @@ const prisma = new PrismaClient();
 // Handle PATCH request to update template settings
 export async function PATCH(
   request: Request,
-  { params }: { params: { eventId: string } }
+  context: { params: Promise<{ eventId: string }> }
 ) {
   try {
+    const { params } = context;
+    const { eventId } = await params;
+
     // Authenticate the user
     const { userId } = await auth();
     if (!userId) {
@@ -18,9 +21,6 @@ export async function PATCH(
         { status: 401 }
       );
     }
-
-    // Get the event ID from the URL params
-    const { eventId } = params;
 
     // Parse the body of the request
     const {
@@ -93,9 +93,12 @@ export async function PATCH(
 // Handle GET request to fetch template settings
 export async function GET(
   request: Request,
-  { params }: { params: { eventId: string } }
+  context: { params: Promise<{ eventId: string }> }
 ) {
   try {
+    const { params } = context;
+    const { eventId } = await params;
+
     // Authenticate the user
     const { userId } = await auth();
     if (!userId) {
@@ -104,9 +107,6 @@ export async function GET(
         { status: 401 }
       );
     }
-
-    // Get the event ID from the URL params
-    const { eventId } = params;
 
     // Find the event and include its template
     const event = await prisma.event.findUnique({
