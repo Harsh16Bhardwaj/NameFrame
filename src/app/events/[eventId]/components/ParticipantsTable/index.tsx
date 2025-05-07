@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Package, User2, Plus, Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Package, User2, Plus, Send, Loader2, CheckCircle, AlertCircle, User } from 'lucide-react';
 import ParticipantSearch from './ParticipantSearch';
 import FilterControls from './FilterControls';
 import TableList from './TableList';
@@ -80,10 +80,10 @@ export default function ParticipantsTable({
   );
 
   return (
-    <div className="mb-8 overflow-hidden rounded-2xl bg-[#322f42]/90 backdrop-blur-md shadow-lg border border-[#4b3a70]/30">
+    <div className="mb-8 overflow-hidden rounded-2xl bg-[#322f42]/30 backdrop-blur-md shadow-lg border border-[#4b3a70]/30">
       <div className="p-6">
         <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-          <h2 className="text-2xl font-semibold text-white">Participants</h2>
+          <h2 className="text-4xl  flex justify-center items-center font-bold gap-x-4 text-[#ae98c0]"> <div className='border-2 border-purple-300 rounded-full p-1 text-xs'><User/></div> Participants</h2>
           
           {/* Action buttons */}
           <div className="flex flex-wrap gap-3">
@@ -116,23 +116,23 @@ export default function ParticipantsTable({
                 whileTap={{ scale: 0.97 }}
                 onClick={sendCertificates}
                 disabled={unsentCount === 0}
-                className={`flex items-center gap-2 rounded-lg bg-[#b7a2c9] px-4 py-2 text-sm font-medium text-[#212531] transition-all hover:bg-[#c9b8d7] disabled:opacity-50 disabled:cursor-not-allowed`}
+                className={`flex items-center gap-2 rounded-lg bg-[#0c8534] px-4 py-2 text-sm font-medium text-[#d8d8da] cursor-pointer transition-all hover:bg-[#35543e] disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 <Send size={16} />
                 <span>Send All Certificates {unsentCount > 0 && `(${unsentCount})`}</span>
               </motion.button>
             )}
             
-            <motion.button
+            {/* <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               className="flex items-center gap-2 rounded-lg border border-[#b7a2c9]/30 bg-[#4b3a70]/30 px-4 py-2 text-sm font-medium text-[#b7a2c9] transition-all hover:bg-[#4b3a70]/50"
             >
               <Package size={16} />
               <span>Download All (ZIP)</span>
-            </motion.button>
+            </motion.button> */}
             
-            <motion.button
+            {/* <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               className="flex items-center gap-2 rounded-lg border border-[#b7a2c9]/30 bg-[#4b3a70]/30 px-4 py-2 text-sm font-medium text-[#b7a2c9] transition-all hover:bg-[#4b3a70]/50"
@@ -140,12 +140,13 @@ export default function ParticipantsTable({
               <User2 size={16} />
               <Plus size={14} className="absolute -mt-2 ml-2" />
               <span>Add Participant</span>
-            </motion.button>
+            </motion.button> */}
           </div>
         </div>
+        <div className='border-b border-1 border-gray-700 mx-20 mb-8 '></div>
         
         {/* Search and filters */}
-        <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="mb-10 flex flex-col sm:flex-row  items-start sm:items-center justify-between">
           <ParticipantSearch
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
