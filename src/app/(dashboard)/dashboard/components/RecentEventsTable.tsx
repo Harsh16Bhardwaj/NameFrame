@@ -4,6 +4,7 @@ import { CgSpinner } from "react-icons/cg";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { IoRefreshOutline } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 interface RecentEventsTableProps {
   events: {
@@ -23,6 +24,8 @@ const RecentEventsTable: React.FC<RecentEventsTableProps> = ({
   loadingEvents, 
   fetchEvents 
 }) => {
+  const router = useRouter();
+  
   const getStatusInfo = (event: any) => {
     const allEmailed = event.participants.length > 0 && 
       event.participants.every((p: { emailed: boolean }) => p.emailed);
@@ -30,6 +33,11 @@ const RecentEventsTable: React.FC<RecentEventsTableProps> = ({
     return allEmailed 
       ? { label: "Completed", className: "text-green-400 bg-green-900/30" }
       : { label: "Scheduled", className: "text-blue-400 bg-blue-900/30" };
+  };
+  
+  const handleRowClick = (eventId: string) => {
+    console.log(`Navigating to event with ID: ${eventId}`);
+    router.push(`/events/${eventId}`);
   };
 
   return (
@@ -78,12 +86,11 @@ const RecentEventsTable: React.FC<RecentEventsTableProps> = ({
                 {events.map((event) => (
                   <tr 
                     key={event.id} 
-                    className="border-b border-[var(--border-color)] hover:bg-[var(--card-hover)] transition-colors"
+                    onClick={() => handleRowClick(event.id)}
+                    className="border-b border-[var(--border-color)] hover:bg-[var(--card-hover)] transition-colors cursor-pointer"
                   >
                     <td className="py-4 px-2">
-                      <Link href={`/dashboard/events/${event.id}`} className="text-[var(--text-primary)] font-medium hover:text-[var(--accent-color)]">
-                        {event.title}
-                      </Link>
+                      <span className="text-[var(--text-primary)] font-medium">{event.title}</span>
                     </td>
                     <td className="py-4 px-2 text-[var(--text-secondary)]">
                       {new Date(event.createdAt).toLocaleDateString()}
