@@ -91,13 +91,18 @@ export async function POST(req: Request) {
           width: event.template.textWidth || 800,
           height: event.template.textHeight || 150,
           gravity: "center",
-          y: typeof event.template.textPositionY === "number" ? (event.template.textPositionY - 50) * 10 : 0,
-          x: typeof event.template.textPositionX === "number" ? (event.template.textPositionX - 50) * 10 : 0,
+          y: typeof event.template.textPositionY === "number"
+            ? Math.round((event.template.textPositionY - 50) * 10)
+            : 0,
+          x: typeof event.template.textPositionX === "number"
+            ? Math.round((event.template.textPositionX - 50) * 10)
+            : 0,
         },
       ],
       format: "png",
       quality: "auto:best",
     });
+    
 
     // Save the certificate URL before sending email
     await prisma.participant.update({
