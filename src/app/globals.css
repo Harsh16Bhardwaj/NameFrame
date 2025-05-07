@@ -45,22 +45,22 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --background: #f8fafc;
+  --foreground: #212531;
+  --card: #ffffff;
+  --card-foreground: #1e293b;
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  --primary: #8b5cf6;
+  --primary-foreground: #ffffff;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #334155;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
+  --border: #e2e8f0;
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
@@ -122,6 +122,15 @@
   --border-radius-xl: 1rem;
   --border-radius-2xl: 1.5rem;
   --border-width: 1px;
+
+  /* Dashboard-specific theme */
+  --dashboard-bg: #f8fafc;
+  --card-bg: #ffffff;
+  --card-hover: #f1f5f9;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --accent-color: #8b5cf6;
+  --border-color: #e2e8f0;
 }
 
 /* Custom Scrollbar */
@@ -144,38 +153,86 @@
   background: rgba(183, 162, 201, 0.5);
 }
 
+/* Custom scrollbar for dark theme */
+.dark .scrollbar-themed {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--card-bg);
+}
+
+/* Chrome, Edge, and Safari */
+.dark .scrollbar-themed::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark .scrollbar-themed::-webkit-scrollbar-track {
+  background: var(--card-bg);
+  border-radius: 4px;
+}
+
+.dark .scrollbar-themed::-webkit-scrollbar-thumb {
+  background-color: var(--accent); 
+  border-radius: 4px;
+  border: 2px solid var(--card-bg);
+}
+
+.dark .scrollbar-themed::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ring);
+}
+
+/* Light theme scrollbar styles - lighter version of the same */
+.scrollbar-themed {
+  scrollbar-width: thin;
+  scrollbar-color: #b7a2c9 #f8f9fa;
+}
+
+.scrollbar-themed::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-themed::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.scrollbar-themed::-webkit-scrollbar-thumb {
+  background-color: #b7a2c9;
+  border-radius: 4px;
+  border: 2px solid #f8f9fa;
+}
+
+.scrollbar-themed::-webkit-scrollbar-thumb:hover {
+  background-color: #9a82b0;
+}
+
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #212531;
+  --foreground: #e2e8f0;
+  --card: #322f42;
+  --card-foreground: #f8fafc;
+  --popover: #272936;
+  --popover-foreground: #f8fafc;
+  --primary: #b7a2c9;
+  --primary-foreground: #ffffff;
+  --secondary: #3a3c4a;
+  --secondary-foreground: #f8fafc;
+  --muted: #272936;
+  --muted-foreground: #c5c3c4;
+  --accent: #4b3a70;
+  --accent-foreground: #f8fafc;
+  --destructive: #e57373;
+  --border: #4b3a70;
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #b7a2c9;
+
+  /* Dashboard-specific theme */
+  --dashboard-bg: #212531;
+  --card-bg: #322f42;
+  --card-hover: #3a3c4a;
+  --text-primary: #c5c3c4;
+  --text-secondary: #9a9a9c;
+  --accent-color: #b7a2c9;
+  --border-color: #4b3a70;
 }
 
 @layer base {

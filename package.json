@@ -37,6 +37,7 @@
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-parallax-tilt": "^1.7.291",
+    "recharts": "^2.15.3",
     "tailwind-merge": "^3.2.0",
     "tw-animate-css": "^1.2.5",
     "xlsx": "^0.18.5"
