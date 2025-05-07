@@ -112,23 +112,24 @@ const dashboardData = {
 // Theme configuration
 const themeConfig = {
   dark: {
-    background: "bg-gradient-to-br from-[#1a1c2e] via-[#2a2d42] to-[#3a3c4a]",
-    sidebar: "bg-gradient-to-b from-[#2a2d42] to-[#1a1c2e]",
-    card: "bg-[#2a2d42]",
+    background:
+      "bg-gradient-to-br from-neutral-900 via-[#1a4345] to-neutral-800",
+    sidebar: "bg-gradient-to-b from-[#1a4345] to-[#0f2d2f]",
+    card: "bg-[#1a4345]",
     text: {
-      primary: "text-white",
-      secondary: "text-[#c5c3c4]",
-      accent: "text-[#b7a2c9]",
+      primary: "text-[#b0ebeb]",
+      secondary: "text-[#8ac1c1]",
+      accent: "text-[#50c9c9]",
     },
-    border: "border-[#4b3a70]",
+    border: "border-[#2d5a5c]",
     hover: {
-      card: "hover:bg-[#3a3c4a]",
-      button: "hover:bg-[#4b3a70]/20",
+      card: "hover:bg-[#255859]",
+      button: "hover:bg-[#2d5a5c]/30",
     },
     gradient: {
-      text: "bg-gradient-to-r from-[#b7a2c9] to-[#8b7ba1]",
-      button: "bg-gradient-to-r from-[#b7a2c9] to-[#8b7ba1]",
-      idk: "bg-gradient-to-r from-neutral-900 to-neutral-800",
+      text: "bg-gradient-to-r from-[#50c9c9] to-[#8ac1c1]",
+      button: "bg-gradient-to-r from-[#50c9c9] to-[#8ac1c1]",
+      idk: "bg-gradient-to-r from-[#0f2d2f] to-[#1a4345]",
     },
   },
   light: {
@@ -170,7 +171,7 @@ const Sparkline = ({ data, color, height = 30, width = 80 }) => {
   const pathData = useMemo(() => {
     if (points.length === 0) return "";
 
-    const d = points       //@ts-ignore
+    const d = points //@ts-ignore
       .map((point, i) => `${i === 0 ? "M" : "L"} ${point.x} ${point.y}`)
       .join(" ");
 
@@ -240,7 +241,7 @@ const LineChart2 = ({ data, color, height = 200, width = 300 }) => {
     y: height - (value / max) * height,
   }));
   //@ts-ignore
-  const pathData = points       //@ts-ignore
+  const pathData = points //@ts-ignore
     .map((point, i) => `${i === 0 ? "M" : "L"} ${point.x} ${point.y}`)
     .join(" ");
 
@@ -318,25 +319,25 @@ export default function Dashboard() {
     recentParticipants: 0,
     totalCertificates: 0,
     totalEmailsSent: 0,
-    recentEmailsSent: 0
+    recentEmailsSent: 0,
   });
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState<Event[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
-  
+
   // Fetch dashboard statistics
   useEffect(() => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/dashboard/stats');
+        const response = await fetch("/api/dashboard/stats");
         const data = await response.json();
-        
+
         if (data.success) {
           setStats(data.data);
         }
       } catch (error) {
-        console.error('Error fetching dashboard stats:', error);
+        console.error("Error fetching dashboard stats:", error);
       } finally {
         setLoading(false);
       }
@@ -350,14 +351,14 @@ export default function Dashboard() {
     const fetchEvents = async () => {
       try {
         setLoadingEvents(true);
-        const response = await fetch('/api/events');
+        const response = await fetch("/api/events");
         const data = await response.json();
-        
+
         if (data.success) {
           setEvents(data.data);
         }
       } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error("Error fetching events:", error);
       } finally {
         setLoadingEvents(false);
       }
@@ -375,13 +376,14 @@ export default function Dashboard() {
 
     // Search through events and templates
     const results: SearchResult[] = [
-      ...dashboardData.events.filter(event => 
-        event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.template.toLowerCase().includes(searchQuery.toLowerCase())
+      ...dashboardData.events.filter(
+        (event) =>
+          event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          event.template.toLowerCase().includes(searchQuery.toLowerCase())
       ),
-      ...dashboardData.certificateTemplates.filter(template =>
+      ...dashboardData.certificateTemplates.filter((template) =>
         template.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      ),
     ];
 
     setSearchResults(results);
@@ -389,7 +391,7 @@ export default function Dashboard() {
 
   // Handle Enter key press
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -416,7 +418,13 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className={`flex pb-20  ${themeConfig[isDarkMode ? 'dark' : 'light'].background} ${themeConfig[isDarkMode ? 'dark' : 'light'].text.primary} overflow-hidden transition-all duration-500`}>
+    <div
+      className={`flex pb-20  ${
+        themeConfig[isDarkMode ? "dark" : "light"].background
+      } ${
+        themeConfig[isDarkMode ? "dark" : "light"].text.primary
+      } overflow-hidden transition-all duration-500`}
+    >
       {/* Mobile Nav Overlay */}
 
       <AnimatePresence>
@@ -426,7 +434,9 @@ export default function Dashboard() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className={`fixed inset-0 ${isDarkMode ? 'bg-black/50' : 'bg-black/30'} z-30 lg:hidden backdrop-blur-sm`}
+            className={`fixed inset-0 ${
+              isDarkMode ? "bg-black/50" : "bg-black/30"
+            } z-30 lg:hidden backdrop-blur-sm`}
             onClick={() => setIsMobileNavOpen(false)}
           />
         )}
@@ -434,7 +444,11 @@ export default function Dashboard() {
 
       {/* Sidebar */}
       <motion.div
-        className={`${themeConfig[isDarkMode ? 'dark' : 'light'].sidebar} fixed lg:relative z-40 mr-2 h-screen shadow-xl flex flex-col border-r ${themeConfig[isDarkMode ? 'dark' : 'light'].border}/30`}
+        className={`${
+          themeConfig[isDarkMode ? "dark" : "light"].sidebar
+        } fixed lg:relative z-40 mr-2 h-screen shadow-xl flex flex-col border-r ${
+          themeConfig[isDarkMode ? "dark" : "light"].border
+        }/30`}
         initial={false}
         animate={{
           width: isSidebarCollapsed ? "80px" : "220px",
@@ -443,17 +457,29 @@ export default function Dashboard() {
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         {/* Logo */}
-        <div className={`flex items-center p-4 h-16 border-b ${themeConfig[isDarkMode ? 'dark' : 'light'].border}/30`}>
+        <div
+          className={`flex items-center p-4 h-16 border-b ${
+            themeConfig[isDarkMode ? "dark" : "light"].border
+          }/30`}
+        >
           <div className="flex items-center gap-3 overflow-hidden">
-            <motion.div 
-              className={`w-8 h-8 rounded-md ${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.button} flex items-center justify-center flex-shrink-0`}
+            <motion.div
+              className={`w-8 h-8 rounded-md ${
+                themeConfig[isDarkMode ? "dark" : "light"].gradient.button
+              } flex items-center justify-center flex-shrink-0`}
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
-              <Award className={`w-5 h-5 ${isDarkMode ? 'text-[#212531]' : 'text-white'}`} />
+              <Award
+                className={`w-5 h-5 ${
+                  isDarkMode ? "text-[#212531]" : "text-white"
+                }`}
+              />
             </motion.div>
             <motion.span
-              className={`font-bold text-lg tracking-tight whitespace-nowrap ${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.text} bg-clip-text text-transparent`}
+              className={`font-bold text-lg tracking-tight whitespace-nowrap ${
+                themeConfig[isDarkMode ? "dark" : "light"].gradient.text
+              } bg-clip-text text-transparent`}
               animate={{
                 opacity: isSidebarCollapsed ? 0 : 1,
                 x: isSidebarCollapsed ? -40 : 0,
@@ -472,8 +498,16 @@ export default function Dashboard() {
               href={item.href}
               className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg overflow-hidden transition-all duration-300 ${
                 item.active
-                  ? `${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.button} text-white border-l-2 ${themeConfig[isDarkMode ? 'dark' : 'light'].border}`
-                  : `${themeConfig[isDarkMode ? 'dark' : 'light'].hover.button} ${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary}`
+                  ? `${
+                      themeConfig[isDarkMode ? "dark" : "light"].gradient.button
+                    } text-white border-l-2 ${
+                      themeConfig[isDarkMode ? "dark" : "light"].border
+                    }`
+                  : `${
+                      themeConfig[isDarkMode ? "dark" : "light"].hover.button
+                    } ${
+                      themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                    }`
               }`}
             >
               <motion.div
@@ -481,7 +515,12 @@ export default function Dashboard() {
                 transition={{ type: "spring", stiffness: 400 }}
               >
                 <item.icon
-                  className={`w-5 h-5 ${item.active ? themeConfig[isDarkMode ? 'dark' : 'light'].text.accent : 'group-hover:' + themeConfig[isDarkMode ? 'dark' : 'light'].text.accent}`}
+                  className={`w-5 h-5 ${
+                    item.active
+                      ? themeConfig[isDarkMode ? "dark" : "light"].text.accent
+                      : "group-hover:" +
+                        themeConfig[isDarkMode ? "dark" : "light"].text.accent
+                  }`}
                 />
               </motion.div>
               <motion.span
@@ -499,15 +538,17 @@ export default function Dashboard() {
 
         {/* Collapse Button */}
         <motion.button
-          className={`absolute top-1/2 -right-3 w-6 h-12 ${themeConfig[isDarkMode ? 'dark' : 'light'].card} rounded-r-md flex items-center justify-center hidden lg:flex`}
+          className={`absolute top-1/2 -right-3 w-6 h-12 ${
+            themeConfig[isDarkMode ? "dark" : "light"].card
+          } rounded-r-md flex items-center justify-center hidden lg:flex`}
           onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
         >
           <ChevronRight
-            className={`w-4 h-4 transition-transform duration-300 ${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} ${
-              isSidebarCollapsed ? "" : "rotate-180"
-            }`}
+            className={`w-4 h-4 transition-transform duration-300 ${
+              themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+            } ${isSidebarCollapsed ? "" : "rotate-180"}`}
           />
         </motion.button>
       </motion.div>
@@ -515,8 +556,12 @@ export default function Dashboard() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden pr-20">
         {/* Top Bar */}
-        <motion.div 
-          className={`h-20 py-4 ${themeConfig[isDarkMode ? 'dark' : 'light'].card}/90 mt-24 rounded-2xl backdrop-blur-sm border ${themeConfig[isDarkMode ? 'dark' : 'light'].border}/30 flex items-center justify-between px-4 gap-4`}
+        <motion.div
+          className={`h-20 py-4 ${
+            themeConfig[isDarkMode ? "dark" : "light"].card
+          }/90 mt-24 rounded-2xl backdrop-blur-sm border ${
+            themeConfig[isDarkMode ? "dark" : "light"].border
+          }/30 flex items-center justify-between px-4 gap-4`}
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -524,37 +569,63 @@ export default function Dashboard() {
           {/* Left section */}
           <div className="flex items-center gap-3">
             <motion.button
-              className={`p-2 rounded-lg ${themeConfig[isDarkMode ? 'dark' : 'light'].hover.button} transition-colors`}
+              className={`p-2 rounded-lg ${
+                themeConfig[isDarkMode ? "dark" : "light"].hover.button
+              } transition-colors`}
               onClick={() => setIsMobileNavOpen(true)}
               title="Open Menu"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Menu className={`w-5 h-5 ${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary}`} />
+              <Menu
+                className={`w-5 h-5 ${
+                  themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                }`}
+              />
             </motion.button>
-            <h1 className={`text-3xl font-bold ${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.text} bg-clip-text text-transparent hidden sm:block`}>
+            <h1
+              className={`text-3xl font-bold ${
+                themeConfig[isDarkMode ? "dark" : "light"].gradient.text
+              } bg-clip-text text-transparent hidden sm:block`}
+            >
               Dashboard
             </h1>
           </div>
 
           {/* Middle section - Search */}
           <div className="flex-1 max-w-lg hidden md:block">
-            <motion.div 
-              className={`flex bg-neutral-900  items-center ${themeConfig[isDarkMode ? 'dark' : 'light'].card}/30 rounded-lg px-2 pl-3 py-1.5 focus-within:ring-1 focus-within:ring-${themeConfig[isDarkMode ? 'dark' : 'light'].text.accent}/50 transition-all duration-300`}
+            <motion.div
+              className={`flex bg-neutral-900  items-center ${
+                themeConfig[isDarkMode ? "dark" : "light"].card
+              }/30 rounded-lg px-2 pl-3 py-1.5 focus-within:ring-1 focus-within:ring-${
+                themeConfig[isDarkMode ? "dark" : "light"].text.accent
+              }/50 transition-all duration-300`}
               whileHover={{ scale: 1.02 }}
             >
-              <Search className={`w-4 h-4 ${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary}/70`} />
+              <Search
+                className={`w-4 h-4 ${
+                  themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                }/70`}
+              />
               <input
                 type="text"
                 placeholder="Search events, templates..."
-                className={` border-none focus:outline-none focus:ring-0 w-full px-2 text-sm ${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} placeholder-${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary}/50`}
+                className={` border-none focus:outline-none focus:ring-0 w-full px-2 text-sm ${
+                  themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                } placeholder-${
+                  themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                }/50`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={handleKeyPress}
               />
               <motion.button
                 onClick={handleSearch}
-                className={`ml-3 p-1.5 bg-teal-800 rounded-md ${themeConfig[isDarkMode ? 'dark' : 'light'].hover.button} ${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} transition-colors`}
+                className={`ml-3 p-1.5 bg-teal-800 rounded-md ${
+                  themeConfig[isDarkMode ? "dark" : "light"].hover.button
+                } ${
+                  themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                } transition-colors`}
                 title="Search"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -567,25 +638,51 @@ export default function Dashboard() {
           {/* Right section */}
           <div className="flex items-center gap-3">
             <motion.button
-              className={`p-2 rounded-lg ${themeConfig[isDarkMode ? 'dark' : 'light'].hover.button} transition-colors`}
+              className={`p-2 rounded-lg ${
+                themeConfig[isDarkMode ? "dark" : "light"].hover.button
+              } transition-colors`}
               onClick={() => setIsDarkMode(!isDarkMode)}
-              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              title={
+                isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
+              }
               whileHover={{ scale: 1.1, rotate: 15 }}
               whileTap={{ scale: 0.95 }}
             >
-              {isDarkMode ? <Sun className={`w-5 h-5 ${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary}`} /> : <Moon className={`w-5 h-5 ${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary}`} />}
+              {isDarkMode ? (
+                <Sun
+                  className={`w-5 h-5 ${
+                    themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                  }`}
+                />
+              ) : (
+                <Moon
+                  className={`w-5 h-5 ${
+                    themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                  }`}
+                />
+              )}
             </motion.button>
             <motion.button
-              className={`p-2 rounded-lg ${themeConfig[isDarkMode ? 'dark' : 'light'].hover.button} transition-colors`}
+              className={`p-2 rounded-lg ${
+                themeConfig[isDarkMode ? "dark" : "light"].hover.button
+              } transition-colors`}
               title="Notifications"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Bell className={`w-5 h-5 ${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary}`} />
+              <Bell
+                className={`w-5 h-5 ${
+                  themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                }`}
+              />
             </motion.button>
             <Link
               href="/create"
-              className={`px-4 py-2 ${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.button} hover:from-[#c9b8d7] hover:to-[#9b8ab1] ${isDarkMode ? 'text-[#212531]' : 'text-white'} font-medium rounded-lg transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl`}
+              className={`px-4 py-2 ${
+                themeConfig[isDarkMode ? "dark" : "light"].gradient.button
+              } hover:from-[#c9b8d7] hover:to-[#9b8ab1] ${
+                isDarkMode ? "text-[#212531]" : "text-white"
+              } font-medium rounded-lg transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl`}
             >
               <Plus className="w-4 h-4" />
               <span className="hidden sm:inline">New Event</span>
@@ -600,26 +697,46 @@ export default function Dashboard() {
             {dashboardData.kpis.map((kpi, index) => (
               <motion.div
                 key={index}
-                className={`${themeConfig[isDarkMode ? 'dark' : 'light'].card} rounded-2xl p-5 shadow-lg border ${themeConfig[isDarkMode ? 'dark' : 'light'].border}/30 backdrop-blur-sm`}
+                className={`${
+                  themeConfig[isDarkMode ? "dark" : "light"].card
+                } rounded-2xl p-5 shadow-lg border ${
+                  themeConfig[isDarkMode ? "dark" : "light"].border
+                }/30 backdrop-blur-sm`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5, scale: 1.02 }}
               >
                 <div className="flex justify-between items-start mb-4">
-                  <div className={`p-2 rounded-lg ${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.button}/20`}>
-                    <kpi.icon className={`w-5 h-5 ${themeConfig[isDarkMode ? 'dark' : 'light'].text.accent}`} />
+                  <div
+                    className={`p-2 rounded-lg ${
+                      themeConfig[isDarkMode ? "dark" : "light"].gradient.button
+                    }/20`}
+                  >
+                    <kpi.icon
+                      className={`w-5 h-5 ${
+                        themeConfig[isDarkMode ? "dark" : "light"].text.accent
+                      }`}
+                    />
                   </div>
                   <div className="flex items-center space-x-1 text-xs">
                     <ArrowUpRight className="w-3 h-3 text-green-500" />
                     <span className="text-green-500">+{kpi.change}</span>
                   </div>
                 </div>
-                <h3 className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-sm font-medium mb-1`}>
+                <h3
+                  className={`${
+                    themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                  } text-sm font-medium mb-1`}
+                >
                   {kpi.title}
                 </h3>
                 <div className="flex items-end justify-between">
-                  <span className={`text-2xl font-bold ${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.text} bg-clip-text text-transparent`}>
+                  <span
+                    className={`text-2xl font-bold ${
+                      themeConfig[isDarkMode ? "dark" : "light"].gradient.text
+                    } bg-clip-text text-transparent`}
+                  >
                     {kpi.value.toLocaleString()}
                   </span>
                   <div className="h-8 flex items-end">
@@ -640,25 +757,37 @@ export default function Dashboard() {
             {/* Events Table */}
             <div className="lg:col-span-2">
               <motion.div
-                className={`${themeConfig[isDarkMode ? 'dark' : 'light'].card} rounded-2xl p-5 shadow-lg border ${themeConfig[isDarkMode ? 'dark' : 'light'].border}/30 h-full min-h-[384px]`}
+                className={`${
+                  themeConfig[isDarkMode ? "dark" : "light"].card
+                } rounded-2xl p-5 shadow-lg border ${
+                  themeConfig[isDarkMode ? "dark" : "light"].border
+                }/30 h-full min-h-[384px]`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
                 <div className="flex justify-between items-center mb-5">
-                  <h2 className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.primary} text-lg font-semibold`}>
+                  <h2
+                    className={`${
+                      themeConfig[isDarkMode ? "dark" : "light"].text.primary
+                    } text-lg font-semibold`}
+                  >
                     Recent Events
                   </h2>
                   <div className="flex items-center gap-3">
                     <Link
                       href="/events"
-                      className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.accent} text-sm font-medium flex items-center gap-1 transition-colors`}
+                      className={`${
+                        themeConfig[isDarkMode ? "dark" : "light"].text.accent
+                      } text-sm font-medium flex items-center gap-1 transition-colors`}
                       title="View All Events"
                     >
                       View All <ChevronRight className="w-4 h-4" />
                     </Link>
                     <button
-                      className={`p-2 rounded-lg ${themeConfig[isDarkMode ? 'dark' : 'light'].hover.button} transition-colors`}
+                      className={`p-2 rounded-lg ${
+                        themeConfig[isDarkMode ? "dark" : "light"].hover.button
+                      } transition-colors`}
                       title="Refresh Events"
                       onClick={() => fetchEvents()}
                     >
@@ -669,23 +798,57 @@ export default function Dashboard() {
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className={`${themeConfig[isDarkMode ? 'dark' : 'light'].border} border-b `}>
-                        <th className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-left pb-3 text-sm font-medium`}>
+                      <tr
+                        className={`${
+                          themeConfig[isDarkMode ? "dark" : "light"].border
+                        } border-b `}
+                      >
+                        <th
+                          className={`${
+                            themeConfig[isDarkMode ? "dark" : "light"].text
+                              .secondary
+                          } text-left pb-3 text-sm font-medium`}
+                        >
                           Event Name
                         </th>
-                        <th className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-left pb-3 text-sm font-medium hidden sm:table-cell`}>
+                        <th
+                          className={`${
+                            themeConfig[isDarkMode ? "dark" : "light"].text
+                              .secondary
+                          } text-left pb-3 text-sm font-medium hidden sm:table-cell`}
+                        >
                           Date
                         </th>
-                        <th className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-left pb-3 text-sm font-medium hidden sm:table-cell`}>
+                        <th
+                          className={`${
+                            themeConfig[isDarkMode ? "dark" : "light"].text
+                              .secondary
+                          } text-left pb-3 text-sm font-medium hidden sm:table-cell`}
+                        >
                           Participants
                         </th>
-                        <th className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-left pb-3 text-sm font-medium hidden md:table-cell`}>
+                        <th
+                          className={`${
+                            themeConfig[isDarkMode ? "dark" : "light"].text
+                              .secondary
+                          } text-left pb-3 text-sm font-medium hidden md:table-cell`}
+                        >
                           Template
                         </th>
-                        <th className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-left pb-3 text-sm font-medium`}>
+                        <th
+                          className={`${
+                            themeConfig[isDarkMode ? "dark" : "light"].text
+                              .secondary
+                          } text-left pb-3 text-sm font-medium`}
+                        >
                           Status
                         </th>
-                        <th className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-right pb-3 text-sm font-medium`}>
+                        <th
+                          className={`${
+                            themeConfig[isDarkMode ? "dark" : "light"].text
+                              .secondary
+                          } text-right pb-3 text-sm font-medium`}
+                        >
                           Actions
                         </th>
                       </tr>
@@ -693,62 +856,129 @@ export default function Dashboard() {
                     <tbody>
                       {loadingEvents ? (
                         <tr>
-                          <td colSpan={6} className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} py-4 text-center`}>
+                          <td
+                            colSpan={6}
+                            className={`${
+                              themeConfig[isDarkMode ? "dark" : "light"].text
+                                .secondary
+                            } py-4 text-center`}
+                          >
                             Loading events...
                           </td>
                         </tr>
                       ) : events.length === 0 ? (
                         <tr>
-                          <td colSpan={6} className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} py-4 text-center`}>
+                          <td
+                            colSpan={6}
+                            className={`${
+                              themeConfig[isDarkMode ? "dark" : "light"].text
+                                .secondary
+                            } py-4 text-center`}
+                          >
                             No events found
                           </td>
                         </tr>
                       ) : (
                         events.slice(0, 5).map((event) => {
                           const totalParticipants = event.participants.length;
-                          const emailsSent = event.participants.filter(p => p.emailed).length;
-                          const status = totalParticipants === emailsSent ? 'Completed' :
-                                       emailsSent > 0 ? 'In Progress' : 'Scheduled';
+                          const emailsSent = event.participants.filter(
+                            (p) => p.emailed
+                          ).length;
+                          const status =
+                            totalParticipants === emailsSent
+                              ? "Completed"
+                              : emailsSent > 0
+                              ? "In Progress"
+                              : "Scheduled";
 
                           return (
                             <tr
                               key={event.id}
-                              className={`${themeConfig[isDarkMode ? 'dark' : 'light'].hover.card} transition-colors px-2 hover:bg-gray-900 rounded-2xl`}
+                              className={`${
+                                themeConfig[isDarkMode ? "dark" : "light"].hover
+                                  .card
+                              } transition-colors px-2 hover:bg-gray-900 rounded-2xl`}
                             >
-                              <td className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} py-3 pl-1 text-sm font-medium`}>
+                              <td
+                                className={`${
+                                  themeConfig[isDarkMode ? "dark" : "light"]
+                                    .text.secondary
+                                } py-3 pl-1 text-sm font-medium`}
+                              >
                                 {event.title}
                               </td>
-                              <td className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} py-3 text-sm hidden sm:table-cell`}>
+                              <td
+                                className={`${
+                                  themeConfig[isDarkMode ? "dark" : "light"]
+                                    .text.secondary
+                                } py-3 text-sm hidden sm:table-cell`}
+                              >
                                 {new Date(event.createdAt).toLocaleDateString()}
                               </td>
-                              <td className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} py-3 text-sm hidden sm:table-cell`}>
+                              <td
+                                className={`${
+                                  themeConfig[isDarkMode ? "dark" : "light"]
+                                    .text.secondary
+                                } py-3 text-sm hidden sm:table-cell`}
+                              >
                                 {totalParticipants}
                               </td>
-                              <td className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} py-3 text-sm hidden md:table-cell`}>
-                                {event.template?.name?.slice(0, 10) || 'No template'}
+                              <td
+                                className={`${
+                                  themeConfig[isDarkMode ? "dark" : "light"]
+                                    .text.secondary
+                                } py-3 text-sm hidden md:table-cell`}
+                              >
+                                {event.template?.name?.slice(0, 10) ||
+                                  "No template"}
                               </td>
-                              <td className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} py-3 text-sm`}>
+                              <td
+                                className={`${
+                                  themeConfig[isDarkMode ? "dark" : "light"]
+                                    .text.secondary
+                                } py-3 text-sm`}
+                              >
                                 <span
-                                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.accent} px-2 py-1 rounded-full text-xs font-medium`}
+                                  className={`${
+                                    themeConfig[isDarkMode ? "dark" : "light"]
+                                      .text.accent
+                                  } px-2 py-1 rounded-full text-xs font-medium`}
                                 >
                                   {status}
                                 </span>
                               </td>
-                              <td className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} py-3 text-right`}>
-                                <div className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.accent} flex items-center justify-end gap-2`}>
+                              <td
+                                className={`${
+                                  themeConfig[isDarkMode ? "dark" : "light"]
+                                    .text.secondary
+                                } py-3 text-right`}
+                              >
+                                <div
+                                  className={`${
+                                    themeConfig[isDarkMode ? "dark" : "light"]
+                                      .text.accent
+                                  } flex items-center justify-end gap-2`}
+                                >
                                   <Link
                                     href={`/events/${event.id}`}
-                                    className={`${themeConfig[isDarkMode ? 'dark' : 'light'].hover.button} p-1.5 rounded-md`}
+                                    className={`${
+                                      themeConfig[isDarkMode ? "dark" : "light"]
+                                        .hover.button
+                                    } p-1.5 rounded-md`}
                                   >
                                     <FileText className="w-4 h-4" />
                                   </Link>
                                   <button
-                                    className={`${themeConfig[isDarkMode ? 'dark' : 'light'].hover.button} p-1.5 rounded-md`}
-                                    onClick={() => {/* Handle email action */}}
+                                    className={`${
+                                      themeConfig[isDarkMode ? "dark" : "light"]
+                                        .hover.button
+                                    } p-1.5 rounded-md`}
+                                    onClick={() => {
+                                      /* Handle email action */
+                                    }}
                                   >
                                     <Mail className="w-4 h-4" />
                                   </button>
-                                 
                                 </div>
                               </td>
                             </tr>
@@ -764,30 +994,47 @@ export default function Dashboard() {
             {/* Analytics */}
             <div>
               <motion.div
-                className={`${themeConfig[isDarkMode ? 'dark' : 'light'].card} rounded-2xl p-5 shadow-lg border ${themeConfig[isDarkMode ? 'dark' : 'light'].border}/30 h-full`}
+                className={`${
+                  themeConfig[isDarkMode ? "dark" : "light"].card
+                } rounded-2xl p-5 shadow-lg border ${
+                  themeConfig[isDarkMode ? "dark" : "light"].border
+                }/30 h-full`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
                 <div className="flex justify-between items-center mb-5">
-                  <h2 className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.primary} text-lg font-semibold`}>
+                  <h2
+                    className={`${
+                      themeConfig[isDarkMode ? "dark" : "light"].text.primary
+                    } text-lg font-semibold`}
+                  >
                     Analytics
                   </h2>
                   <div className="flex items-center gap-2">
                     <button
-                      className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-xs bg-[#4b3a70]/30 px-2 py-1 rounded-md hover:bg-[#4b3a70]/40 transition-colors`}
+                      className={`${
+                        themeConfig[isDarkMode ? "dark" : "light"].text
+                          .secondary
+                      } text-xs bg-[#4b3a70]/30 px-2 py-1 rounded-md hover:bg-[#4b3a70]/40 transition-colors`}
                       title="View Weekly Analytics"
                     >
                       Week
                     </button>
                     <button
-                      className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-xs hover:bg-[#4b3a70]/20 px-2 py-1 rounded-md transition-colors`}
+                      className={`${
+                        themeConfig[isDarkMode ? "dark" : "light"].text
+                          .secondary
+                      } text-xs hover:bg-[#4b3a70]/20 px-2 py-1 rounded-md transition-colors`}
                       title="View Monthly Analytics"
                     >
                       Month
                     </button>
                     <button
-                      className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-xs hover:bg-[#4b3a70]/20 px-2 py-1 rounded-md transition-colors`}
+                      className={`${
+                        themeConfig[isDarkMode ? "dark" : "light"].text
+                          .secondary
+                      } text-xs hover:bg-[#4b3a70]/20 px-2 py-1 rounded-md transition-colors`}
                       title="View Yearly Analytics"
                     >
                       Year
@@ -798,23 +1045,45 @@ export default function Dashboard() {
                 {/* Event Completion Rate */}
                 <div className="mb-6 space-y-2">
                   <div className="flex justify-between items-center">
-                    <h3 className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-sm font-medium flex items-center gap-1`}>
+                    <h3
+                      className={`${
+                        themeConfig[isDarkMode ? "dark" : "light"].text
+                          .secondary
+                      } text-sm font-medium flex items-center gap-1`}
+                    >
                       <BarChart3 className="w-4 h-4" /> Event Completion Rate
                     </h3>
-                    <span className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-xs`}>
+                    <span
+                      className={`${
+                        themeConfig[isDarkMode ? "dark" : "light"].text
+                          .secondary
+                      } text-xs`}
+                    >
                       {events.reduce((sum, event) => {
                         const total = event.participants.length;
-                        const completed = event.participants.filter(p => p.emailed).length;
-                        return sum + (total > 0 ? Math.round((completed / total) * 100) : 0);
-                      }, 0) / events.length || 0}% Avg
+                        const completed = event.participants.filter(
+                          (p) => p.emailed
+                        ).length;
+                        return (
+                          sum +
+                          (total > 0
+                            ? Math.round((completed / total) * 100)
+                            : 0)
+                        );
+                      }, 0) / events.length || 0}
+                      % Avg
                     </span>
                   </div>
                   <div className="px-3">
                     <BarChart
-                      data={events.map(event => {
+                      data={events.map((event) => {
                         const total = event.participants.length;
-                        const completed = event.participants.filter(p => p.emailed).length;
-                        return total > 0 ? Math.round((completed / total) * 100) : 0;
+                        const completed = event.participants.filter(
+                          (p) => p.emailed
+                        ).length;
+                        return total > 0
+                          ? Math.round((completed / total) * 100)
+                          : 0;
                       })}
                       color={isDarkMode ? "#b7a2c9" : "#8b7ba1"}
                       height={120}
@@ -822,7 +1091,9 @@ export default function Dashboard() {
                     />
                     <div className="flex justify-between mt-1 text-xs text-[#c5c3c4]/70">
                       {events.slice(0, 5).map((event, index) => (
-                        <span key={index} title={event.title}>{event.title.slice(0, 3)}</span>
+                        <span key={index} title={event.title}>
+                          {event.title.slice(0, 3)}
+                        </span>
                       ))}
                     </div>
                   </div>
@@ -831,22 +1102,40 @@ export default function Dashboard() {
                 {/* Email Delivery Success Rate */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <h3 className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-sm font-medium flex items-center gap-1`}>
+                    <h3
+                      className={`${
+                        themeConfig[isDarkMode ? "dark" : "light"].text
+                          .secondary
+                      } text-sm font-medium flex items-center gap-1`}
+                    >
                       <LineChart className="w-4 h-4" /> Email Delivery Success
                     </h3>
-                    <span className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-xs`}>
+                    <span
+                      className={`${
+                        themeConfig[isDarkMode ? "dark" : "light"].text
+                          .secondary
+                      } text-xs`}
+                    >
                       {events.reduce((sum, event) => {
                         const total = event.participants.length;
-                        const sent = event.participants.filter(p => p.emailed).length;
-                        return sum + (total > 0 ? Math.round((sent / total) * 100) : 0);
-                      }, 0) / events.length || 0}% Avg
+                        const sent = event.participants.filter(
+                          (p) => p.emailed
+                        ).length;
+                        return (
+                          sum +
+                          (total > 0 ? Math.round((sent / total) * 100) : 0)
+                        );
+                      }, 0) / events.length || 0}
+                      % Avg
                     </span>
                   </div>
                   <div className="px-3">
                     <LineChart2
-                      data={events.map(event => {
+                      data={events.map((event) => {
                         const total = event.participants.length;
-                        const sent = event.participants.filter(p => p.emailed).length;
+                        const sent = event.participants.filter(
+                          (p) => p.emailed
+                        ).length;
                         return total > 0 ? Math.round((sent / total) * 100) : 0;
                       })}
                       color={isDarkMode ? "#7dc896" : "#8b7ba1"}
@@ -855,7 +1144,9 @@ export default function Dashboard() {
                     />
                     <div className="flex justify-between mt-1 text-xs text-[#c5c3c4]/70">
                       {events.slice(0, 5).map((event, index) => (
-                        <span key={index} title={event.title}>{event.title.slice(0, 3)}</span>
+                        <span key={index} title={event.title}>
+                          {event.title.slice(0, 3)}
+                        </span>
                       ))}
                     </div>
                   </div>
@@ -868,78 +1159,151 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Quick Actions */}
             <motion.div
-              className={`${themeConfig[isDarkMode ? 'dark' : 'light'].card} rounded-2xl p-5 shadow-lg border ${themeConfig[isDarkMode ? 'dark' : 'light'].border}/30`}
+              className={`${
+                themeConfig[isDarkMode ? "dark" : "light"].card
+              } rounded-2xl p-5 shadow-lg border ${
+                themeConfig[isDarkMode ? "dark" : "light"].border
+              }/30`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              <h2 className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.primary} text-lg font-semibold mb-5`}>
+              <h2
+                className={`${
+                  themeConfig[isDarkMode ? "dark" : "light"].text.primary
+                } text-lg font-semibold mb-5`}
+              >
                 Quick Actions
               </h2>
               <div className="grid grid-cols-2 gap-4">
                 <Link
                   href="/create"
-                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.idk} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
+                  className={`${
+                    themeConfig[isDarkMode ? "dark" : "light"].gradient.idk
+                  } p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
                   title="Create a New Event"
                 >
                   <Calendar className="w-6 h-6 text-[#b7a2c9]" />
-                  <span className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-sm font-medium`}>New Event</span>
+                  <span
+                    className={`${
+                      themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                    } text-sm font-medium`}
+                  >
+                    New Event
+                  </span>
                 </Link>
                 <Link
                   href="/templates"
-                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.idk} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
+                  className={`${
+                    themeConfig[isDarkMode ? "dark" : "light"].gradient.idk
+                  } p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
                   title="Manage Templates"
                 >
                   <FileType className="w-6 h-6 text-[#b7a2c9]" />
-                  <span className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-sm font-medium`}>Templates</span>
+                  <span
+                    className={`${
+                      themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                    } text-sm font-medium`}
+                  >
+                    Templates
+                  </span>
                 </Link>
                 <Link
                   href="/participants"
-                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.idk} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
+                  className={`${
+                    themeConfig[isDarkMode ? "dark" : "light"].gradient.idk
+                  } p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
                   title="Manage Participants"
                 >
                   <Users className="w-6 h-6 text-[#b7a2c9]" />
-                  <span className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-sm font-medium`}>Participants</span>
+                  <span
+                    className={`${
+                      themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                    } text-sm font-medium`}
+                  >
+                    Participants
+                  </span>
                 </Link>
                 <Link
                   href="/contact"
-                  className={`${themeConfig[isDarkMode ? 'dark' : 'light'].gradient.idk} p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
+                  className={`${
+                    themeConfig[isDarkMode ? "dark" : "light"].gradient.idk
+                  } p-4 rounded-xl hover:bg-[#4b3a70]/30 transition-colors flex flex-col items-center gap-2`}
                   title="Help"
                 >
                   <Settings className="w-6 h-6 text-[#b7a2c9]" />
-                  <span className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-sm font-medium`}>Help</span>
+                  <span
+                    className={`${
+                      themeConfig[isDarkMode ? "dark" : "light"].text.secondary
+                    } text-sm font-medium`}
+                  >
+                    Help
+                  </span>
                 </Link>
               </div>
             </motion.div>
 
             {/* Recent Activity */}
             <motion.div
-              className={`${themeConfig[isDarkMode ? 'dark' : 'light'].card} rounded-2xl p-5 shadow-lg border ${themeConfig[isDarkMode ? 'dark' : 'light'].border}/30`}
+              className={`${
+                themeConfig[isDarkMode ? "dark" : "light"].card
+              } rounded-2xl p-5 shadow-lg border ${
+                themeConfig[isDarkMode ? "dark" : "light"].border
+              }/30`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <h2 className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.primary} text-lg font-semibold mb-5`}>
+              <h2
+                className={`${
+                  themeConfig[isDarkMode ? "dark" : "light"].text.primary
+                } text-lg font-semibold mb-5`}
+              >
                 Recent Activity
               </h2>
               <div className="space-y-4">
                 {events.slice(0, 3).map((event) => (
                   <div
                     key={event.id}
-                    className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.accent} flex items-start gap-3 p-3 bg-[#4b3a70]/10 rounded-lg hover:bg-[#4b3a70]/20 transition-colors`}
+                    className={`${
+                      themeConfig[isDarkMode ? "dark" : "light"].text.accent
+                    } flex items-start gap-3 p-3 bg-[#4b3a70]/10 rounded-lg hover:bg-[#4b3a70]/20 transition-colors`}
                   >
-                    <div className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.accent} p-2 rounded-lg`}>
+                    <div
+                      className={`${
+                        themeConfig[isDarkMode ? "dark" : "light"].text.accent
+                      } p-2 rounded-lg`}
+                    >
                       <Calendar className="w-4 h-4" />
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
-                        <h3 className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.primary} text-sm font-medium`}>{event.title}</h3>
-                        <span className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-xs`}>
+                        <h3
+                          className={`${
+                            themeConfig[isDarkMode ? "dark" : "light"].text
+                              .primary
+                          } text-sm font-medium`}
+                        >
+                          {event.title}
+                        </h3>
+                        <span
+                          className={`${
+                            themeConfig[isDarkMode ? "dark" : "light"].text
+                              .secondary
+                          } text-xs`}
+                        >
                           {new Date(event.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className={`${themeConfig[isDarkMode ? 'dark' : 'light'].text.secondary} text-xs mt-1`}>
-                        {event.participants.length} participants • {event.participants.filter(p => p.emailed).length} certificates sent
+                      <p
+                        className={`${
+                          themeConfig[isDarkMode ? "dark" : "light"].text
+                            .secondary
+                        } text-xs mt-1`}
+                      >
+                        {event.participants.length} participants •{" "}
+                        {event.participants.filter((p) => p.emailed).length}{" "}
+                        certificates sent
                       </p>
                     </div>
                   </div>
