@@ -1,30 +1,18 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { v2 as cloudinary } from "cloudinary";
+import { generateCertificateEmail } from "../emailTemplate";
 
 const prisma = new PrismaClient();
-
-// Configure Cloudinary
+const resend = new Resend(process.env.RESEND_API_KEY);
 cloudinary.config({
-  cloud_name:
-    process.env.CLOUDINARY_CLOUD_NAME ||
-    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Update: Use Gmail service instead of generic SMTP
-const transporter = nodemailer.createTransport({
-  service: "gmail", // Use Gmail service instead of specifying host/port
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
-
-// Fix the TypeScript issues in the transformation options
 export async function POST(req: Request) {
   try {
     const { userId } = await auth();
@@ -89,51 +77,104 @@ export async function POST(req: Request) {
       ? publicIdMatch[1]
       : "certificate_templates/default";
 
-    // Generate certificate URL with proper text overlay
+    // Use template settings from DB for Cloudinary transformations
     const certificateUrl = cloudinary.url(publicId, {
       transformation: [
         {
           overlay: {
-            font_family: "Arial",
-            font_size: 90,
+            font_family: event.template.fontFamily || "Arial",
+            font_size: event.template.fontSize || 48,
             font_weight: "bold",
             text: participant.name,
           },
-          color: "black",
+          color: event.template.fontColor || "#000000",
+          width: event.template.textWidth || 800,
+          height: event.template.textHeight || 150,
           gravity: "center",
-          // Fix TypeScript issues by using proper type checks
-          y: typeof event.template?.textPositionY === "number" ? (event.template.textPositionY - 50) * 10 : 0,
-          x: typeof event.template?.textPositionX === "number" ? (event.template.textPositionX - 50) * 10 : 0,
+          y: typeof event.template.textPositionY === "number" ? (event.template.textPositionY - 50) * 10 : 0,
+          x: typeof event.template.textPositionX === "number" ? (event.template.textPositionX - 50) * 10 : 0,
         },
       ],
+      format: "png",
+      quality: "auto:best",
     });
 
-    // Send the email
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: participant.email,
-      subject,
-      html: `
-        <p>${transcript}</p>
-        <p>Here is your certificate:</p>
-        <a href="${certificateUrl}" target="_blank">Download Certificate</a>
-      `,
-    });
-
-    // Mark the participant as emailed
+    // Save the certificate URL before sending email
     await prisma.participant.update({
       where: { id: participant.id },
-      data: { emailed: true, certificateUrl },
+      data: { certificateUrl },
     });
 
-    return NextResponse.json({
-      success: true,
-      message: `Email sent successfully to ${participant.email}`,
+    // Create a professional email template with download button
+    const emailHtml = generateCertificateEmail({
+      subject,
+      eventTitle: event.title,
+      participantName: participant.name,
+      transcript,
+      certificateUrl,
     });
+
+    try {
+      // Debug logging
+      console.log("Sending email to:", participant.email);
+      
+      // Send email using Resend with proper testing settings
+      const emailResult = await resend.emails.send({
+        from: "onboarding@resend.dev", // This is the only allowed sender for testing
+        to: [participant.email], // Make sure it's an array
+        subject: subject,
+        html: emailHtml,
+        // Include these optional parameters for better tracking
+        tags: [
+          {
+            name: "event_id",
+            value: eventId,
+          },
+        ],
+      });
+
+      console.log("Email result:", emailResult);
+
+      if (emailResult.error) {
+        console.error("Resend API error:", emailResult.error);
+        return NextResponse.json(
+          { 
+            success: false, 
+            error: `Email API error: ${emailResult.error.message || "Unknown error"}`,
+            details: emailResult.error
+          },
+          { status: 500 }
+        );
+      }
+
+      // Mark the participant as emailed only if email was sent successfully
+      await prisma.participant.update({
+        where: { id: participant.id },
+        data: { emailed: true },
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: `Email sent successfully to ${participant.email}`,
+        emailId: emailResult.id,
+      });
+    } catch (emailError) {
+      console.error("Error sending email:", emailError);
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: `Email exception: ${emailError instanceof Error ? emailError.message : "Unknown error"}` 
+        },
+        { status: 500 }
+      );
+    }
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("General error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to send email" },
+      { 
+        success: false, 
+        error: `Failed to process: ${error instanceof Error ? error.message : "Unknown error"}` 
+      },
       { status: 500 }
     );
   } finally {
