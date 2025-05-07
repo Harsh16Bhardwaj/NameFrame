@@ -6,6 +6,7 @@ import { FaHome, FaPhoneAlt } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { IoMdCreate } from "react-icons/io";
 import { FaDollarSign } from "react-icons/fa6";
+import { HiMenu, HiX } from "react-icons/hi";
 import {
   SignedIn,
   SignedOut,
@@ -16,6 +17,7 @@ import {
 import { Manrope, Style_Script, Poppins } from "next/font/google";
 import Logo from "../../public/nameframelogo.png";
 import UserSync from "./userSync";
+import { motion, AnimatePresence } from "framer-motion";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -36,6 +38,7 @@ const poppins = Poppins({
 const Header: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -77,7 +80,7 @@ const Header: React.FC = () => {
 
       draw() {
         if (ctx) {
-          ctx.fillStyle = `rgba(45, 212, 191, ${this.opacity})`; // Teal for sleek effect
+          ctx.fillStyle = `rgba(45, 212, 191, ${this.opacity})`;
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
           ctx.fill();
@@ -132,9 +135,55 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isMobileMenuOpen]);
+
+  const navigationLinks = [
+    {
+      href: "/dashboard",
+      label: (
+        <div className="flex justify-center items-center gap-x-1">
+          <FaHome size={16} /> Dashboard
+        </div>
+      ),
+    },
+    {
+      href: "/create",
+      label: (
+        <div className="flex justify-center items-center gap-x-1">
+          <IoMdCreate size={16} /> Create
+        </div>
+      ),
+    },
+    {
+      href: "/pricing",
+      label: (
+        <div className="flex justify-center items-center gap-x-1">
+          <FaDollarSign size={16} /> Pricing
+        </div>
+      ),
+    },
+    {
+      href: "/contact",
+      label: (
+        <div className="flex justify-center items-center gap-x-1">
+          <FaPhoneAlt size={16} /> Contact
+        </div>
+      ),
+    },
+  ];
+
   return (
     <header
-      className={`${manrope.variable} ${poppins.variable} font-sans  fixed top-4 left-1/2 transform -translate-x-1/2 w-[90%] max-w-5xl z-50 bg-gradient-to-r from-gray-900/95 via-teal-900/95 to-gray-900/95 rounded-4xl transition-all duration-500 ${
+      className={`${manrope.variable} ${poppins.variable} font-sans fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] sm:w-[90%] max-w-5xl z-50 bg-gradient-to-r from-gray-900/95 via-teal-900/95 to-gray-900/95 rounded-xl md:rounded-4xl transition-all duration-500 ${
         isScrolledDown
           ? "bg-opacity-90 backdrop-blur-xl shadow-xl"
           : "bg-opacity-90 backdrop-blur-2xl shadow-lg"
@@ -145,21 +194,21 @@ const Header: React.FC = () => {
         className="absolute inset-0 h-16 rounded-xl pointer-events-none opacity-30"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 rounded-xl" />
-      <div className="flex justify-between items-center py-3 px-8 relative z-10">
+      <div className="flex justify-between items-center py-3 px-4 sm:px-6 md:px-8 relative z-10">
         <Link href="/" passHref>
-          <div className="flex items-center gap-x-2 cursor-pointer group">
+          <div className="flex items-center gap-x-1 sm:gap-x-2 cursor-pointer group">
             <div className="relative">
               <Image
                 src={Logo}
                 alt="Logo"
-                width={36}
-                height={36}
-                className="group-hover:scale-105 group-hover:rotate-3 transition-transform duration-500 ease-in-out"
+                width={32}
+                height={32}
+                className="sm:w-9 sm:h-9 group-hover:scale-105 group-hover:rotate-3 transition-transform duration-500 ease-in-out"
               />
               <div className="absolute inset-0 rounded-full border border-teal-300/40 opacity-0 group-hover:opacity-100 group-hover:scale-120 transition-all duration-500 ease-out"></div>
             </div>
             <span
-              className={`text-3xl font-bold  text-teal-100 tracking-tight group-hover:text-teal-300 transition-colors duration-300 ${styleScript.className}`}
+              className={`text-xl sm:text-2xl md:text-3xl font-bold text-teal-100 tracking-tight group-hover:text-teal-300 transition-colors duration-300 ${styleScript.className}`}
             >
               NameFrame
             </span>
@@ -168,42 +217,9 @@ const Header: React.FC = () => {
 
         <SignedIn>
           <UserSync />
-          <nav className="flex items-center gap-x-8">
-            <div className="flex gap-x-8 text-gray-300 font-medium">
-              {[
-                {
-                  href: "/dashboard",
-                  label: (
-                    <div className="flex justify-center items-center gap-x-1">
-                      <FaHome size={16} /> Dashboard
-                    </div>
-                  ),
-                },
-                {
-                  href: "/create",
-                  label: (
-                    <div className="flex justify-center items-center gap-x-1">
-                      <IoMdCreate size={16} /> Create
-                    </div>
-                  ),
-                },
-                {
-                  href: "/pricing",
-                  label: (
-                    <div className="flex justify-center items-center gap-x-1">
-                      <FaDollarSign size={16} /> Pricing
-                    </div>
-                  ),
-                },
-                {
-                  href: "/contact",
-                  label: (
-                    <div className="flex justify-center items-center gap-x-1">
-                      <FaPhoneAlt size={16} /> Contact
-                    </div>
-                  ),
-                },
-              ].map((link) => (
+          <nav className="hidden md:flex items-center gap-x-8">
+            <div className="flex gap-x-4 lg:gap-x-8 text-gray-300 font-medium">
+              {navigationLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -217,29 +233,42 @@ const Header: React.FC = () => {
           </nav>
         </SignedIn>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center">
           <SignedOut>
-            <div className="flex space-x-3">
+            <div className="flex space-x-2 sm:space-x-3">
               <SignInButton signUpForceRedirectUrl="/dashboard">
-                <button className="px-4 py-1.5 bg-gradient-to-br from-purple-950 via-purple-800 to-purple-950 text-white rounded-lg font-poppins font-semibold text-sm cursor-pointer transition-all duration-400 hover:from-purple-800 hover:to-purple-800 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 active:scale-100">
+                <button className="px-2 sm:px-4 py-1.5 bg-gradient-to-br from-purple-950 via-purple-800 to-purple-950 text-white rounded-lg font-poppins font-semibold text-xs sm:text-sm cursor-pointer transition-all duration-400 hover:from-purple-800 hover:to-purple-800 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 active:scale-100">
                   Sign In
                 </button>
               </SignInButton>
               <SignUpButton signInForceRedirectUrl="/dashboard">
-                <button className="px-4 py-1.5 bg-gradient-to-r from-[#ED213A] via-[#93291E] to-[#93291E] text-white rounded-lg font-poppins font-semibold text-sm border border-red-300/30 cursor-pointer transition-all duration-400 hover:from-[#ED213A] hover:to-[#b93627] hover:scale-105 hover:shadow-lg hover:shadow-red-500/30 active:scale-100">
+                <button className="px-2 sm:px-4 py-1.5 bg-gradient-to-r from-[#ED213A] via-[#93291E] to-[#93291E] text-white rounded-lg font-poppins font-semibold text-xs sm:text-sm border border-red-300/30 cursor-pointer transition-all duration-400 hover:from-[#ED213A] hover:to-[#b93627] hover:scale-105 hover:shadow-lg hover:shadow-red-500/30 active:scale-100">
                   Sign Up
                 </button>
               </SignUpButton>
             </div>
           </SignedOut>
+
           <SignedIn>
-            <div className="relative">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden ml-2 p-2 text-gray-300 hover:text-white focus:outline-none"
+              aria-label="Toggle mobile menu"
+            >
+              {isMobileMenuOpen ? (
+                <HiX className="w-6 h-6" />
+              ) : (
+                <HiMenu className="w-6 h-6" />
+              )}
+            </button>
+
+            <div className="relative ml-4">
               <UserButton
                 afterSignOutUrl="/"
                 appearance={{
                   elements: {
                     avatarBox:
-                      "w-8 h-8 rounded-full border border-teal-300/40 shadow-sm cursor-pointer",
+                      "w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-teal-300/40 shadow-sm cursor-pointer",
                   },
                 }}
               />
@@ -248,6 +277,34 @@ const Header: React.FC = () => {
           </SignedIn>
         </div>
       </div>
+
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <SignedIn>
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden overflow-hidden relative z-10"
+            >
+              <div className="py-3 px-4 border-t border-teal-800/30">
+                {navigationLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block py-2 text-gray-300 hover:text-teal-300 font-poppins text-sm transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          </SignedIn>
+        )}
+      </AnimatePresence>
+
       <style jsx>{`
         @keyframes pulse-slow {
           0% {
