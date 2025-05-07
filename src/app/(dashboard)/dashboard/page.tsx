@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 // Import components
 import TopBar from "./components/TopBar";
@@ -47,25 +48,21 @@ export default function Dashboard({
   const [filteredEvents, setFilteredEvents] = useState(events);
   const [loadingEvents, setLoadingEvents] = useState(true);
 
-  // Fetch dashboard statistics
+  // Fetch dashboard statistics from the API
   useEffect(() => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        // For demo - simulated response since API might not be ready
-        setTimeout(() => {
-          setStats({
-            totalEvents: 2,
-            totalParticipants: 10,
-            recentParticipants: 5,
-            totalCertificates: 10,
-            totalEmailsSent: 5,
-            recentEmailsSent: 5,
-          });
-          setLoading(false);
-        }, 600);
+        const response = await axios.get('/api/dashboard/stats');
+        
+        if (response.data.success) {
+          setStats(response.data.data);
+        } else {
+          console.error("Failed to fetch dashboard stats:", response.data.error);
+        }
       } catch (error) {
         console.error("Error fetching dashboard stats:", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -73,46 +70,32 @@ export default function Dashboard({
     fetchStats();
   }, []);
 
-  // Fetch events data
+  // Fetch events data from the API
   const fetchEvents = async () => {
     try {
       setLoadingEvents(true);
-      // For demo - simulated response
-      setTimeout(() => {
-        const eventsData = [
-          {
-            id: "1",
-            title: "test 2",
-            createdAt: "2025-05-03",
-            participants: [
-              { emailed: true },
-              { emailed: true },
-              { emailed: true },
-              { emailed: true },
-              { emailed: true },
-            ],
-            template: { name: "Template f" },
-          },
-          {
-            id: "2",
-            title: "test 3",
-            createdAt: "2025-07-07",
-            participants: [
-              { emailed: false },
-              { emailed: false },
-              { emailed: false },
-              { emailed: false },
-              { emailed: false },
-            ],
-            template: { name: "Template f" },
-          },
-        ];
+      const response = await axios.get('/api/events');
+      
+      if (response.data.success) {
+        // Make sure the data structure matches what the component expects
+        const eventsData = response.data.data.map((event: any) => ({
+          id: event.id,
+          title: event.title || event.name,
+          createdAt: event.createdAt,
+          participants: Array.isArray(event.participants) ? event.participants : [],
+          template: {
+            name: event.template?.name || 'Default Template'
+          }
+        }));
+        
         setEvents(eventsData);
         setFilteredEvents(eventsData);
-        setLoadingEvents(false);
-      }, 500);
+      } else {
+        console.error("Failed to fetch events:", response.data.error);
+      }
     } catch (error) {
       console.error("Error fetching events:", error);
+    } finally {
       setLoadingEvents(false);
     }
   };

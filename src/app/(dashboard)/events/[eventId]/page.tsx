@@ -376,7 +376,7 @@ export default function EventDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#080711] to-[#0e1015] text-[#c5c3c4]">
+    <div className="min-h-screen bg-gradient-to-br from-[#080711] to-[#0e1015] text-[#c5c3c4] overflow-y-auto">
       <div className="container mx-auto max-w-7xl px-4 py-8 pt-28">
         {/* Top Section: Event Overview */}
         <EventHeader event={event} />
