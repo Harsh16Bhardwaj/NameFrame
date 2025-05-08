@@ -1,172 +1,184 @@
 # NameFrame Certificate Generator
 
+![Hero Image](./public/Landing.png)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Build Status](https://img.shields.io/travis/nameframe/nameframe.svg)](https://travis-ci.org/nameframe/nameframe)
 [![GitHub issues](https://img.shields.io/github/issues/nameframe/nameframe.svg)](https://github.com/nameframe/nameframe/issues)
+[![GitHub stars](https://img.shields.io/github/stars/nameframe/nameframe.svg)](https://github.com/nameframe/nameframe)
 
-A dynamic certificate generator that empowers event organizers to create and distribute personalized certificates effortlessly. Built with **Next.js**, **React**, and the **HTML5 Canvas API**, NameFrame offers real-time certificate previews, name validation, adjustable font sizes, and one-click downloads with celebratory confetti animations.
+Tired of creating certificates manually? 😓 NameFrame is your solution! This dynamic certificate generator empowers event organizers to create and distribute personalized certificates effortlessly. Built with **Next.js**, **React**, and the **HTML5 Canvas API**, NameFrame offers unique certificate generation, content modification, and reliable mailing. Try it now and automate your workflow! ⭐
 
-## Table of Contents
+## Quick Start 🚀
 
-- [Features](#features)
-- [Demo](#demo)
-- [Certificate Template Specifications](#certificate-template-specifications)
-- [Installation & Setup](#installation--setup)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
+Get started in minutes:
 
-## Features
+1. Visit the [NameFrame demo](#) (launching soon!).
+2. Upload a certificate template in **4:3 format** (1440x1080 pixels, PNG/JPEG).
+3. Upload an **Excel file** with participant details (columns: Name, Email).
+4. Generate and download personalized certificates!
 
-- **Real-Time Certificate Preview:**  
-  Instantly render certificates using the HTML5 Canvas with dynamic text overlays.
+**For Developers**: Jump to [Installation & Setup](#installation--setup) to run locally.
 
-- **Name Validation:**  
-  Validates entered names against a predefined participant list to ensure authenticity.
+## Features 🎉
 
-- **Adjustable Font Size:**  
-  Customize font size via the UI for perfect text placement on the certificate.
+- **Unique Certificate Generation** 🖼️  
+  Create one-of-a-kind certificates with dynamic text overlays using the HTML5 Canvas API.
 
-- **Download with Confetti Celebration:**  
-  Download certificates as PNG files with a delightful confetti animation.
+- **Content Modification** 🎨  
+  Customize text placement, font size, and style via an intuitive UI.
 
-- **Responsive & Elegant UI:**  
-  Modern design featuring glassmorphism effects and smooth animations for a premium experience.
+- **Mail Customization** ✉️  
+  Personalize email templates for certificate distribution.  
+  ![Mail Customization](./screenshots/mail.png)
 
-- **Robust Mailing Architecture:**  
-  *(For Production)* Backend integration for emailing certificates, with rate limiting, sender rotation, and Kafka queues for scalability.
+- **Reliable Mailing** 📨  
+  Scalable backend with rate limiting, sender rotation, and Kafka queues for bulk emailing.
 
-## Demo
+- **Dashboard Management** 📊  
+  Monitor certificate generation and mailing status in a modern dashboard.  
+  ![Dashboard](./screenshots/dashboard.png)
 
-Check out NameFrame in action:
+- **Lead Generation** 📈  
+  Capture participant data for event analytics and follow-ups.
+
+## Demo 🎥
+
+Watch NameFrame generate personalized certificates in seconds! 🚀  
+
+[![NameFrame Demo](https://img.youtube.com/vi/placeholder/0.jpg)](https://youtube.com/watch?v=placeholder)  
+*Click to watch the demo on YouTube.*  
 
 ![Certificate Preview](./screenshots/preview.png)  
 *Real-time certificate rendering with dynamic text overlay.*
 
-![Mailing Dashboard](./screenshots/mailing_dashboard.png)  
-*Mailing dashboard for bulk certificate distribution.*
+## Certificate Template Specifications 📄
 
-> *Live demo coming soon! Visit [nameframe.app](#) for a preview (link placeholder).*
+- **Format**: 4:3 aspect ratio (1440x1080 pixels recommended).  
+- **Accepted Formats**: PNG or JPEG.  
+- **Text Placement**: Centered horizontally, at ~60% of template height (adjustable in UI).  
+- **Participant List**: Excel file with columns: **Name**, **Email**.  
 
-## Certificate Template Specifications
+![Text Placement Diagram](./assets/text-placement.png)  
+*Text placement coordinates for certificate templates.*
 
-- **Recommended Dimensions:**  
-  1920 x 1080 pixels (16:9 aspect ratio) for optimal text overlay resolution.
+## Usage 🛠️
 
-- **Text Placement Guidance:**  
-  Recipient names are rendered near the center, at approximately 60% of the template height (horizontally centered). Adjust placement directly in the UI.
+1. **Upload Template**: Upload a 4:3 PNG/JPEG template (1440x1080 pixels).  
+   ![Template Upload](./screenshots/excel-upload.png)
 
-- **Accepted Image Formats:**  
-  PNG or JPEG.
+2. **Upload Participant List**: Provide an Excel file (columns: Name, Email).  
+   ![Excel Upload](./screenshots/excel-upload.png)
 
-## Installation & Setup
+3. **Customize Text**: Adjust font size and placement using the preview.  
+   ![Text Customization](./screenshots/text-customization.png)
 
-### Prerequisites
+4. **Generate Certificates**: Preview and download as PNGs.  
+5. **Send Emails**: Use the mailing system to distribute certificates.
 
-- **Node.js** (>= 14.x)
-- **npm** or **yarn**
-- A **Cloudinary** account for image uploads (optional for production)
+**Tips**:  
+- Use high-contrast templates for better text visibility.  
+- Ensure Excel file has no empty rows in Name/Email columns.
 
-### Installation Steps
+## For Developers ⚙️
 
-1. **Clone the Repository:**
+### Installation & Setup
 
+**Prerequisites**:  
+- **Node.js** (>= 14.x)  
+- **npm** or **yarn**  
+- **Cloudinary** account (optional for production)
+
+**Quick Setup**:  
+
+1. Clone the repository:  
    ```bash
    git clone https://github.com/nameframe/nameframe.git
    cd nameframe
    ```
 
-2. **Install Dependencies:**
-
+2. Install dependencies:  
    ```bash
    npm install
    ```
 
-   Or, if using Yarn:
-
-   ```bash
-   yarn install
-   ```
-
-3. **Set Up Environment Variables:**  
-   Create a `.env.local` file in the project root and add the following:
-
+3. Set up environment variables in `.env.local`:  
    ```bash
    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
    NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
    NEXT_PUBLIC_API_URL=http://localhost:3000/api
    ```
 
-   Replace `your_cloudinary_cloud_name` and `your_upload_preset` with your Cloudinary credentials. Obtain these from your [Cloudinary dashboard](https://cloudinary.com/).
-
-4. **Run the Development Server:**
-
+4. Run the development server:  
    ```bash
    npm run dev
    ```
 
-   Or with Yarn:
+   Open [http://localhost:3000](http://localhost:3000).
 
-   ```bash
-   yarn dev
-   ```
+**Advanced Setup** (click to expand):  
+<details>
+<summary>Production Build & Cloudinary</summary>
 
-   Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
+- Build for production:  
+  ```bash
+  npm run build
+  npm run start
+  ```
 
-5. **Build for Production (Optional):**
+- Obtain Cloudinary credentials from [Cloudinary dashboard](https://cloudinary.com/).
 
-   ```bash
-   npm run build
-   npm run start
-   ```
+</details>
 
-## Usage
+**Troubleshooting**: Check [GitHub Issues](https://github.com/nameframe/nameframe/issues) for common problems.
 
-1. **Upload a Certificate Template:**  
-   Upload a PNG or JPEG template via the UI (1920x1080 recommended).
+### Contributing 🤝
 
-2. **Enter Participant Names:**  
-   Input names manually or upload a participant list for validation.
+We welcome contributions! To get started:  
 
-3. **Customize Text:**  
-   Adjust font size and placement using the preview controls.
-
-4. **Generate & Download:**  
-   Preview the certificate, then download it as a PNG with a confetti celebration.
-
-5. **Bulk Mailing (Production):**  
-   Configure the mailing system to send certificates to participants via email.
-
-For detailed usage instructions, check the [docs](./docs) folder (coming soon).
-
-## Contributing
-
-We welcome contributions! To get started:
-
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix:
+1. Fork the repository.  
+2. Create a feature branch:  
    ```bash
    git checkout -b feature/your-feature-name
    ```
-3. Commit your changes with descriptive messages:
+3. Run tests:  
+   ```bash
+   npm test
+   ```
+4. Commit changes:  
    ```bash
    git commit -m "Add feature: your feature description"
    ```
-4. Push your branch and submit a pull request:
+5. Push and submit a pull request:  
    ```bash
    git push origin feature/your-feature-name
    ```
-5. Reference any related issues in your pull request description.
 
-For questions or suggestions, open an issue on [GitHub](https://github.com/nameframe/nameframe/issues).
+Check [Good First Issues](https://github.com/nameframe/nameframe/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## License
+### Workflow 📝
+
+We will update the workflow soon. Stay tuned!
+
+### Roadmap 🛣️
+
+- Launching support for smaller screens (mobile-friendly UI).  
+- Integrating multiple send methods (e.g., WhatsApp, SMS).  
+- Adding backup queues for mailing reliability.  
+
+Track progress on [GitHub Issues](https://github.com/nameframe/nameframe/issues).
+
+### Tech Stack 🛠️
+
+- **Frontend**: Next.js, React, HTML5 Canvas API  
+- **Backend**: Node.js, Kafka (for mailing)  
+- **Image Management**: Cloudinary  
+
+## License 📜
 
 This project is licensed under the [MIT License](LICENSE).
 
-## Acknowledgements
+## Acknowledgements 🙌
 
-- Built with [Next.js](https://nextjs.org/) and [React](https://reactjs.org/).
-- Powered by [Cloudinary](https://cloudinary.com/) for image management.
-- Inspired by modern certificate automation platforms and contemporary UI/UX design trends.
+- Built with [Next.js](https://nextjs.org/) and [React](https://reactjs.org/).  
+- Powered by [Cloudinary](https://cloudinary.com/) for image management.  
+- Inspired by modern certificate automation platforms.
