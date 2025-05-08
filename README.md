@@ -1,6 +1,6 @@
 # NameFrame Certificate Generator
 
-![Hero Image](./assets/hero.png)
+![Hero Image](./public/Landing.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Build Status](https://img.shields.io/travis/nameframe/nameframe.svg)](https://travis-ci.org/nameframe/nameframe)
