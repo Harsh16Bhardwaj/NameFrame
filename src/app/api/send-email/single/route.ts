@@ -91,8 +91,8 @@ export async function POST(req: Request) {
             text: participant.name,
           },
           color: event.template.fontColor || "#000000",
-          width: event.template.textWidth*10 || 800,
-          height: event.template.textHeight*10 || 150,
+          width: event.template.textWidth*11 || 800,
+          height: event.template.textHeight*9 || 150,
           gravity: "center",
           y: typeof event.template.textPositionY === "number"
             ? Math.round((event.template.textPositionY - 50) * 10)
@@ -107,13 +107,11 @@ export async function POST(req: Request) {
     });
     
 
-    // Save the certificate URL before sending email
     await prisma.participant.update({
       where: { id: participant.id },
       data: { certificateUrl },
     });
 
-    // Create a professional email template with download button
     const emailHtml = generateCertificateEmail({
       subject,
       eventTitle: event.title,
@@ -123,16 +121,11 @@ export async function POST(req: Request) {
     });
 
     try {
-      // Debug logging
-      console.log("Sending email to:", participant.email);
-      
-      // Send email using Resend with proper testing settings
       const emailResult = await resend.emails.send({
-        from: "onboarding@resend.dev", // This is the only allowed sender for testing
-        to: [participant.email], // Make sure it's an array
+        from: `${event.title || 'Certificates'} <noreply@${process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL}>`, 
+        to: [participant.email], 
         subject: subject,
         html: emailHtml,
-        // Include these optional parameters for better tracking
         tags: [
           {
             name: "event_id",
@@ -140,8 +133,6 @@ export async function POST(req: Request) {
           },
         ],
       });
-
-      console.log("Email result:", emailResult);
 
       if (emailResult.error) {
         console.error("Resend API error:", emailResult.error);

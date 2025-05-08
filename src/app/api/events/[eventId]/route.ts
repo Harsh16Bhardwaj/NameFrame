@@ -16,11 +16,10 @@ export async function GET(_: Request, { params }: Params) {
     if (!userId) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
-
-    // Fetch the event with the specified ID for the authenticated user
+    const { eventId } = await params; 
     const event = await prisma.event.findUnique({
       where: {
-        id: params.eventId, // Changed from params.id to params.eventId
+        id: eventId, 
         userId,
       },
       include: {
