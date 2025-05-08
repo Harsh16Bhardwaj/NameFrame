@@ -35,20 +35,30 @@ export const Hero: React.FC<HeroProps> = ({
       {/* Grid pattern overlay */}
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
 
-      <div className="container max-w-7xl mx-auto px-4 z-10 flex flex-col lg:flex-row gap-12 items-center">
+      <div className="container max-w-6xl mx-auto px-4 z-10 flex flex-col lg:flex-row gap-12 items-center">
         {/* Hero content */}
-        <div className=" space-y-6 text-center lg:text-left mx-4 w-4xl">
+        <div className=" space-y-2 text-center lg:text-left mx-4 w-4xl">
           <motion.h1
-            className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-300"
+            className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-300"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Automate Your Certificates in Seconds
+            Tired of creating event certificates manually ?
           </motion.h1>
+          
 
           <motion.p
-            className="text-lg md:text-xl text-gray-300 max-w-lg"
+            className="text-lg md:text-xl text-gray-300 mb-5  font-semibold max-w-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+           Try <span className="text-teal-400 text-2xl"> NameFrame : Automation for Certifications</span>
+          </motion.p>
+
+          <motion.p
+            className="text-lg md:text-xl text-gray-400 max-w-lg mb-7"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -80,7 +90,7 @@ export const Hero: React.FC<HeroProps> = ({
               </Link>
             </SignedIn>
             <a href="#action">
-              <button className="px-8 py-3 cursor-pointer border border-gray-600 rounded-lg font-medium text-gray-300 hover:bg-gradient-to-br ease-in-out hover:ease-in-out hover:scale-103 hover:duration-200 hover:from-teal-800 hover:via-teal-700 hover:to-gray-800 transition duration-200">
+              <button className="px-8 py-3 cursor-pointer border border-dashed border-gray-400 rounded-lg font-medium text-gray-300 hover:bg-gradient-to-r ease-in-out hover:ease-in-out hover:scale-103 hover:duration-200 hover:from-teal-800 hover:via-teal-700 hover:to-gray-800 transition duration-200">
                 See How It Works
               </button>
             </a>
@@ -89,7 +99,7 @@ export const Hero: React.FC<HeroProps> = ({
 
         {/* 3D Certificate Mockup */}
         <motion.div
-          className="lg:w-1/2 parallax"
+          className="lg:w-2/3 parallax"
           data-speed="0.1"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
