@@ -15,17 +15,11 @@ import RecentActivity from "./components/RecentActivity";
 import type { ThemeConfig } from "@/config/theme";
 import { themeConfig as defaultThemeConfig } from "@/config/theme";
 
-export default function Dashboard({
-  isDarkMode,
-  setIsDarkMode,
-  setIsMobileNavOpen,
-  themeConfig,
-}: {
-  isDarkMode: boolean;
-  setIsDarkMode: (value: boolean) => void;
-  setIsMobileNavOpen: (value: boolean) => void;
-  themeConfig?: ThemeConfig;
-}) {
+export default function Dashboard() {
+  // State management
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [themeConfig, setThemeConfig] = useState<ThemeConfig | undefined>(defaultThemeConfig);
   const [searchQuery, setSearchQuery] = useState("");
   const [stats, setStats] = useState({
     totalEvents: 0,
@@ -47,6 +41,17 @@ export default function Dashboard({
   >([]);
   const [filteredEvents, setFilteredEvents] = useState(events);
   const [loadingEvents, setLoadingEvents] = useState(true);
+
+  // Check user preference for dark mode on initial load
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    setIsDarkMode(savedDarkMode);
+  }, []);
+
+  // Save dark mode preference when it changes
+  useEffect(() => {
+    localStorage.setItem('darkMode', isDarkMode.toString());
+  }, [isDarkMode]);
 
   // Fetch dashboard statistics from the API
   useEffect(() => {

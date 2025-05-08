@@ -8,25 +8,25 @@ const QuickActions: React.FC = () => {
     {
       title: "New Event",
       icon: <IoCalendarOutline className="w-6 h-6" />,
-      href: "/dashboard/events/new",
+      href: "/create",
       color: "#b7a2c9",
     },
     {
       title: "Templates",
       icon: <IoDocumentOutline className="w-6 h-6" />,
-      href: "/dashboard/templates",
+      href: "/templates",
       color: "#b7a2c9",
     },
     {
       title: "Add Participants",
       icon: <IoPeopleOutline className="w-6 h-6" />,
-      href: "/dashboard/participants/import",
+      href: "/participants",
       color: "#b7a2c9",
     },
     {
       title: "Send Emails",
       icon: <IoMailOutline className="w-6 h-6" />,
-      href: "/dashboard/emails",
+      href: "/events",
       color: "#b7a2c9",
     },
   ];
