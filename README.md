@@ -3,7 +3,6 @@
 ![Hero Image](./public/Landing.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Build Status](https://img.shields.io/travis/nameframe/nameframe.svg)](https://travis-ci.org/nameframe/nameframe)
 [![GitHub issues](https://img.shields.io/github/issues/nameframe/nameframe.svg)](https://github.com/nameframe/nameframe/issues)
 [![GitHub stars](https://img.shields.io/github/stars/nameframe/nameframe.svg)](https://github.com/nameframe/nameframe)
 
