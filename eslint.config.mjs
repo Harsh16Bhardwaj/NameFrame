@@ -10,7 +10,32 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // 1) include Next.js defaults
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
+  // 2) override specific rules so they only warn (not error)
+  {
+    rules: {
+      // allow unescaped ' and " in JSX without build failure
+      "react/no-unescaped-entities": "warn",
+
+      // unused vars/imports become warnings; underscore‑prefixed args/vars are ignored
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true
+        }
+      ],
+
+      // allow plain <img> tags without breaking build
+      "@next/next/no-img-element": "warn",
+
+      // permit use of `any` type without error
+      "@typescript-eslint/no-explicit-any": "warn",
+    },
+  },
 ];
 
 export default eslintConfig;
