@@ -4,13 +4,16 @@ import { PrismaClient } from "@prisma/client";
 import { parse } from "papaparse"; // For CSV parsing
 import * as XLSX from 'xlsx';
 
-interface Params { 
-  params: { eventId: string };  // Changed from id to eventId
+// This is the correct way to define params for Next.js App Router
+type RouteParams = {
+  params: {
+    eventId: string
+  }
 }
 
 const prisma = new PrismaClient();
 
-export async function POST(req: Request, { params }: Params) {
+export async function POST(req: Request, { params }: RouteParams) {
   try {
     // Authenticate the user
     const { userId } = await auth();
@@ -21,7 +24,7 @@ export async function POST(req: Request, { params }: Params) {
     // Verify the event exists and belongs to the user
     const event = await prisma.event.findUnique({
       where: {
-        id: params.eventId,  // Changed from params.id to params.eventId
+        id: params.eventId,
         userId,
       },
     });
@@ -85,14 +88,14 @@ export async function POST(req: Request, { params }: Params) {
 
     for (const row of parsedData as Array<{ [key: string]: any }>) {
       // Try to find name and email fields (handling different possible column names)
-      const name = row.name || row.Name || row.NAME || row["Student Name"] || row["STUDENT NAME"] || row.student_name;
-      const email = row.email || row.Email || row.EMAIL || row["Student Email"] || row["STUDENT EMAIL"] || row.student_email;
+      const name = row.name || row.Name || row.NAME || row["Student Name"] || row["STUDENT NAME"] || row.student_name || row["PARTICIPANT NAME"] || row["Participant Name"];
+      const email = row.email || row.Email || row.EMAIL || row["Student Email"] || row["STUDENT EMAIL"] || row.student_email || row["PARTICIPANT EMAIL"] || row["Participant Email"];
 
       if (name && email && emailRegex.test(email)) {
         participants.push({
           name,
           email,
-          eventId: params.eventId,  // Changed from params.id to params.eventId
+          eventId: params.eventId,
         });
       } else {
         invalidRows.push(row);
