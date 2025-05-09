@@ -18,6 +18,7 @@ import {
   Titan_One,
   Style_Script,
   Delius,
+  Poppins,
 } from "next/font/google";
 
 export const cookieFont = Cookie({
@@ -37,7 +38,9 @@ export const dancingScript = Dancing_Script({
   weight: "400",
   variable: "--font-dancing-script",
 });
-
+export const poppinFont = Poppins({
+  weight:["400","700"]
+})
 export const delius = Delius({
   weight: "400",
   subsets: ["latin"],
@@ -198,7 +201,7 @@ const Hero: React.FC<HeroProps> = ({
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
                       <div
-                        className={`text-xl sm:text-2xl md:text-3xl ${cookieFont.className} text-black font-bold`}
+                        className={`text-xl sm:text-2xl md:text-3xl ${poppinFont.className} text-black font-bold`}
                       >
                         {previewName}
                       </div>

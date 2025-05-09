@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { Download } from "lucide-react";
@@ -89,20 +90,56 @@ export const InteractivePreview: React.FC<InteractivePreviewProps> = ({
   templates,
 }) => {
   const certificateRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
+  // Adjusted parameters for text position and font settings to match the preview
+  const textPosition = {
+    x: 50, // Center horizontally (adjusted to match the preview's centering)
+    y: 46, // Position below the "Certificate of Appreciation" text
+    width: 80, // Wider to accommodate longer names
+    height: 10,
+  };
+
+  const fontSettings = {
+    family: "Poppins", // Match the preview and certificate style
+    size: 70, // Base font size; will be halved in preview
+    color: "#414141", // Match the certificate's text color
+  };
+
   const handleDownload = async () => {
-    if (!certificateRef.current) return;
+    const image = imageRef.current;
+    if (!image || !isImageLoaded) return;
 
     try {
-      const canvas = await html2canvas(certificateRef.current, {
-        useCORS: true,
-        scale: 2,
-        backgroundColor: null,
-      });
+      // Create canvas
+      const canvas = document.createElement("canvas");
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
 
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      // Draw the certificate background
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+      // Apply font settings
+      ctx.font = `${fontSettings.size }px ${fontSettings.family}`; // Match the preview's font size
+      ctx.fillStyle = fontSettings.color;
+      ctx.textAlign = "center"; // Center the text
+      ctx.textBaseline = "middle";
+
+      // Calculate absolute position
+      const x = (textPosition.x / 100) * canvas.width;
+      const y = (textPosition.y / 100) * canvas.height + 30;
+      const maxWidth = (textPosition.width / 100) * canvas.width;
+
+      // Draw participant name
+      ctx.fillText(previewName || "Your Name", x, y, maxWidth);
+
+      // Create download link
       const link = document.createElement("a");
-      link.download = `certificate-${previewName.replace(/\s+/g, "-").toLowerCase()}.png`;
+      link.download = `certificate-${(previewName || "your-name").replace(/\s+/g, "-").toLowerCase()}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
     } catch (error) {
@@ -200,28 +237,43 @@ export const InteractivePreview: React.FC<InteractivePreviewProps> = ({
                   key={currentTemplate}
                   ref={certificateRef}
                   className="relative overflow-hidden rounded-lg"
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
-                  transition={{ duration: 0.5 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
                 >
                   <Image
+                    ref={imageRef}
                     src={templates[currentTemplate]}
                     alt="Certificate preview"
-                    width={600}
-                    height={400}
+                    width={1000}
+                    height={800}
                     className="w-full h-auto"
                     onLoad={() => setIsImageLoaded(true)}
                   />
-                  <div className="absolute top-10 right-10 sm:top-12 sm:right-12 flex items-start justify-end">
+                  <div
+                    className="absolute flex items-center justify-center w-full"
+                    style={{
+                      left: "0%", // Position the container at the left edge
+                      top: `${textPosition.y}%`,
+                      width: "100%", // Full width to allow centering
+                      height: `${textPosition.height}%`,
+                    }}
+                  >
                     <motion.div
-                      className="text-right"
+                      className="text-center"
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.5, delay: 0.1 }}
                     >
-                      <div className={`text-xl sm:text-2xl md:text-3xl ${dancingScript.className} text-black font-bold`}>
-                        {previewName}
+                      <div
+                        className={`certificate-name text-2xl sm:text-3xl md:text-4xl ${dancingScript.className} font-bold`}
+                        style={{
+                          fontFamily: fontSettings.family,
+                          color: fontSettings.color,
+                        }}
+                      >
+                        {previewName || "Your Name"}
                       </div>
                     </motion.div>
                   </div>
