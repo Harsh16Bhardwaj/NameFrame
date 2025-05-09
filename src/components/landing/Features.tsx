@@ -112,7 +112,7 @@ export const Features: React.FC = () => {
           <AnimatePresence>
             <CardSpotlight className="hover:scale-103 mx-4 md:mx-0 ease-in-out duration-300 hover:ease-in-out hover:duration-300">
               <motion.div
-                className="bg-transparent cursor-pointer relative z-30 p-6 h-72 md:h-80 rounded-xl border border-gray-800 hover:border-violet-500/50 transition-all duration-300"
+                className="bg-transparent cursor-pointer relative z-30 p-6 h-72 md:h-80 rounded-xl border border-gray-700 hover:border-violet-500/50 transition-all duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -164,7 +164,7 @@ export const Features: React.FC = () => {
           <AnimatePresence>
             <CardSpotlight className="hover:scale-103 mx-4 md:mx-0 ease-in-out duration-300 hover:ease-in-out hover:duration-300">
               <motion.div
-                className="bg-transparent cursor-pointer relative z-30 p-6 h-72 md:h-80 rounded-xl border border-gray-800 hover:border-violet-500/50 transition-all duration-300"
+                className="bg-transparent cursor-pointer relative z-30 p-6 h-72 md:h-80 rounded-xl border border-gray-700 hover:border-violet-500/50 transition-all duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -216,7 +216,7 @@ export const Features: React.FC = () => {
           <AnimatePresence>
             <CardSpotlight className="hover:scale-103 md:mx-0 mx-4 ease-in-out duration-300 hover:ease-in-out hover:duration-300">
               <motion.div
-                className="bg-transparent cursor-pointer relative z-30 p-6 h-72 md:h-80 rounded-xl border border-gray-800 hover:border-violet-500/50 transition-all duration-300"
+                className="bg-transparent cursor-pointer relative z-30 p-6 h-72 md:h-80 rounded-xl border border-gray-700 hover:border-violet-500/50 transition-all duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}

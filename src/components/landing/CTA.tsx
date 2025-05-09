@@ -8,7 +8,7 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 export const CTA: React.FC = () => {
   return (
     <motion.section
-      className="py-16 sm:py-24 relative bg-gradient-to-br from-[#2d1a54] to-[#1a1a2e]"
+      className="py-16 sm:py-24 relative bg-gradient-to-br darkOnyx to-[#1a1a2e]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -76,16 +76,7 @@ export const CTA: React.FC = () => {
               </motion.button>
             </Link>
           </SignedIn>
-          <Link href="/demo">
-            <motion.button
-              className="px-4 sm:px-8 py-3 sm:py-4 border border-violet-500/50 rounded-lg font-medium text-gray-200 hover:bg-violet-500/10 transition-colors text-sm sm:text-base"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Request Demo
-            </motion.button>
-          </Link>
-        </motion.div>
+                  </motion.div>
       </motion.div>
     </motion.section>
   );
