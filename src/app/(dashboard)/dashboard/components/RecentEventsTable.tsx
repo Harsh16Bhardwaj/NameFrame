@@ -42,14 +42,14 @@ const RecentEventsTable: React.FC<RecentEventsTableProps> = ({
 
   return (
     <motion.div
-      className="bg-[var(--card-bg)] rounded-2xl p-5 shadow-md border border-[var(--border-color)] h-full overflow-hidden"
+      className="bg-[var(--dark-onyx-text)] px-8 rounded-2xl p-5 shadow-md border border-[var(--bluey-text)] h-full overflow-hidden"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
     >
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-[var(--text-primary)]">Recent Events</h2>
-        <Link href="/events" className="flex items-center gap-1 text-sm font-medium text-[var(--accent-color)] hover:underline">
+        <h2 className="text-xl md:text-3xl font-bold m-2 text-[var(--tealy-text)]">Recent Events</h2>
+        <Link href="/events" className="flex items-center gap-1 text-sm font-medium text-[var(--tealy-text)] hover:underline">
           View All <FiArrowRight size={14} />
         </Link>
       </div>
@@ -87,7 +87,7 @@ const RecentEventsTable: React.FC<RecentEventsTableProps> = ({
                   <tr 
                     key={event.id} 
                     onClick={() => handleRowClick(event.id)}
-                    className="border-b border-[var(--border-color)] hover:bg-[var(--card-hover)] transition-colors cursor-pointer"
+                    className="border-b border-[var(--bluey-text)] hover:bg-[var(--bluey-text)] transition-colors cursor-pointer"
                   >
                     <td className="py-4 px-2">
                       <span className="text-[var(--text-primary)] font-medium">{event.title}</span>
@@ -95,7 +95,7 @@ const RecentEventsTable: React.FC<RecentEventsTableProps> = ({
                     <td className="py-4 px-2 text-[var(--text-secondary)]">
                       {new Date(event.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="py-4 px-2 text-[var(--text-primary)]">
+                    <td className="py-4 px-2 text-[var(--pale)] pl-8">
                       {event.participants.length}
                     </td>
                     <td className="py-4 px-2 text-[var(--text-secondary)]">

@@ -137,18 +137,20 @@
 
 :root {
   --dark-onyx: #1B262C;
-  --dark-onyx-text: #1B262C;
+  --dark-onyx-text: #10171a;
   --onyx: #32373B;
   --onyx-text: #323738;
   --space: #4A5859;
   --space-text: #4A5859;
   --tealy: #00ADB5;
-  --tealy-text: #00ADB5;
+  --tealy-text: #048a91;
+  --tealy-heading: #7fc0c4;
   --bluey: #0F4C75;
+  --bluey1: #1e6492;
   --bluey-text: #093552;
   --bluey-hover: #0935524a;
   --pale: #F4D6CC;
-  --pale-text: #F4D6CC;
+  --pale-text: #000000;
   --yellow: #F4B860;
   --yellow-text: #F4B860;
   --love: #C83E4D;
@@ -469,7 +471,7 @@
 
 
 .onyx {
-  background-color: #32373b;
+  background-color: #262d37;
 }
 .onyx-text {
   color: #323738;

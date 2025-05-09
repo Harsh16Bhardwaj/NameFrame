@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import Logo from "@/../public/nameframelogo.png";
 import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
+import { cookieFont, delius, justAnotherHand, leckerliOne, merienda, pacifico, styleScript } from "../landing/Hero";
 
 type SidebarProps = {
   isSidebarCollapsed: boolean;
@@ -34,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Desktop Sidebar */}
       <div
         className={`hidden lg:flex flex-col border-r border-[var(--bluey)] bg-[var(--dark-onyx)] h-full transition-all duration-300 ease-in-out ${
-          isSidebarCollapsed ? "w-18" : "w-64"
+          isSidebarCollapsed ? "w-18" : "w-52"
         }`}
       >
         {/* Logo and Toggle */}
@@ -48,12 +49,12 @@ const Sidebar: React.FC<SidebarProps> = ({
                 height={32}
                 className="rounded-md"
               />
-              {/* {!isSidebarCollapsed && (
-                <span className="ml-3 font-medium text-xl text-[var(--text-primary)]">
+              {!isSidebarCollapsed && (
+                <span className={`ml-3 ${leckerliOne.className} font-medium text-xl text-[var(--text-primary)]`}>
                   NameFrame
                 </span>
               )}
-              <button
+              {/* <button
                 onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                 className="p-1.5 rounded-md  cursor-pointer text-[var(--text-secondary)] hover:bg-[var(--bluey-hover)] transition-colors"
               >
@@ -67,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           </Link>
         </div>
 
-        <div className={`h-screen z-40 ${isSidebarCollapsed? "ml-14":"ml-60"} duration-300 absolute flex justify-end items-center`}>
+        <div className={`h-screen z-40 ${isSidebarCollapsed? "ml-14":"ml-48"} duration-300 absolute flex justify-end items-center`}>
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
             className={`p-2  rounded-md mt-4  bg-slate-700 cursor-pointer text-gray-200 hover:bg-[var(--bluey)] transition-colors`}

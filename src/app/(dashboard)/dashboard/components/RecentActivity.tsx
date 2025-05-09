@@ -79,16 +79,16 @@ const RecentActivity: React.FC<RecentActivityProps> = ({ events }) => {
   };
 
   return (
-    <div className="space-y-4 max-h-[300px] overflow-y-auto pr-1 scrollbar-thin">
+    <div className="space-y-4 max-h-[270px] overflow-y-auto pr-1 scrollbar-thin">
       {sortedActivities.length === 0 ? (
-        <div className="text-center py-8 text-[var(--text-secondary)]">
+        <div className="text-center py-8 text-[var(--bluey-text)]">
           <p>No recent activity</p>
         </div>
       ) : (
         sortedActivities.map((activity, index) => (
           <motion.div
             key={activity.id}
-            className="flex gap-3 py-2"
+            className="flex gap-3 py-2 border border-[var(--bluey-text)] rounded-xl"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 * index }}
@@ -102,7 +102,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({ events }) => {
                 <p className="font-medium text-[var(--text-primary)] truncate">
                   {activity.title}
                 </p>
-                <span className="text-xs text-[var(--text-secondary)] whitespace-nowrap ml-2">
+                <span className="text-xs text-[var(--text-secondary)] whitespace-nowrap ">
                   {getRelativeTime(activity.date)}
                 </span>
               </div>
