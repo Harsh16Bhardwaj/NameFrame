@@ -90,7 +90,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents }) 
                   />
                   <Bar 
                     dataKey="value" 
-                    fill="#048a91"
+                    fill="#C83E4D"
                     radius={[4, 4, 0, 0]}
                     label={{ 
                       position: 'top', 
@@ -147,7 +147,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents }) 
                   <Line 
                     type="monotone" 
                     dataKey="value" 
-                    stroke="#048a91"
+                    stroke="#C83E4D"
                     strokeWidth={3}
                     dot={{ r: 5, stroke: '#093552', strokeWidth: 2, fill: '#ffffff' }}
                     activeDot={{ r: 7 }}

@@ -79,6 +79,9 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const isDashboard = pathname.startsWith("/dashboard");
+  const isEvents = pathname.startsWith("/events");
+  const isParticipants = pathname.startsWith("/participants");
+  const isTemplate = pathname.startsWith("/templates");
 
   return (
     <ClerkProvider>
@@ -86,9 +89,9 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          {!isDashboard && <Header />}
+          {(!isDashboard && isEvents  && !isTemplate && !isParticipants) && <Header />}
           {children}
-          {!isDashboard && <Footer />}
+          {(!isDashboard && !isEvents && !isTemplate && !isParticipants) && <Footer />}
         </body>
       </html>
     </ClerkProvider>

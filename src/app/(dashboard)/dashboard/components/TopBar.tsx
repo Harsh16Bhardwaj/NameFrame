@@ -33,7 +33,7 @@ const TopBar: React.FC<TopBarProps> = ({
         <h1 className={`text-3xl font-semibold ${titanOne.className}  text-[var(--text-primary)] hidden md:block`}>Dashboard</h1>
       </div>
 
-      <div className="flex-1 px-6 max-w-2xl mx-auto">
+      <div className="flex  px-6 justify-end  w-full mx-auto">
         <div className="relative">
           <input
             type="text"
@@ -41,7 +41,7 @@ const TopBar: React.FC<TopBarProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyPress}
-            className="w-full py-2 pl-10 pr-4 text-sm bg-[var(--bluey-hover)] border border-[var(--tealy)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] transition-colors"
+            className="w-2xl py-2 pl-10 pr-4 text-sm bg-[var(--bluey-hover)] border border-[var(--tealy)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] transition-colors"
           />
           <MdSearch
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5 cursor-pointer"
@@ -50,14 +50,14 @@ const TopBar: React.FC<TopBarProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      {/* <div className="flex items-center gap-3">
         <button
           onClick={() => setIsDarkMode(!isDarkMode)}
           className="p-2 rounded-full bg-[var(--bluey-text)] text-[var(--pale)] hover:bg-[var(--bluey)] hover:text-[var(--accent-foreground)] transition-colors"
         >
           {isDarkMode ? <MdLightMode className="w-5 h-5" /> : <MdDarkMode className="w-5 h-5" />}
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

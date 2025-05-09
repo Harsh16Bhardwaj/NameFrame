@@ -16,6 +16,7 @@ import type { ThemeConfig } from "@/config/theme";
 import { themeConfig as defaultThemeConfig } from "@/config/theme";
 import Link from "next/link";
 import { Calendar } from "lucide-react";
+import { josefinFont } from "@/components/landing/Hero";
 
 export default function Dashboard() {
   // State management
@@ -173,9 +174,12 @@ export default function Dashboard() {
       <div className="flex-1 p-6 overflow-y-auto onyx scrollbar-themed">
         <div className="w-full  h-10 mb-5">
           <Link href="/create">
-            <div className="flex w-full px-5  justify-end gap-x-2">
+            <div className="flex  flex-col md:flex-row   w-full px-5  justify-end gap-x-2">
+              <button className={ `${josefinFont.className} visible  md:invisible text-gray-300 font-semibold`}>
+                For Best Experience Switch to Web Version. Thank You...
+              </button>
               <button
-                className={`flex cursor-pointer items-center justify-center gap-x-2 rounded-md px-6 py-2.5 font-medium text-sm transition-all duration-200 ease-in-out transform
+                className={`flex md:visible invisible cursor-pointer items-center justify-center gap-x-2 rounded-md px-6 py-2.5 font-medium text-sm transition-all duration-200 ease-in-out transform
     ${
       isDarkMode
         ? "bg-gradient-to-r from-[#1e293b] to-[#334155] text-gray-100 border border-[#475569] hover:from-[#2d3b50] hover:to-[#3b4c64] hover:shadow-md hover:scale-105"
