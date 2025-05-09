@@ -14,6 +14,7 @@ import template1 from '@/../public/1.png';
 import template2 from '@/../public/2.png';
 import template3 from '@/../public/3.png';
 import template4 from '@/../public/4.png';
+import FeedbackForm from "@/components/feedbackForm";
 
 // Throttle function
 const throttle = (func: Function, delay: number) => {
@@ -92,6 +93,7 @@ export default function LandingPage() {
       
       {/* CTA Section */}
       <CTA />
+      <FeedbackForm/>
       
       {/* Custom styles for animations */}
       <CustomStyles />

@@ -51,7 +51,7 @@ const navItems = [
     icon: <FaDollarSign className="h-4 w-4 text-gray-300" />,
   },
   {
-    name: "Contact",
+    name: "Collab",
     link: "/contact",
     icon: <FaPhoneAlt className="h-4 w-4 text-gray-300" />,
   },

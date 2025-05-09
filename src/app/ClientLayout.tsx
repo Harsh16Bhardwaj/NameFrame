@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import FeedbackForm from "@/components/feedbackForm";
 
 export default function ClientLayout({
   children,
@@ -21,6 +22,7 @@ export default function ClientLayout({
     <>
       {showHeaderFooter && <Header />}
       {children}
+      {<FeedbackForm></FeedbackForm>}
       {showHeaderFooter && <Footer />}
     </>
   );

@@ -44,11 +44,11 @@ const socialHandles: SocialHandle[] = [
 ];
 
 const caseTypes = [
-  'Property Dispute',
-  'Family Law',
-  'Criminal Case',
-  'Civil Suit',
-  'Corporate Law',
+  'UI Feature',
+  'Core Feature',
+  'Fun Feature',
+  'Found a Bug',
+  'Something can be Better',
   'Other'
 ];
 
@@ -159,8 +159,8 @@ const ContactPage = () => {
           transition={{ duration: 0.8 }}
           className="text-5xl md:text-5xl decoration-2  underline-offset-4 font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#0F4C75] to-indigo-500 ]"
         >
-          Got an Issue?
-          <span className={`text-[#d6d6d5] ${josefinFont.className} -mt-4 md:mt-0 text-2xl ml-2`}>We have you covered</span>
+          Want a Feature?
+          <span className={`text-[#d6d6d5] ${josefinFont.className} -mt-4 md:mt-0 text-2xl ml-4`}>Just Ask...</span>
         </motion.h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -222,7 +222,7 @@ const ContactPage = () => {
               </div>
               <div>
                 <label htmlFor="caseType" className="block text-sm font-medium text-gray-200 mb-2 font-[var(--font-inter)]">
-                  Type of Case
+                  Type of Feature
                 </label>
                 <select
                   id="caseType"
@@ -231,7 +231,7 @@ const ContactPage = () => {
                   onChange={handleInputChange}
                   className="w-full p-2 md:p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
                 >
-                  <option value="">Select case type</option>
+                  <option value="">Select a Type</option>
                   {caseTypes.map((type) => (
                     <option key={type} value={type}>{type}</option>
                   ))}
