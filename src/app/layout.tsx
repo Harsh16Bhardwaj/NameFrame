@@ -1,4 +1,3 @@
-"use client"
 import type { Metadata } from "next";
 import {
   Geist,
@@ -10,13 +9,10 @@ import {
   Raleway,
   Josefin_Sans,
 } from "next/font/google";
-import { usePathname } from "next/navigation";
-
 
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import ClientLayout from "./ClientLayout";
 
 // Font Configs
 const geistSans = Geist({
@@ -65,33 +61,93 @@ const josefinSans = Josefin_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
-// Export or use them in your layout/app as needed
+export const metadata: Metadata = {
+  title: "NameFrame | Professional Certificate Generation Platform",
+  description: "Create, customize, and distribute professional certificates for events, courses, and achievements with our all-in-one certificate management solution.",
+  keywords: "certificate generator, event certificates, digital certificates, certificate management, certificate templates",
+    
+  // Icon configuration
+  icons: {
+    // Main favicon (16x16)
+    icon: [
+      {
+        url: '/favicon.ico',
+        sizes: '16x16',
+      },
+      {
+        url: '/favicon-32x32.png',
+        sizes: '32x32',
+      }
+    ],
+    // Apple Touch Icon (for iOS devices)
+    apple: [
+      {
+        url: '/apple-touch-icon.png',
+        sizes: '180x180',
+      }
+    ],
+    // Other icons
+    other: [
+      {
+        rel: 'mask-icon',
+        url: '/safari-pinned-tab.svg',
+      }
+    ]
+  },
+  
+  // Manifest file for PWA
+  manifest: '/site.webmanifest',
+  
+  // Open Graph and Twitter config remains the same
+  openGraph: {
+    title: "NameFrame | Professional Certificate Generation Platform",
+    description: "Create, customize, and distribute professional certificates for events, courses, and achievements.",
+    images: ['/og-image.png'],
+    type: 'website',
+    url: 'https://www.nameframe.site/',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "NameFrame | Professional Certificate Generation Platform",
+    description: "Create, customize, and distribute professional certificates for events, courses, and achievements.",
+    images: ['/og-image.png'],
+  }
 
-// export const metadata: Metadata = {
-//   title: "NameFrame : One stop solution for Event Certtification",
-//   description: "One stop solution for Event Certification. Manage your event from start to end with ease.",
-// };
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const isDashboard = pathname.startsWith("/dashboard");
-  const isEvents = pathname.startsWith("/events");
-  const isParticipants = pathname.startsWith("/participants");
-  const isTemplate = pathname.startsWith("/templates");
+  // No need for path checking here - moved to client layout
 
   return (
     <ClerkProvider>
       <html lang="en" className="dark">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} ${styleScript.variable} ${bangers.variable} ${titanOne.variable} ${signika.variable} ${raleway.variable} ${josefinSans.variable} antialiased`}
         >
-          {(!isDashboard && !isEvents  && !isTemplate && !isParticipants) && <Header />}
-          {children}
-          {(!isDashboard && !isEvents && !isTemplate && !isParticipants) && <Footer />}
+          {/* Import the client component with theme and pathname logic */}
+          <ClientLayout>{children}</ClientLayout>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "SoftwareApplication",
+                "name": "NameFrame",
+                "applicationCategory": "BusinessApplication",
+                "operatingSystem": "Web",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "INR"
+                },
+                "description": "Professional certificate generation and management platform"
+              })
+            }}
+          />
         </body>
       </html>
     </ClerkProvider>

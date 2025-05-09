@@ -1,8 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
+import { Metadata } from "next";
 import { Check, Plus } from "lucide-react";
 import { motion } from "framer-motion";
+
+export const metadata: Metadata = {
+  title: "Pricing Plans | NameFrame Certificate Platform",
+  description: "Choose the right certificate generation plan for your needs - from free personal use to enterprise solutions for large organizations.",
+};
 
 const PricingPage = () => {
   const [isYearly, setIsYearly] = useState(false);

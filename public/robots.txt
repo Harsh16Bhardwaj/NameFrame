@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://nameframe.vercel.app/sitemap.xml
+Sitemap: https://www.nameframe.site/sitemap.xml
 
 # Disallow admin and API routes
 Disallow: /api/*
@@ -17,4 +17,4 @@ Disallow: /send-emails/*
 Disallow: /download/*
 
 # Crawl-delay
-Crawl-delay: 10 
+Crawl-delay: 10
