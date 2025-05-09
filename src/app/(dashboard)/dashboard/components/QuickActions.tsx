@@ -40,13 +40,13 @@ const QuickActions: React.FC = () => {
           className="group"
         >
           <motion.div
-            className="bg-[var(--muted)] hover:bg-[var(--card-hover)] border border-[var(--border-color)] rounded-xl p-4 transition-all duration-300 h-full flex flex-col items-center justify-center text-center gap-2"
+            className="bg-[var(--dark-onyx-text)] hover:bg-[var(--bluey-text)] border border-[var(--bluey-text)] rounded-xl p-4 transition-all duration-300 h-full flex flex-col items-center justify-center text-center gap-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 * index }}
           >
             <div 
-              className="p-3 rounded-full bg-[rgba(183,162,201,0.2)] text-[var(--accent-color)] transition-transform group-hover:scale-110"
+              className="p-3 rounded-full bg-[rgba(183,162,201,0.2)] text-[var(--tealy-heading)] transition-transform group-hover:scale-110"
             >
               {action.icon}
             </div>

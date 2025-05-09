@@ -1,3 +1,4 @@
+"use client"
 import type { Metadata } from "next";
 import {
   Geist,
@@ -9,6 +10,8 @@ import {
   Raleway,
   Josefin_Sans,
 } from "next/font/google";
+import { usePathname } from "next/navigation";
+
 
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
@@ -64,25 +67,31 @@ const josefinSans = Josefin_Sans({
 
 // Export or use them in your layout/app as needed
 
-export const metadata: Metadata = {
-  title: "NameFrame : One stop solution for Event Certtification",
-  description: "One stop solution for Event Certification. Manage your event from start to end with ease.",
-};
+// export const metadata: Metadata = {
+//   title: "NameFrame : One stop solution for Event Certtification",
+//   description: "One stop solution for Event Certification. Manage your event from start to end with ease.",
+// };
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isDashboard = pathname.startsWith("/dashboard");
+  const isEvents = pathname.startsWith("/events");
+  const isParticipants = pathname.startsWith("/participants");
+  const isTemplate = pathname.startsWith("/templates");
+
   return (
     <ClerkProvider>
       <html lang="en" className="dark">
         <body
-          className={`${geistSans.variable} ${geistMono.variable}  antialiased `}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Header></Header>
+          {(!isDashboard && !isEvents  && !isTemplate && !isParticipants) && <Header />}
           {children}
-          <Footer></Footer>
+          {(!isDashboard && !isEvents && !isTemplate && !isParticipants) && <Footer />}
         </body>
       </html>
     </ClerkProvider>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Hero } from "@/components/landing/Hero";
+import  Hero  from "@/components/landing/Hero";
 import { Features } from "@/components/landing/Features";
 import { InteractivePreview } from "@/components/landing/InteractivePreview";
 import { Testimonials } from "@/components/landing/Testimonials";

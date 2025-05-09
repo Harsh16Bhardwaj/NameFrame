@@ -161,13 +161,13 @@ export default function ParticipantsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "SENT":
-        return "bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+        return "bg-gradient-to-r from-[var(--tealy)]/20 to-[var(--bluey)]/20 text-[var(--tealy-text)] border border-[var(--tealy)]/30";
       case "PENDING":
-        return "bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-orange-400 border border-orange-500/30";
+        return "bg-gradient-to-r from-[var(--yellow)]/20 to-[var(--yellow)]/20 text-[var(--yellow-text)] border border-[var(--yellow)]/30";
       case "FAILED":
-        return "bg-gradient-to-r from-red-500/20 to-rose-500/20 text-rose-400 border border-rose-500/30";
+        return "bg-gradient-to-r from-[var(--love)]/20 to-[var(--love)]/20 text-[var(--love-text)] border border-[var(--love)]/30";
       default:
-        return "bg-gradient-to-r from-gray-500/20 to-slate-500/20 text-gray-400 border border-gray-500/30";
+        return "bg-gradient-to-r from-[var(--space)]/20 to-[var(--space)]/20 text-[var(--space-text)] border border-[var(--space)]/30";
     }
   };
 
@@ -188,10 +188,10 @@ export default function ParticipantsPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-tr pt-24 from-[#080a15] via-[#2c2f3f] to-[#06070a] text-white p-8 relative overflow-hidden"
+      className="min-h-screen bg-[var(--dark-onyx)] text-[var(--pale-text)] p-8 relative  pt-24"
     >
       {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 ">
         <motion.div
           animate={{
             scale: [1, 1.2, 1],
@@ -202,7 +202,7 @@ export default function ParticipantsPage() {
             repeat: Infinity,
             repeatType: "reverse",
           }}
-          className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-[#4b3a70]/10 to-transparent rounded-full blur-3xl"
+          className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-[var(--bluey)]/10 to-transparent rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -214,7 +214,7 @@ export default function ParticipantsPage() {
             repeat: Infinity,
             repeatType: "reverse",
           }}
-          className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tr from-[#b7a2c9]/10 to-transparent rounded-full blur-3xl"
+          className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tr from-[var(--tealy)]/10 to-transparent rounded-full blur-3xl"
         />
       </div>
 
@@ -225,9 +225,9 @@ export default function ParticipantsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed top-4 right-4 bg-[#4b3a70]/90 backdrop-blur-sm text-white px-6 py-3 rounded-lg shadow-lg border border-[#b7a2c9]/30 flex items-center gap-2 z-50"
+            className="fixed top-4 right-4 bg-[var(--onyx)] backdrop-blur-sm text-[var(--pale)] px-6 py-3 rounded-lg shadow-lg border border-[var(--space)]/30 flex items-center gap-2 z-50"
           >
-            <Check className="w-5 h-5 text-emerald-400" />
+            <Check className="w-5 h-5 text-[var(--tealy)]" />
             <span>{notificationMessage}</span>
           </motion.div>
         )}
@@ -241,10 +241,10 @@ export default function ParticipantsPage() {
           className="flex justify-between items-center mb-8"
         >
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#c7b9d3] via-[#ffffff] to-[#542082] text-transparent bg-clip-text">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--tealy-heading)] via-[var(--pale)] to-[var(--bluey)] text-transparent bg-clip-text">
               Participants
             </h1>
-            <p className="text-[#c5c3c4]/70 mt-2">
+            <p className="text-[var(--tealy-text)] mt-2">
               Manage and track all your event participants
             </p>
           </div>
@@ -253,7 +253,7 @@ export default function ParticipantsPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleExport}
-              className="px-4 py-2 cursor-pointer bg-gradient-to-r from-[#b7a2c9] via-[#e7e7e7] to-[#a894b9] hover:from-[#c9b8d7] hover:via-[#9d8db3] hover:to-[#c9b8d7] text-[#212531] font-medium rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-[#b7a2c9]/20"
+              className="px-4 py-2 cursor-pointer bg-gradient-to-r from-[var(--tealy)] to-[var(--bluey)] hover:from-[var(--bluey1)] hover:to-[var(--bluey-hover)] text-[var(--pale-text)] font-medium rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-[var(--tealy)]/20"
             >
               <Download className="w-4 h-4" />
               Export List
@@ -268,27 +268,27 @@ export default function ParticipantsPage() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="bg-gradient-to-r from-[#4b3a70]/20 via-gray-700 to-[#2a2f3d]/20 backdrop-blur-sm rounded-lg p-6 mb-6 border border-[#4b3a70]/30 overflow-hidden shadow-lg"
+              className="bg-[var(--bluey-hover)] backdrop-blur-sm rounded-lg p-6 mb-6 border border-[var(--tealy)]/60 duration-100 ease-in-out shadow-lg"
             >
               <button
                 onClick={() => setIsFilterExpanded(!isFilterExpanded)}
-                className="flex justify-between w-full border-1 border-gray-300 cursor-pointer hover:bg-gradient-to-r from-[#1b1527] duration-150 ease-in-out to-[#291f3d] px-4 hover:text-white transition-colors rounded-lg p-1 items-center mb-4"
+                className="flex justify-between w-full cursor-pointer hover:bg-[var(--dark-onyx)] transition-colors rounded-lg p-1 items-center mb-4"
               >
-                <h3 className="text-lg font-semibold  text-[#b7a2c9] flex items-center gap-2">
-                  <Filter className="w-5 h-5" />
+                <h3 className="text-lg font-semibold text-gray-200 flex items-center gap-2">
+                  <Filter className="w-5 h-5 text-gray-200" />
                   Filters
                 </h3>
-                <motion.button
+                <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="text-[#c5c3c4]/70 hover:text-[#b7a2c9] transition-colors"
+                  className="text-[var(--space-text)] hover:text-[var(--tealy)] transition-colors"
                 >
                   {isFilterExpanded ? (
                     <ChevronUp className="w-5 h-5" />
                   ) : (
                     <ChevronDown className="w-5 h-5" />
                   )}
-                </motion.button>
+                </motion.div>
               </button>
 
               <AnimatePresence>
@@ -301,7 +301,7 @@ export default function ParticipantsPage() {
                   >
                     {/* Email Status Filter */}
                     <div className="space-y-2">
-                      <label className="text-sm border-b border-[#4b3a70]/30 text-[#c5c3c4]/70 flex items-center gap-2">
+                      <label className="text-sm border-b border-[var(--space)]/30 text-[var(--space-text)] flex items-center gap-2">
                         <Mail className="w-4 h-4" />
                         Email Status
                       </label>
@@ -313,7 +313,7 @@ export default function ParticipantsPage() {
                             emailStatus: e.target.value,
                           })
                         }
-                        className="w-full bg-[#212531] border border-[#4b3a70] rounded-lg px-2 py-2 focus:outline-none focus:border-[#b7a2c9]"
+                        className="w-full bg-[var(--bluey1)]/30 border border-[var(--space)] rounded-lg px-2 py-2 focus:outline-none focus:border-[var(--tealy)] text-gray-300"
                       >
                         <option value="all">All Statuses</option>
                         <option value="SENT">Sent</option>
@@ -324,7 +324,7 @@ export default function ParticipantsPage() {
 
                     {/* Date Range Filter */}
                     <div className="space-y-2">
-                      <label className="text-sm text-[#c5c3c4]/70 flex items-center gap-2">
+                      <label className="text-sm text-[var(--space-text)] flex items-center gap-2">
                         <CalendarDays className="w-4 h-4" />
                         Date Range
                       </label>
@@ -333,7 +333,7 @@ export default function ParticipantsPage() {
                         onChange={(e) =>
                           setFilters({ ...filters, dateRange: e.target.value })
                         }
-                        className="w-full bg-[#212531] border border-[#4b3a70] rounded-lg px-2 py-2 focus:outline-none focus:border-[#b7a2c9]"
+                        className="w-full bg-[var(--bluey1)]/30 border border-[var(--space)] rounded-lg px-2 py-2 focus:outline-none focus:border-[var(--tealy)] text-gray-300"
                       >
                         <option value="all">All Time</option>
                         <option value="today">Today</option>
@@ -348,7 +348,7 @@ export default function ParticipantsPage() {
 
                     {/* Event Filter */}
                     <div className="space-y-2">
-                      <label className="text-sm text-[#c5c3c4]/70 flex items-center gap-2">
+                      <label className="text-sm text-[var(--space-text)] flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
                         Event
                       </label>
@@ -360,7 +360,7 @@ export default function ParticipantsPage() {
                             eventFilter: e.target.value,
                           })
                         }
-                        className="w-full bg-[#212531] border border-[#4b3a70] rounded-lg px-2 py-2 focus:outline-none focus:border-[#b7a2c9]"
+                        className="w-full bg-[var(--bluey1)]/30 border border-[var(--space)] rounded-lg px-2 py-2 focus:outline-none focus:border-[var(--tealy)] text-gray-300"
                       >
                         <option value="all">All Events</option>
                         {events.map((event) => (
@@ -373,7 +373,7 @@ export default function ParticipantsPage() {
 
                     {/* Sort Options */}
                     <div className="space-y-2">
-                      <label className="text-sm text-[#c5c3c4]/70 flex items-center gap-2">
+                      <label className="text-sm text-[var(--space-text)] flex items-center gap-2">
                         <Clock className="w-4 h-4" />
                         Sort By
                       </label>
@@ -383,31 +383,13 @@ export default function ParticipantsPage() {
                           onChange={(e) =>
                             setFilters({ ...filters, sortBy: e.target.value })
                           }
-                          className="flex-1 bg-[#212531] border border-[#4b3a70] rounded-lg px-2 py-2 focus:outline-none focus:border-[#b7a2c9]"
+                          className="flex-1 bg-[var(--bluey1)]/30 border border-[var(--space)] rounded-lg px-2 py-2 focus:outline-none focus:border-[var(--tealy)] text-gray-300"
                         >
                           <option value="createdAt">Date Created</option>
                           <option value="name">Name</option>
                           <option value="email">Email</option>
                           <option value="event">Event</option>
                         </select>
-                        {/* <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() =>
-                            setFilters({
-                              ...filters,
-                              sortOrder:
-                                filters.sortOrder === "asc" ? "desc" : "asc",
-                            })
-                          }
-                          className="p-2 bg-[#4b3a70] hover:bg-[#5b4a80] rounded-lg transition-colors"
-                        >
-                          {filters.sortOrder === "asc" ? (
-                            <ChevronUp className="w-4 h-4" />
-                          ) : (
-                            <ChevronDown className="w-4 h-4" />
-                          )}
-                        </motion.button> */}
                       </div>
                     </div>
                   </motion.div>
@@ -428,16 +410,16 @@ export default function ParticipantsPage() {
                       sortOrder: "desc",
                     })
                   }
-                  className="px-4 py-2 cursor-pointer bg-[#4b3a70]/60   hover:bg-[#4b3a70]/70 text-[#c5c3c4] font-medium rounded-lg transition-colors flex items-center gap-2 border border-gray-400"
+                  className="px-4 py-2 cursor-pointer bg-[var(--space)]/60 hover:bg-[var(--space)]/70 text-[var(--tealy-heading)] font-medium rounded-lg transition-colors flex items-center gap-2 border border-[var(--space)]"
                 >
                   <RefreshCw className="w-4 h-4" />
                   Reset Filters
                 </motion.button>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => fetchParticipants(1)}
-                  className="px-4 py-2 bg-gradient-to-r cursor-pointer font-semibold from-[#b7a2c9] to-[#b4a8c4] hover:from-[#c9b8d7] hover:to-[#9d8db3] text-[#212531]  rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-[#b7a2c9]/20"
+                  className="px-4 py-2 duration-200 ease-in-out hover:duration-200 hover:ease-in-out cursor-pointer bg-gradient-to-r from-[var(--bluey-text)] to-[var(--bluey)] hover:from-[var(--bluey-hover)] hover:to-[var(--bluey1)] text-gray-200 font-medium rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-[var(--tealy)]/20"
                 >
                   <Search className="w-4 h-4" />
                   Apply Filters
@@ -451,19 +433,19 @@ export default function ParticipantsPage() {
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-gradient-to-br from-[#2a2f3d]/50 to-[#1a1c2a]/50 backdrop-blur-sm rounded-lg p-6 mb-8 border border-[#4b3a70]/30 shadow-xl"
+          className="bg-[var(--onyx)] backdrop-blur-sm rounded-lg p-6 mb-8 border border-[var(--space)]/30 shadow-xl"
         >
           {/* Search Bar */}
           <div className="flex gap-4 mb-6">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#c5c3c4]/50 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--space-text)] w-5 h-5" />
               <input
                 type="text"
                 placeholder="Search by name, email, or event..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={handleKeyPress}
-                className="w-full border-1 border-gray-300  pl-12 pr-4 py-3 bg-[#212531]/50 backdrop-blur-sm  rounded-lg focus:outline-none focus:border-[#b7a2c9] transition-all"
+                className="w-full pl-4 pr-4 py-3 bg-[var(--dark-onyx)]/50 backdrop-blur-sm rounded-lg focus:outline-none focus:border-[var(--tealy)] transition-all border border-[var(--bluey)] text-[var(--pale)]"
               />
             </div>
             <div className="flex gap-2">
@@ -471,17 +453,18 @@ export default function ParticipantsPage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowFilters(!showFilters)}
-                className="px-4 py-2 cursor-pointer bg-gradient-to-r from-[#4b3a70]/30 to-[#4b3a70]/20 hover:from-[#4b3a70]/40 hover:to-[#4b3a70]/30 text-[#c5c3c4] font-medium rounded-lg transition-all flex items-center gap-2 border border-[#4b3a70] backdrop-blur-sm"
+                className="px-4 py-2 cursor-pointer bg-[var(--space)]/30 hover:bg-[var(--space)]/40 text-gray-300 font-medium rounded-lg transition-all flex items-center gap-2 border border-[var(--space)] backdrop-blur-sm"
               >
-                <Filter className="w-4 h-4" />
+                <Filter className="w-4 h-4 text-gray-300" />
                 Filters
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleSearch}
-                className="px-6 py-3 cursor-pointer bg-gradient-to-br from-[#6d1911] via-[#741313] to-[#540404] ease-in-out duration-150 hover:from-[#a01b1b] hover:via-[#992318] hover:to-[#850707] text-white font-medium rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-[#4b3a70]/20"
+                className="px-6 py-3 cursor-pointer bg-gradient-to-r from-[var(--tealy)] to-[var(--bluey)] hover:from-[var(--bluey1)] hover:to-[var(--bluey-hover)] text-[var(--pale-text)] font-medium rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-[var(--tealy)]/20"
               >
+                <Search className="w-4 h-4" />
                 Search
               </motion.button>
             </div>
@@ -491,17 +474,17 @@ export default function ParticipantsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className="bg-gradient-to-r  from-neutral-900/40 via-black/80 to-neutral-900/40  backdrop-blur-xl  rounded-lg p-4 border border-[#4b3a70]/30 shadow-lg"
+              className="bg-[var(--dark-onyx)]/80 backdrop-blur-xl rounded-lg p-4 border border-[var(--bluey1)] shadow-lg"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-[#4b3a70]/90 to-[#2a2f3d]/40">
-                  <Users className="w-5 h-5 text-[#b7a2c9]" />
+                <div className="p-2 rounded-lg bg-[var(--bluey)]">
+                  <Users className="w-5 h-5 text-[var(--pale)]" />
                 </div>
                 <div>
-                  <p className="text-sm text-[#c5c3c4]/70">
+                  <p className="text-sm text-[var(--space-text)]">
                     Total Participants
                   </p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-3xl font-bold text-[var(--pale)]">
                     {pagination.total}
                   </p>
                 </div>
@@ -509,18 +492,18 @@ export default function ParticipantsPage() {
             </motion.div>
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className="bg-gradient-to-r from-neutral-900/40 via-black/80 to-neutral-900/40  backdrop-blur-xl rounded-lg p-4 border border-[#4b3a70]/30 shadow-lg"
+              className="bg-[var(--dark-onyx)]/80 backdrop-blur-xl rounded-lg p-4 border border-[var(--bluey1)] shadow-lg"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-[#4b3a70]/30 to-[#2a2f3d]/30">
-                  <Mail className="w-5 h-5 text-[#b7a2c9]" />
+                <div className="p-2 rounded-lg bg-[var(--bluey)]">
+                  <Mail className="w-5 h-5 text-[var(--pale)]" />
                 </div>
                 <div>
-                  <p className="text-sm text-[#c5c3c4]/70">Emails Sent</p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-sm text-[var(--space-text)]">Emails Sent</p>
+                  <p className="text-3xl font-bold text-[var(--pale)]">
                     {
-                      participants.filter((p) => p.emailStatus === "SENT")
-                        .length
+                      participants.filter((p) => p.emailStatus === "SENT").length
+                        
                     }
                   </p>
                 </div>
@@ -528,15 +511,15 @@ export default function ParticipantsPage() {
             </motion.div>
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className="bg-gradient-to-r from-neutral-900/40 via-black/80 to-neutral-900/40  backdrop-blur-xl rounded-lg p-4 border border-[#4b3a70]/30 shadow-lg"
+              className="bg-[var(--dark-onyx)]/80 backdrop-blur-xl rounded-lg p-4 border border-[var(--bluey1)] shadow-lg"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-[#4b3a70]/30 to-[#2a2f3d]/30">
-                  <AlertCircle className="w-5 h-5 text-[#b7a2c9]" />
+                <div className="p-2 rounded-lg bg-[var(--bluey)]">
+                  <AlertCircle className="w-5 h-5 text-[var(--pale)]" />
                 </div>
                 <div>
-                  <p className="text-sm text-[#c5c3c4]/70">Pending Actions</p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-sm text-[var(--space-text)]">Pending Actions</p>
+                  <p className="text-3xl font-bold text-[var(--pale)]">
                     {
                       participants.filter((p) => p.emailStatus === "PENDING")
                         .length
@@ -554,7 +537,7 @@ export default function ParticipantsPage() {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               >
-                <RefreshCw className="w-8 h-8 text-[#b7a2c9]" />
+                <RefreshCw className="w-8 h-8 text-[var(--tealy)]" />
               </motion.div>
             </div>
           ) : (
@@ -562,23 +545,23 @@ export default function ParticipantsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b bg-gradient-to-r from-purple-900/10 via-purple-800/20 to-purple-900/10  backdrop-blur-xl rounded-2xl p-4 border border-[#4b3a70]/30 shadow-lg ">
-                      <th className="text-left py-4 px-4 text-[#c5c3c4]/70 font-medium">
+                    <tr className="border-b bg-[var(--bluey)]/20 backdrop-blur-xl rounded-2xl p-4 border border-[var(--space)]/30 shadow-lg">
+                      <th className="text-left py-4 px-4 text-[var(--space-text)] font-medium">
                         Name
                       </th>
-                      <th className="text-left py-4 px-4 text-[#c5c3c4]/70 font-medium">
+                      <th className="text-left py-4 px-4 text-[var(--space-text)] font-medium">
                         Email
                       </th>
-                      <th className="text-left py-4 px-4 text-[#c5c3c4]/70 font-medium">
+                      <th className="text-left py-4 px-4 text-[var(--space-text)] font-medium">
                         Event
                       </th>
-                      <th className="text-left py-4 px-4 text-[#c5c3c4]/70 font-medium">
+                      <th className="text-left py-4 px-4 text-[var(--space-text)] font-medium">
                         Status
                       </th>
-                      <th className="text-left py-4 px-4 text-[#c5c3c4]/70 font-medium">
+                      <th className="text-left py-4 px-4 text-[var(--space-text)] font-medium">
                         Created
                       </th>
-                      <th className="text-right py-4 px-4 text-[#c5c3c4]/70 font-medium">
+                      <th className="text-right py-4 px-4 text-[var(--space-text)] font-medium">
                         Actions
                       </th>
                     </tr>
@@ -589,16 +572,16 @@ export default function ParticipantsPage() {
                         key={participant.id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="border-b border-[#4b3a70]/30 hover:bg-[#4b3a70]/20 transition-colors group"
+                        className="border-b border-[var(--space)]/30 hover:bg-[var(--bluey-hover)] transition-colors group"
                       >
-                        <td className="py-4 px-4">{participant.name}</td>
-                        <td className="py-4 px-4 text-[#c5c3c4]/70">
+                        <td className="py-4 px-4 text-[var(--pale)]">{participant.name}</td>
+                        <td className="py-4 px-4 text-[var(--space-text)]">
                           {participant.email}
                         </td>
                         <td className="py-4 px-4">
                           <Link
                             href={`/events/${participant.event.title}`}
-                            className="text-[#b7a2c9] hover:text-[#c9b8d7] transition-colors"
+                            className="text-[var(--tealy)] hover:text-[var(--tealy-heading)] transition-colors"
                           >
                             {participant.event.title}
                           </Link>
@@ -613,21 +596,21 @@ export default function ParticipantsPage() {
                             {participant.emailStatus}
                           </span>
                         </td>
-                        <td className="py-4 px-4 text-[#c5c3c4]/70">
+                        <td className="py-4 px-4 text-[var(--space-text)]">
                           {new Date(participant.createdAt).toLocaleDateString()}
                         </td>
                         <td className="py-4 px-4">
-                          <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="flex items-center text-gray-200 justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <motion.button
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
                               onClick={() =>
                                 copyEmailToClipboard(participant.email)
                               }
-                              className="p-2 rounded-lg bg-gradient-to-br from-[#4b3a70]/20 to-[#2a2f3d]/20 hover:from-[#4b3a70]/30 hover:to-[#2a2f3d]/30 transition-all"
+                              className="p-2 rounded-lg bg-[var(--space)]/20 hover:bg-[var(--space)]/30 transition-all"
                               title="Copy Email"
                             >
-                              <Copy className="w-4 h-4" />
+                              <Copy className="w-4 h-4 text-[var(--tealy)]" />
                             </motion.button>
                           </div>
                         </td>
@@ -639,11 +622,11 @@ export default function ParticipantsPage() {
 
               {participants.length === 0 && (
                 <div className="text-center py-12">
-                  <AlertCircle className="w-12 h-12 text-[#c5c3c4]/30 mx-auto mb-4" />
-                  <p className="text-[#c5c3c4]/70 text-lg">
+                  <AlertCircle className="w-12 h-12 text-[var(--space-text)] mx-auto mb-4" />
+                  <p className="text-[var(--space-text)] text-lg">
                     No participants found
                   </p>
-                  <p className="text-[#c5c3c4]/50 text-sm mt-1">
+                  <p className="text-[var(--space-text)]/80 text-sm mt-1">
                     Try adjusting your search or filters
                   </p>
                 </div>
@@ -651,7 +634,7 @@ export default function ParticipantsPage() {
 
               {/* Pagination */}
               <div className="flex justify-between items-center mt-6">
-                <div className="text-sm text-[#c5c3c4]/70">
+                <div className="text-sm text-[var(--space-text)]">
                   Showing {participants.length} of {pagination.total}{" "}
                   participants
                 </div>
@@ -662,11 +645,11 @@ export default function ParticipantsPage() {
                       whileTap={{ scale: 0.9 }}
                       onClick={() => fetchParticipants(pagination.page - 1)}
                       disabled={pagination.page === 1}
-                      className="p-2 rounded-lg bg-gradient-to-br from-[#4b3a70]/20 to-[#2a2f3d]/20 hover:from-[#4b3a70]/30 hover:to-[#2a2f3d]/30 transition-all disabled:opacity-50 disabled:hover:bg-transparent"
+                      className="p-2 rounded-lg bg-[var(--space)]/20 hover:bg-[var(--space)]/30 transition-all disabled:opacity-50 disabled:hover:bg-transparent"
                     >
-                      <ChevronLeft className="w-5 h-5" />
+                      <ChevronLeft className="w-5 h-5 text-[var(--tealy)]" />
                     </motion.button>
-                    <span className="px-4 py-2 rounded-lg bg-gradient-to-br from-[#4b3a70]/20 to-[#2a2f3d]/20 text-[#c5c3c4]">
+                    <span className="px-4 py-2 rounded-lg bg-[var(--space)]/20 text-[var(--pale-text)]">
                       Page {pagination.page} of {pagination.totalPages}
                     </span>
                     <motion.button
@@ -674,9 +657,9 @@ export default function ParticipantsPage() {
                       whileTap={{ scale: 0.9 }}
                       onClick={() => fetchParticipants(pagination.page + 1)}
                       disabled={pagination.page === pagination.totalPages}
-                      className="p-2 rounded-lg bg-gradient-to-br from-[#4b3a70]/20 to-[#2a2f3d]/20 hover:from-[#4b3a70]/30 hover:to-[#2a2f3d]/30 transition-all disabled:opacity-50 disabled:hover:bg-transparent"
+                      className="p-2 rounded-lg bg-[var(--space)]/20 hover:bg-[var(--space)]/30 transition-all disabled:opacity-50 disabled:hover:bg-transparent"
                     >
-                      <ChevronRight className="w-5 h-5" />
+                      <ChevronRight className="w-5 h-5 text-[var(--tealy)]" />
                     </motion.button>
                   </div>
                 </div>

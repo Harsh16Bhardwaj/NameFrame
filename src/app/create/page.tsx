@@ -271,7 +271,7 @@ const CertificateForm: React.FC = () => {
           ref={canvasRef}
           className="absolute  inset-0 pointer-events-none"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-950/80 via-purple-900/30 to-pink-900/20 animate-holo-shift" />
+        <div className="absolute inset-0 bg-gradient-to-br from-bg-[var(--tealy)] via-purple-900/30 to-bg-[var(--tealy)] animate-holo-shift" />
         <div className="relative -mt-10 z-10 w-full max-w-6xl bg-gradient-to-br from-gray-900/20  to-black/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-gray-400/60">
           <h2 className="text-4xl text-center underline-offset-8 unerline- decoration-white decoration-1 font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-neutral-300 mb-10 tracking-tight animate-glow">
             Craft a Certificate Session

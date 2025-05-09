@@ -36,22 +36,22 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents }) 
 
   return (
     <motion.div
-      className="bg-[var(--card-bg)] rounded-2xl p-5 shadow-md border border-[var(--border-color)] overflow-hidden"
+      className="bg-[var(--dark-onyx)] rounded-2xl p-5  shadow-md border border-[var(--dark-onyx-text)] overflow-hidden"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5 }}
     >
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-[var(--text-primary)]">Analytics</h2>
+        <h2 className="text-lg md:text-xl font-bold text-[var(--tealy-heading) underline decoration-2 underline-offset-4 decoration-1]">Analytics</h2>
         
 
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-6 px-1">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <h3 className="text-sm font-medium text-[var(--text-primary)]">Event Completion Rate</h3>
-            <span className="text-xs text-[var(--text-secondary)]">100% Avg</span>
+            <span className="text-xs text-[var(--text-secondary)]">% Avg</span>
           </div>
           <p className="text-xs text-[var(--text-secondary)] mb-4">Certificate completion rates per event</p>
           
@@ -90,11 +90,11 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents }) 
                   />
                   <Bar 
                     dataKey="value" 
-                    fill="#b7a2c9"
+                    fill="#C83E4D"
                     radius={[4, 4, 0, 0]}
                     label={{ 
                       position: 'top', 
-                      fill: '#c5c3c4',
+                      fill: '#F4D6CC',
                       fontSize: 12,
                       formatter: (v) => `${v}%` 
                     }}
@@ -147,9 +147,9 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents }) 
                   <Line 
                     type="monotone" 
                     dataKey="value" 
-                    stroke="#b7a2c9"
+                    stroke="#C83E4D"
                     strokeWidth={3}
-                    dot={{ r: 5, stroke: '#b7a2c9', strokeWidth: 2, fill: '#322f42' }}
+                    dot={{ r: 5, stroke: '#093552', strokeWidth: 2, fill: '#ffffff' }}
                     activeDot={{ r: 7 }}
                     isAnimationActive={true}
                     label={{
