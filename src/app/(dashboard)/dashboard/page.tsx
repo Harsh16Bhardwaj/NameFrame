@@ -17,6 +17,7 @@ import { themeConfig as defaultThemeConfig } from "@/config/theme";
 import Link from "next/link";
 import { Calendar } from "lucide-react";
 import { josefinFont } from "@/components/landing/Hero";
+import ProtectedPage from "@/components/protectedPage";
 
 export default function Dashboard() {
   // State management
@@ -157,106 +158,110 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
-      {/* TopBar - Fixed at the top, no scrolling */}
-      <TopBar
-        isDarkMode={isDarkMode}
-        setIsDarkMode={setIsDarkMode}
-        setIsMobileNavOpen={setIsMobileNavOpen}
-        themeConfig={theme}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        handleSearch={handleSearch}
-        handleKeyPress={handleKeyPress}
-      />
+    <ProtectedPage>
+      <div className="flex flex-col h-screen overflow-hidden">
+        {/* TopBar - Fixed at the top, no scrolling */}
+        <TopBar
+          isDarkMode={isDarkMode}
+          setIsDarkMode={setIsDarkMode}
+          setIsMobileNavOpen={setIsMobileNavOpen}
+          themeConfig={theme}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          handleSearch={handleSearch}
+          handleKeyPress={handleKeyPress}
+        />
 
-      {/* Main scrollable area - Add the scrollbar-themed class */}
-      <div className="flex-1 p-6 overflow-y-auto onyx scrollbar-themed">
-        <div className="w-full  h-10 mb-5">
-          <Link href="/create">
-            <div className="flex  flex-col md:flex-row   w-full px-5  justify-end gap-x-2">
-              <button className={ `${josefinFont.className} visible  md:invisible text-gray-300 font-semibold`}>
-                For Best Experience Switch to Web Version. Thank You...
-              </button>
-              <button
-                className={`flex md:visible invisible cursor-pointer items-center justify-center gap-x-2 rounded-md px-6 py-2.5 font-medium text-sm transition-all duration-200 ease-in-out transform
+        {/* Main scrollable area - Add the scrollbar-themed class */}
+        <div className="flex-1 p-6 overflow-y-auto onyx scrollbar-themed">
+          <div className="w-full  h-10 mb-5">
+            <Link href="/create">
+              <div className="flex  flex-col md:flex-row   w-full px-5  justify-end gap-x-2">
+                <button
+                  className={`${josefinFont.className} visible  md:invisible text-gray-300 font-semibold`}
+                >
+                  For Best Experience Switch to Web Version. Thank You...
+                </button>
+                <button
+                  className={`flex md:visible invisible cursor-pointer items-center justify-center gap-x-2 rounded-md px-6 py-2.5 font-medium text-sm transition-all duration-200 ease-in-out transform
     ${
       isDarkMode
         ? "bg-gradient-to-r from-[#1e293b] to-[#334155] text-gray-100 border border-[#475569] hover:from-[#2d3b50] hover:to-[#3b4c64] hover:shadow-md hover:scale-105"
         : "bg-gradient-to-r from-[#f9fcff] to-[#fbfdff] text-gray-800 border border-[#cbd5e1] hover:from-[#d8e0ea] hover:to-[#bfc8d7] hover:shadow-sm hover:scale-105"
     }
-  `}
-              >
-                <Calendar className="w-4 h-4"></Calendar>
-                Create Event
-              </button>
-            </div>
-          </Link>
-        </div>
-        <div className="space-y-6 pb-6">
-          {/* KPI Cards */}
-          <KpiCards
-            stats={stats}
-            loading={loading}
-            isDarkMode={isDarkMode}
-            themeConfig={theme}
-          />
-
-          {/* Middle section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <RecentEventsTable
-                events={filteredEvents}
-                loadingEvents={loadingEvents}
-                isDarkMode={isDarkMode}
-                themeConfig={theme}
-                fetchEvents={fetchEvents}
-              />
-            </div>
-            <AnalyticsCard
-              events={filteredEvents}
+    `}
+                >
+                  <Calendar className="w-4 h-4"></Calendar>
+                  Create Event
+                </button>
+              </div>
+            </Link>
+          </div>
+          <div className="space-y-6 pb-6">
+            {/* KPI Cards */}
+            <KpiCards
               stats={stats}
-              loadingEvents={loadingEvents}
+              loading={loading}
               isDarkMode={isDarkMode}
               themeConfig={theme}
             />
-          </div>
 
-          {/* Bottom section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Quick Actions Card */}
-            <motion.div
-              className="bg-[var(--dark-onyx)] rounded-2xl p-5
- shadow-lg border border-[var(--bluey-text)]"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <h2 className="text-[var(--tealy-heading)] text-lg md:text-2xl font-bold p-3 text-center mb-2">
-                Quick Actions
-              </h2>
-              <QuickActions themeConfig={theme} isDarkMode={isDarkMode} />
-            </motion.div>
-
-            {/* Recent Activity Card */}
-            <motion.div
-              className="bg-[var(--dark-onyx-text)] rounded-2xl p-5 shadow-lg border border-[var(--bluey-text)]"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <h2 className="text-[var(--tealy-text)] text-lg md:text-xl font-bold mb-5">
-                Activity Log :
-              </h2>
-              <RecentActivity
+            {/* Middle section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <RecentEventsTable
+                  events={filteredEvents}
+                  loadingEvents={loadingEvents}
+                  isDarkMode={isDarkMode}
+                  themeConfig={theme}
+                  fetchEvents={fetchEvents}
+                />
+              </div>
+              <AnalyticsCard
                 events={filteredEvents}
-                themeConfig={theme}
+                stats={stats}
+                loadingEvents={loadingEvents}
                 isDarkMode={isDarkMode}
+                themeConfig={theme}
               />
-            </motion.div>
+            </div>
+
+            {/* Bottom section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Quick Actions Card */}
+              <motion.div
+                className="bg-[var(--dark-onyx)] rounded-2xl p-5
+              shadow-lg border border-[var(--bluey-text)]"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <h2 className="text-[var(--tealy-heading)] text-lg md:text-2xl font-bold p-3 text-center mb-2">
+                  Quick Actions
+                </h2>
+                <QuickActions themeConfig={theme} isDarkMode={isDarkMode} />
+              </motion.div>
+
+              {/* Recent Activity Card */}
+              <motion.div
+                className="bg-[var(--dark-onyx-text)] rounded-2xl p-5 shadow-lg border border-[var(--bluey-text)]"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <h2 className="text-[var(--tealy-text)] text-lg md:text-xl font-bold mb-5">
+                  Activity Log :
+                </h2>
+                <RecentActivity
+                  events={filteredEvents}
+                  themeConfig={theme}
+                  isDarkMode={isDarkMode}
+                />
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </ProtectedPage>
   );
 }

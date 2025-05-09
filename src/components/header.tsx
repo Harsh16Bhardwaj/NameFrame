@@ -284,7 +284,7 @@ const Header: React.FC = () => {
                     key={`mobile-link-${idx}`}
                     href={item.link}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block py-2 text-gray-300 hover:text-teal-300 font-poppins text-sm transition-colors flex items-center space-x-2"
+                    className=" py-2 text-gray-300 hover:text-teal-300 font-poppins text-sm transition-colors flex items-center space-x-2"
                   >
                     <span>{item.icon}</span>
                     <span>{item.name}</span>

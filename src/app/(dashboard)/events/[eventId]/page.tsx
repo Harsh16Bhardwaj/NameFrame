@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import LoadingState from "./components/LoadingState";
 import ErrorState from "./components/ErrorState";
 import EventHeader from "./components/EventHeader";
+import ProtectedPage from "@/components/protectedPage";
 
 // Dynamic imports for code splitting
 const ParticipantsTable = dynamic(
@@ -23,12 +24,12 @@ const CertificateSection = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div  className="h-64 animate-pulse bg-[#322f42]/30 rounded-2xl"></div>
+      <div className="h-64 animate-pulse bg-[#322f42]/30 rounded-2xl"></div>
     ),
   }
 );
 
-const   PreviewModal = dynamic(() => import("./components/PreviewModal"), {
+const PreviewModal = dynamic(() => import("./components/PreviewModal"), {
   ssr: false,
 });
 
@@ -376,85 +377,86 @@ export default function EventDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#080711] to-[#0e1015] text-[#c5c3c4] overflow-y-auto">
-      <div className="container mx-auto max-w-7xl px-4 py-8 pt-28">
-        {/* Top Section: Event Overview */}
-        <EventHeader event={event} />
+    <ProtectedPage>
+      <div className="min-h-screen bg-gradient-to-br from-[#080711] to-[#0e1015] text-[#c5c3c4] overflow-y-auto">
+        <div className="container mx-auto max-w-7xl px-4 py-8 pt-28">
+          {/* Top Section: Event Overview */}
+          <EventHeader event={event} />
 
-        
-        {/* Dummy Name Input */}
-        <div className="mb-4 flex flex-col justify-center items-center pt-5">
-          <label
-            htmlFor="dummyName"
-            className="block text-lg ml-2 font-medium text-[#c5c3c4]"
-          >
-            Preview Name :
-          </label>
-          <div id="certPreview" className="mt-2 w-1/3">
-            <input
-              type="text"
-              id="dummyName"
-              value={dummyName}
-              onChange={(e) => setDummyName(e.target.value)}
-              className="w-full rounded-md border border-[#4b3a70]/30 font-semibold  bg-[#272936] px-4 py-2 text-gray-200 focus:text-white focus:border-[#b7a2c9] focus:outline-none focus:ring-1 focus:ring-[#b7a2c9]"
-              placeholder="Enter a name for preview"
-            />
+          {/* Dummy Name Input */}
+          <div className="mb-4 flex flex-col justify-center items-center pt-5">
+            <label
+              htmlFor="dummyName"
+              className="block text-lg ml-2 font-medium text-[#c5c3c4]"
+            >
+              Preview Name :
+            </label>
+            <div id="certPreview" className="mt-2 w-1/3">
+              <input
+                type="text"
+                id="dummyName"
+                value={dummyName}
+                onChange={(e) => setDummyName(e.target.value)}
+                className="w-full rounded-md border border-[#4b3a70]/30 font-semibold  bg-[#272936] px-4 py-2 text-gray-200 focus:text-white focus:border-[#b7a2c9] focus:outline-none focus:ring-1 focus:ring-[#b7a2c9]"
+                placeholder="Enter a name for preview"
+              />
+            </div>
+            <p className="mt-1 text-xs text-[#c5c3c4]/70 mb-4">
+              This name will be shown on the certificate preview.
+            </p>
           </div>
-          <p className="mt-1 text-xs text-[#c5c3c4]/70 mb-4">
-            This name will be shown on the certificate preview.
-          </p>
+
+          {/* Bottom Section: Certificate Preview & Customization */}
+          <CertificateSection
+            templateUrl={event.templateUrl}
+            textPosition={textPosition}
+            fontSettings={fontSettings}
+            onPositionChange={handlePositionChange}
+            onFontChange={handleFontChange}
+            onSavePositions={savePositionChanges}
+            onTemplateChange={handleTemplateChange} // Add this line
+          />
+
+          {/* Save Button */}
+          <div className="m-4 mb-10 flex justify-end">
+            <button
+              onClick={savePositionChanges}
+              disabled={isSaving}
+              className={`rounded-md bg-[#4b3a70] px-4 py-2 text-white transition-all hover:bg-[#5d4b82] ${
+                isSaving ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              {isSaving ? "Saving..." : "Save Position Settings"}
+            </button>
+
+            {saveSuccess && (
+              <span className="ml-3 text-green-400 text-sm">
+                Settings saved successfully!
+              </span>
+            )}
+          </div>
+          <ParticipantsTable
+            participants={event.participants}
+            sendCertificates={sendCertificates}
+            sendSingleCertificate={sendSingleCertificate}
+            isSending={isSending}
+            sendingStatus={sendingStatus}
+            emailProgress={emailProgress}
+            onShowPreview={handleShowPreview}
+          />
         </div>
 
-        {/* Bottom Section: Certificate Preview & Customization */}
-        <CertificateSection
-          templateUrl={event.templateUrl}
-          textPosition={textPosition}
-          fontSettings={fontSettings}
-          onPositionChange={handlePositionChange}
-          onFontChange={handleFontChange}
-          onSavePositions={savePositionChanges}
-          onTemplateChange={handleTemplateChange} // Add this line
-        />
-
-        {/* Save Button */}
-        <div className="m-4 mb-10 flex justify-end">
-          <button
-            onClick={savePositionChanges}
-            disabled={isSaving}
-            className={`rounded-md bg-[#4b3a70] px-4 py-2 text-white transition-all hover:bg-[#5d4b82] ${
-              isSaving ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            {isSaving ? "Saving..." : "Save Position Settings"}
-          </button>
-
-          {saveSuccess && (
-            <span className="ml-3 text-green-400 text-sm">
-              Settings saved successfully!
-            </span>
-          )}
-        </div>
-        <ParticipantsTable
-          participants={event.participants}
-          sendCertificates={sendCertificates}
-          sendSingleCertificate={sendSingleCertificate}
-          isSending={isSending}
-          sendingStatus={sendingStatus}
-          emailProgress={emailProgress}
-          onShowPreview={handleShowPreview}
-        />
+        {/* Certificate Preview Modal */}
+        {showPreview && previewParticipant && (
+          <PreviewModal
+            participant={previewParticipant}
+            templateUrl={event.templateUrl}
+            textPosition={textPosition}
+            fontSettings={fontSettings}
+            onClose={() => setShowPreview(false)}
+          />
+        )}
       </div>
-
-      {/* Certificate Preview Modal */}
-      {showPreview && previewParticipant && (
-        <PreviewModal
-          participant={previewParticipant}
-          templateUrl={event.templateUrl}
-          textPosition={textPosition}
-          fontSettings={fontSettings}
-          onClose={() => setShowPreview(false)}
-        />
-      )}
-    </div>
+    </ProtectedPage>
   );
 }
