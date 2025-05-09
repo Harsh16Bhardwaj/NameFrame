@@ -89,7 +89,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          {(!isDashboard && isEvents  && !isTemplate && !isParticipants) && <Header />}
+          {(!isDashboard && !isEvents  && !isTemplate && !isParticipants) && <Header />}
           {children}
           {(!isDashboard && !isEvents && !isTemplate && !isParticipants) && <Footer />}
         </body>

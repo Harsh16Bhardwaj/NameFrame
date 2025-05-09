@@ -14,6 +14,8 @@ import {
   FaWhatsapp,
   FaEnvelope,
 } from 'react-icons/fa';
+import { SparklesText } from '@/components/magicui/sparkles-text';
+import { josefinFont } from '@/components/landing/Hero';
 
 interface ContactForm {
   name: string;
@@ -155,10 +157,10 @@ const ContactPage = () => {
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-5xl md:text-5xl decoration-2  underline-offset-4 font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-indigo-500 ]"
+          className="text-5xl md:text-5xl decoration-2  underline-offset-4 font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#0F4C75] to-indigo-500 ]"
         >
           Got an Issue?
-          <span className='text-white text-2xl ml-2'>We have you covered</span>
+          <span className={`text-[#d6d6d5] ${josefinFont.className} -mt-4 md:mt-0 text-2xl ml-2`}>We have you covered</span>
         </motion.h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -169,7 +171,7 @@ const ContactPage = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="bg-gray-900/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-purple-500/30"
           >
-            <h2 className="text-3xl font-semibold mb-6 text-purple-400 font-[var(--font-playfair)]">Contact Our Team</h2>
+            <h2 className="text-3xl font-bold mb-6 text-center text-[#C83E4D]">Contact Our Team</h2>
             <p className="text-sm text-gray-400 mb-6 font-[var(--font-inter)]">
               Fill out the form below and our team will get back to you within 24 hours.
             </p>
@@ -185,7 +187,7 @@ const ContactPage = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  className="w-full p-2 md:p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
                   placeholder="John Doe"
                 />
               </div>
@@ -200,7 +202,7 @@ const ContactPage = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  className="w-full p-2 md:p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
                   placeholder="you@example.com"
                 />
               </div>
@@ -214,7 +216,7 @@ const ContactPage = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="w-full p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  className="w-full p-2 md:p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
                   placeholder="+91 1234567890"
                 />
               </div>
@@ -227,7 +229,7 @@ const ContactPage = () => {
                   name="caseType"
                   value={formData.caseType}
                   onChange={handleInputChange}
-                  className="w-full p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  className="w-full p-2 md:p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
                 >
                   <option value="">Select case type</option>
                   {caseTypes.map((type) => (
@@ -246,14 +248,14 @@ const ContactPage = () => {
                   onChange={handleInputChange}
                   required
                   rows={5}
-                  className="w-full p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  className="w-full p-2 md:p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
                   placeholder="Brief description of your legal matter..."
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 cursor-pointer border border-gray-100/50 rounded-lg font-semibold text-white transition duration-300 hover:from-purple-500/80 hover:to-indigo-500/80 ${
+                className={`w-full p-2 md:p-3 bg-gradient-to-r from-purple-600 to-indigo-600 cursor-pointer border border-gray-100/50 rounded-lg font-semibold text-white transition duration-300 hover:from-purple-500/80 hover:to-indigo-500/80 ${
                   loading ? 'opacity-50 cursor-not-allowed' : ''
                 } font-[var(--font-inter)]`}
               >
@@ -302,7 +304,10 @@ const ContactPage = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="bg-gray-900/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-indigo-500/30 relative flex flex-col items-center"
           >
-            <h2 className="text-3xl font-semibold mb-6 text-indigo-400 font-[var(--font-playfair)]">Connect With Us</h2>
+            <SparklesText>
+
+            <h2 className="text-2xl md:text-4xl underline underline-offset-4 decoration-1 font-bold mb-6 text-[#048a91] x-40 relative ">Connect With Us</h2>
+            </SparklesText>
             <p className="text-sm text-gray-400 mb-6 font-[var(--font-inter)] text-center">
               Reach out to us through any of our social channels or visit our office in Delhi.
             </p>
@@ -375,7 +380,7 @@ const ContactPage = () => {
 
             {/* Office Information */}
             <div className="w-full mb-8 p-4 bg-gray-800/50 rounded-xl border border-indigo-500/20">
-              <h3 className="text-lg font-semibold text-white mb-3 font-[var(--font-inter)]">Our Office</h3>
+              <h3 className="text-lg font-bold text-[#f7c172] mb-3 ">Our Office :</h3>
               <div className="space-y-2">
                 <p className="text-gray-300 text-sm flex items-center">
                   <span className="w-5 h-5 mr-2 flex items-center justify-center bg-indigo-500/20 rounded-full">
