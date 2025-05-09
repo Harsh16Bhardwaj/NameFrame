@@ -72,7 +72,7 @@ export function generateCertificateEmail({
 
             <div class="certificate-container">
               <img
-                src="${certificateUrl}"
+                src = "${certificateUrl}"
                 alt="Certificate of Completion for ${participantName}"
                 class="certificate-image"
               >
