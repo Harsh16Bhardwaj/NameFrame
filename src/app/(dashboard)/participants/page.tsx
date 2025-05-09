@@ -188,7 +188,7 @@ export default function ParticipantsPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-[var(--dark-onyx)] text-[var(--pale-text)] p-8 relative  pt-24"
+       className="min-h-screen max-h-screen overflow-y-auto scrollbar-themed bg-[var(--dark-onyx)] text-[var(--pale-text)] p-8 relative pt-24"
     >
       {/* Animated Background Elements */}
       <div className="absolute inset-0 ">

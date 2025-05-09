@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Check, Plus } from 'lucide-react';
-import { VideoText } from "@/components/magicui/video-text";
-
 import {
   Dancing_Script,
   Cookie,
@@ -14,7 +12,6 @@ import {
   Titan_One,
   Style_Script,
   Delius,
-  Sour_Gummy,
 } from "next/font/google";
 
 export const cookieFont = Cookie({
@@ -38,6 +35,7 @@ export const delius = Delius({
 });
 export const titanOne = Titan_One({
   weight: "400",
+  subsets: ["latin"],
 });
 
 export const pacifico = Pacifico({
@@ -46,8 +44,9 @@ export const pacifico = Pacifico({
   variable: "--font-pacifico",
 });
 export const styleScript = Style_Script({
-  weight:"400"
-})
+  weight: "400",
+  subsets: ["latin"],
+});
 
 export const merienda = Merienda({
   subsets: ["latin"],
