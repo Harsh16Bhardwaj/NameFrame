@@ -39,8 +39,9 @@ export const dancingScript = Dancing_Script({
   variable: "--font-dancing-script",
 });
 export const poppinFont = Poppins({
-  weight:["400","700"]
-})
+  weight: ["400", "700"],
+  subsets: ["latin"], // Add this line
+});
 export const delius = Delius({
   weight: "400",
   subsets: ["latin"],
