@@ -3,7 +3,7 @@ import Link from "next/link";
 
 function Footer() {
   return (
-    <footer className="mt-8 bottom-0  px-6 py-6 bg-gradient-to-r from-red-900 to-gray-700 text-white rounded-t-xl shadow-inner">
+    <footer className=" border-t-2 border-gray-700  bottom-0  px-6 py-6 bg-gradient-to-r from-slate-900 via-gray-700 to-gray-900 text-white rounded-t-xl shadow-inner">
       <div className="flex flex-col md:flex-row justify-between items-center gap-6">
         {/* Branding & Love */}
         <div className="text-center md:text-left">

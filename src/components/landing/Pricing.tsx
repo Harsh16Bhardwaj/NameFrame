@@ -1,16 +1,83 @@
 "use client";
 import React, { useState } from "react";
 import { Check, Plus } from 'lucide-react';
+import { VideoText } from "@/components/magicui/video-text";
+
+import {
+  Dancing_Script,
+  Cookie,
+  Josefin_Sans,
+  Pacifico,
+  Merienda,
+  Leckerli_One,
+  Just_Another_Hand,
+  Titan_One,
+  Style_Script,
+  Delius,
+  Sour_Gummy,
+} from "next/font/google";
+
+export const cookieFont = Cookie({
+  subsets: ["latin"],
+  weight: "400", // or other available weights
+  variable: "--font-cookie", // optional if you want to use CSS variable
+});
+export const josefinFont = Josefin_Sans({
+  subsets: ["latin"],
+  weight: ["400", "700"], // specify weights you need
+  variable: "--font-josefin",
+});
+export const dancingScript = Dancing_Script({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-dancing-script",
+});
+export const delius = Delius({
+  weight: "400",
+  subsets: ["latin"],
+});
+export const titanOne = Titan_One({
+  weight: "400",
+});
+
+export const pacifico = Pacifico({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-pacifico",
+});
+export const styleScript = Style_Script({
+  weight:"400"
+})
+
+export const merienda = Merienda({
+  subsets: ["latin"],
+  weight: ["400","800"],
+  variable: "--font-merienda",
+});
+
+export const leckerliOne = Leckerli_One({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-leckerli-one",
+});
+
+export const justAnotherHand = Just_Another_Hand({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-just-another-hand",
+});
+
+
 
 export const Pricing: React.FC = () => {
   const [isYearly, setIsYearly] = useState(false);
   
   return (
-    <section className="py-24 bg-[#1a1930]">
+    <section className="py-40 mt-10  bg-[#1a1930]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">Choose the plan that's right for your organization.</p>
+          <p className="text-gray-100 md:text-6xl font-bold text-2xl mb-2 max-w-2xl mx-auto">Explore the Pricing </p>
+          <h2 className={`text-md md:text-xl text-gray-300 font-bold mb-4 ${merienda.className}`}>Its Free for Now, but who knows...</h2>
           
           {/* Billing toggle */}
           <div className="flex items-center justify-center gap-4 mt-8">
@@ -27,10 +94,10 @@ export const Pricing: React.FC = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {/* Free Plan */}
-          <div className="bg-[#252440] rounded-xl border border-gray-800 overflow-hidden">
+          <div className="bg-[#252440] md:mx-0 mx-4 rounded-xl border border-gray-800 overflow-hidden">
             <div className="p-6 border-b border-gray-800">
               <h3 className="text-xl font-semibold mb-2">Free</h3>
-              <div className="text-3xl font-bold">$0<span className="text-gray-500 text-sm">/month</span></div>
+              <div className="text-3xl font-bold">₹0<span className="text-gray-500 text-sm">/month</span></div>
               <p className="text-gray-400 mt-2">Perfect for small events and individual use.</p>
             </div>
             
@@ -65,7 +132,7 @@ export const Pricing: React.FC = () => {
           </div>
           
           {/* Pro Plan */}
-          <div className="relative bg-[#252440] rounded-xl border border-violet-500 overflow-hidden shadow-lg shadow-violet-500/20 transform scale-105 z-10">
+          <div className="relative md:mx-0 mx-4 bg-[#252440] rounded-xl border border-violet-500 overflow-hidden shadow-lg shadow-violet-500/20 transform scale-105 z-10">
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-purple-500"></div>
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-violet-600 to-purple-600 text-white text-xs font-semibold py-1 px-3 rounded-full">
               Most Popular
@@ -74,7 +141,7 @@ export const Pricing: React.FC = () => {
             <div className="p-6 border-b border-gray-800">
               <h3 className="text-xl font-semibold mb-2">Pro</h3>
               <div className="text-3xl font-bold">
-                ${isYearly ? "24" : "29"}<span className="text-gray-500 text-sm">/month</span>
+                ${isYearly ? "699" : "149"}<span className="text-gray-500 text-sm">/month</span>
               </div>
               <p className="text-gray-400 mt-2">For teams and organizations with regular events.</p>
             </div>
@@ -110,11 +177,11 @@ export const Pricing: React.FC = () => {
           </div>
           
           {/* Enterprise Plan */}
-          <div className="bg-[#252440] rounded-xl border border-gray-800 overflow-hidden">
+          <div className="bg-[#252440] md:mx-0 mx-4 rounded-xl border border-gray-800 overflow-hidden">
             <div className="p-6 border-b border-gray-800">
               <h3 className="text-xl font-semibold mb-2">Enterprise</h3>
               <div className="text-3xl font-bold">
-                ${isYearly ? "79" : "99"}<span className="text-gray-500 text-sm">/month</span>
+              ₹{isYearly ? "999" : "399"}<span className="text-gray-500 text-sm">/month</span>
               </div>
               <p className="text-gray-400 mt-2">For large organizations and unique requirements.</p>
             </div>

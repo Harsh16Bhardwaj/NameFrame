@@ -11,7 +11,7 @@ export const CustomStyles: React.FC = () => {
       
       .animate-gradient-slow {
         background-size: 200% 200%;
-        animation: gradient-slow 15s ease infinite;
+        animation: gradient-slow 10s ease infinite;
       }
       
       @keyframes float {
