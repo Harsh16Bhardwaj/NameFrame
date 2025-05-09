@@ -14,12 +14,16 @@ import RecentActivity from "./components/RecentActivity";
 // Import theme type and default theme config
 import type { ThemeConfig } from "@/config/theme";
 import { themeConfig as defaultThemeConfig } from "@/config/theme";
+import Link from "next/link";
+import { Calendar } from "lucide-react";
 
 export default function Dashboard() {
   // State management
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-  const [themeConfig, setThemeConfig] = useState<ThemeConfig | undefined>(defaultThemeConfig);
+  const [themeConfig, setThemeConfig] = useState<ThemeConfig | undefined>(
+    defaultThemeConfig
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [stats, setStats] = useState({
     totalEvents: 0,
@@ -44,26 +48,38 @@ export default function Dashboard() {
 
   // Check user preference for dark mode on initial load
   useEffect(() => {
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    setIsDarkMode(savedDarkMode);
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    const savedTheme = localStorage.getItem("theme");
+    setIsDarkMode(savedTheme === "dark" || (!savedTheme && prefersDark));
   }, []);
 
-  // Save dark mode preference when it changes
+  // Update root class for dark mode to toggle CSS variables
   useEffect(() => {
-    localStorage.setItem('darkMode', isDarkMode.toString());
+    document.documentElement.classList.toggle("dark", isDarkMode);
+    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
+
+  // Select theme based on dark mode
+  const theme = isDarkMode
+    ? themeConfig?.dark
+    : themeConfig?.light || defaultThemeConfig;
 
   // Fetch dashboard statistics from the API
   useEffect(() => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/dashboard/stats');
-        
+        const response = await axios.get("/api/dashboard/stats");
+
         if (response.data.success) {
           setStats(response.data.data);
         } else {
-          console.error("Failed to fetch dashboard stats:", response.data.error);
+          console.error(
+            "Failed to fetch dashboard stats:",
+            response.data.error
+          );
         }
       } catch (error) {
         console.error("Error fetching dashboard stats:", error);
@@ -79,20 +95,22 @@ export default function Dashboard() {
   const fetchEvents = async () => {
     try {
       setLoadingEvents(true);
-      const response = await axios.get('/api/events');
-      
+      const response = await axios.get("/api/events");
+
       if (response.data.success) {
         // Make sure the data structure matches what the component expects
         const eventsData = response.data.data.map((event: any) => ({
           id: event.id,
           title: event.title || event.name,
           createdAt: event.createdAt,
-          participants: Array.isArray(event.participants) ? event.participants : [],
+          participants: Array.isArray(event.participants)
+            ? event.participants
+            : [],
           template: {
-            name: event.template?.name || 'Default Template'
-          }
+            name: event.template?.name || "Default Template",
+          },
         }));
-        
+
         setEvents(eventsData);
         setFilteredEvents(eventsData);
       } else {
@@ -137,9 +155,6 @@ export default function Dashboard() {
     }
   };
 
-  // Use default theme config if not provided from props
-  const theme = themeConfig || defaultThemeConfig;
-
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       {/* TopBar - Fixed at the top, no scrolling */}
@@ -156,6 +171,23 @@ export default function Dashboard() {
 
       {/* Main scrollable area - Add the scrollbar-themed class */}
       <div className="flex-1 p-6 overflow-y-auto scrollbar-themed">
+        <div className="w-full  h-10 mb-5">
+          <Link href="/create">
+            <div className="flex w-full px-5  justify-end gap-x-2">
+              <button
+                className={`flex items-center justify-center gap-x-2 rounded-md px-6 py-2.5 font-medium text-sm transition-all duration-200 ease-in-out transform
+    ${
+      isDarkMode
+        ? "bg-gradient-to-r from-[#1e293b] to-[#334155] text-gray-100 border border-[#475569] hover:from-[#2d3b50] hover:to-[#3b4c64] hover:shadow-md hover:scale-105"
+        : "bg-gradient-to-r from-[#f9fcff] to-[#fbfdff] text-gray-800 border border-[#cbd5e1] hover:from-[#d8e0ea] hover:to-[#bfc8d7] hover:shadow-sm hover:scale-105"
+    }
+  `}
+              >
+                Continue
+              </button>
+            </div>
+          </Link>
+        </div>
         <div className="space-y-6 pb-6">
           {/* KPI Cards */}
           <KpiCards

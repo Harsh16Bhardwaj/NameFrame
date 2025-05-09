@@ -135,6 +135,26 @@
   --border-color: #e2e8f0;
 }
 
+:root {
+  --dark-onyx: #1B262C;
+  --dark-onyx-text: #1B262C;
+  --onyx: #32373B;
+  --onyx-text: #323738;
+  --space: #4A5859;
+  --space-text: #4A5859;
+  --tealy: #00ADB5;
+  --tealy-text: #00ADB5;
+  --bluey: #0F4C75;
+  --bluey-text: #093552;
+  --bluey-hover: #0935524a;
+  --pale: #F4D6CC;
+  --pale-text: #F4D6CC;
+  --yellow: #F4B860;
+  --yellow-text: #F4B860;
+  --love: #C83E4D;
+  --love-text: #BC2658;
+}
+
 /* Custom Scrollbar */
 .scrollbar-thin::-webkit-scrollbar {
   width: 5px;

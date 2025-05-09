@@ -2,10 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaHome, FaPhoneAlt } from "react-icons/fa";
-import { MdDashboard } from "react-icons/md";
+import { FaHome, FaPhoneAlt, FaDollarSign } from "react-icons/fa";
 import { IoMdCreate } from "react-icons/io";
-import { FaDollarSign } from "react-icons/fa6";
 import { HiMenu, HiX } from "react-icons/hi";
 import {
   SignedIn,
@@ -17,7 +15,8 @@ import {
 import { Manrope, Style_Script, Poppins } from "next/font/google";
 import Logo from "../../public/nameframelogo.png";
 import UserSync from "./userSync";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -35,10 +34,45 @@ const poppins = Poppins({
   weight: ["400", "600", "800"],
 });
 
+const navItems = [
+  {
+    name: "Dashboard",
+    link: "/dashboard",
+    icon: <FaHome className="h-4 w-4 text-gray-300" />,
+  },
+  {
+    name: "Create",
+    link: "/create",
+    icon: <IoMdCreate className="h-4 w-4 text-gray-300" />,
+  },
+  {
+    name: "Pricing",
+    link: "/pricing",
+    icon: <FaDollarSign className="h-4 w-4 text-gray-300" />,
+  },
+  {
+    name: "Contact",
+    link: "/contact",
+    icon: <FaPhoneAlt className="h-4 w-4 text-gray-300" />,
+  },
+];
+
 const Header: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isScrolledDown, setIsScrolledDown] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const [visible, setVisible] = useState(true);
+
+  useMotionValueEvent(scrollYProgress, "change", (current) => {
+    if (typeof current === "number") {
+      let direction = current - scrollYProgress.getPrevious();
+      if (scrollYProgress.get() < 0.05) {
+        setVisible(true);
+      } else {
+        setVisible(direction < 0);
+      }
+    }
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -123,19 +157,6 @@ const Header: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setIsScrolledDown(currentScrollY > lastScrollY && currentScrollY > 50);
-      lastScrollY = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768 && isMobileMenuOpen) {
         setIsMobileMenuOpen(false);
@@ -146,48 +167,14 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, [isMobileMenuOpen]);
 
-  const navigationLinks = [
-    {
-      href: "/dashboard",
-      label: (
-        <div className="flex justify-center items-center gap-x-1">
-          <FaHome size={16} /> Dashboard
-        </div>
-      ),
-    },
-    {
-      href: "/create",
-      label: (
-        <div className="flex justify-center items-center gap-x-1">
-          <IoMdCreate size={16} /> Create
-        </div>
-      ),
-    },
-    {
-      href: "/pricing",
-      label: (
-        <div className="flex justify-center items-center gap-x-1">
-          <FaDollarSign size={16} /> Pricing
-        </div>
-      ),
-    },
-    {
-      href: "/contact",
-      label: (
-        <div className="flex justify-center items-center gap-x-1">
-          <FaPhoneAlt size={16} /> Contact
-        </div>
-      ),
-    },
-  ];
-
   return (
-    <header
-      className={`${manrope.variable} ${poppins.variable} font-sans fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] sm:w-[90%] max-w-5xl z-50 bg-gradient-to-r from-gray-900/95 via-teal-900/95 to-gray-900/95 rounded-xl md:rounded-4xl transition-all duration-500 ${
-        isScrolledDown
-          ? "bg-opacity-90 backdrop-blur-xl shadow-xl"
-          : "bg-opacity-90 backdrop-blur-2xl shadow-lg"
-      } border border-teal-300/20`}
+    <motion.header
+      initial={{ opacity: 1, y: 0 }}
+      animate={{ y: visible ? 16 : -100, opacity: visible ? 1 : 0 }}
+      transition={{ duration: 0.2 }}
+      className={cn(
+        `${manrope.variable} ${poppins.variable} font-sans fixed top-0 left-1/2 transform -translate-x-1/2 w-[95%] sm:w-[90%] max-w-5xl z-[5000] bg-gradient-to-r from-gray-900/95 via-teal-900/95 to-gray-900/95 rounded-xl md:rounded-4xl transition-all duration-500 backdrop-blur-2xl shadow-lg border border-teal-300/20`
+      )}
     >
       <canvas
         ref={canvasRef}
@@ -219,13 +206,14 @@ const Header: React.FC = () => {
           <UserSync />
           <nav className="hidden md:flex items-center gap-x-8">
             <div className="flex gap-x-4 lg:gap-x-8 text-gray-300 font-medium">
-              {navigationLinks.map((link) => (
+              {navItems.map((item, idx) => (
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  className="relative group text-sm font-poppins text-gray-300 hover:text-white cursor-pointer transition-all duration-400"
+                  key={`link-${idx}`}
+                  href={item.link}
+                  className="relative group text-sm font-poppins text-gray-300 hover:text-white cursor-pointer transition-all duration-400 flex items-center space-x-1"
                 >
-                  {link.label}
+                  <span className="block">{item.icon}</span>
+                  <span className="block">{item.name}</span>
                   <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-teal-400 transition-all duration-500 group-hover:w-full group-hover:shadow-glow"></span>
                 </Link>
               ))}
@@ -237,13 +225,15 @@ const Header: React.FC = () => {
           <SignedOut>
             <div className="flex space-x-2 sm:space-x-3">
               <SignInButton signUpForceRedirectUrl="/dashboard">
-                <button className="px-2 sm:px-4 py-1.5 bg-gradient-to-br from-purple-950 via-purple-800 to-purple-950 text-white rounded-lg font-poppins font-semibold text-xs sm:text-sm cursor-pointer transition-all duration-400 hover:from-purple-800 hover:to-purple-800 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 active:scale-100">
-                  Sign In
+                <button className="px-2 sm:px-4 py-1.5 bg-gradient-to-br from-purple-950 via-purple-800 to-purple-950 text-white rounded-lg font-poppins font-semibold text-xs sm:text-sm cursor-pointer transition-all duration-400 hover:from-purple-800 hover:to-purple-800 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 active:scale-100 relative">
+                  <span>Sign In</span>
+                  <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent h-px" />
                 </button>
               </SignInButton>
               <SignUpButton signInForceRedirectUrl="/dashboard">
-                <button className="px-2 sm:px-4 py-1.5 bg-gradient-to-r from-[#ED213A] via-[#93291E] to-[#93291E] text-white rounded-lg font-poppins font-semibold text-xs sm:text-sm border border-red-300/30 cursor-pointer transition-all duration-400 hover:from-[#ED213A] hover:to-[#b93627] hover:scale-105 hover:shadow-lg hover:shadow-red-500/30 active:scale-100">
-                  Sign Up
+                <button className="px-2 sm:px-4 py-1.5 bg-gradient-to-r from-[#ED213A] via-[#93291E] to-[#93291E] text-white rounded-lg font-poppins font-semibold text-xs sm:text-sm border border-red-300/30 cursor-pointer transition-all duration-400 hover:from-[#ED213A] hover:to-[#b93627] hover:scale-105 hover:shadow-lg hover:shadow-red-500/30 active:scale-100 relative">
+                  <span>Sign Up</span>
+                  <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent h-px" />
                 </button>
               </SignUpButton>
             </div>
@@ -289,14 +279,15 @@ const Header: React.FC = () => {
               className="md:hidden overflow-hidden relative z-10"
             >
               <div className="py-3 px-4 border-t border-teal-800/30">
-                {navigationLinks.map((link) => (
+                {navItems.map((item, idx) => (
                   <Link
-                    key={link.href}
-                    href={link.href}
+                    key={`mobile-link-${idx}`}
+                    href={item.link}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block py-2 text-gray-300 hover:text-teal-300 font-poppins text-sm transition-colors"
+                    className="block py-2 text-gray-300 hover:text-teal-300 font-poppins text-sm transition-colors flex items-center space-x-2"
                   >
-                    {link.label}
+                    <span>{item.icon}</span>
+                    <span>{item.name}</span>
                   </Link>
                 ))}
               </div>
@@ -338,7 +329,7 @@ const Header: React.FC = () => {
           animation: glow 1.5s infinite;
         }
       `}</style>
-    </header>
+    </motion.header>
   );
 };
 

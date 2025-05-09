@@ -33,13 +33,13 @@ const Sidebar: React.FC<SidebarProps> = ({
     <>
       {/* Desktop Sidebar */}
       <div
-        className={`hidden lg:flex flex-col border-r border-[var(--border-color)] bg-[var(--card-bg)] h-full transition-all duration-300 ease-in-out ${
-          isSidebarCollapsed ? "w-20" : "w-64"
+        className={`hidden lg:flex flex-col border-r border-[var(--bluey)] bg-[var(--dark-onyx)] h-full transition-all duration-300 ease-in-out ${
+          isSidebarCollapsed ? "w-18" : "w-64"
         }`}
       >
         {/* Logo and Toggle */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-[var(--border-color)]">
-          <Link href="/dashboard">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-[var(--bluey)]">
+          <Link href="/">
             <div className="flex items-center">
               <Image
                 src={Logo}
@@ -48,16 +48,29 @@ const Sidebar: React.FC<SidebarProps> = ({
                 height={32}
                 className="rounded-md"
               />
-              {!isSidebarCollapsed && (
+              {/* {!isSidebarCollapsed && (
                 <span className="ml-3 font-medium text-xl text-[var(--text-primary)]">
                   NameFrame
                 </span>
               )}
+              <button
+                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                className="p-1.5 rounded-md  cursor-pointer text-[var(--text-secondary)] hover:bg-[var(--bluey-hover)] transition-colors"
+              >
+                {isSidebarCollapsed ? (
+                  <ChevronRight size={18} />
+                ) : (
+                  <ChevronLeft size={18} />
+                )}
+              </button> */}
             </div>
           </Link>
+        </div>
+
+        <div className={`h-screen z-40 ${isSidebarCollapsed? "ml-14":"ml-60"} duration-300 absolute flex justify-end items-center`}>
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="p-1.5 rounded-md text-[var(--text-secondary)] hover:bg-[var(--card-hover)] transition-colors"
+            className={`p-2  rounded-md mt-4  bg-slate-700 cursor-pointer text-gray-200 hover:bg-[var(--bluey)] transition-colors`}
           >
             {isSidebarCollapsed ? (
               <ChevronRight size={18} />
@@ -76,8 +89,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 href={item.href}
                 className={`flex items-center px-3 py-3 rounded-md transition-all duration-200 group ${
                   item.active
-                    ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                    : "text-[var(--text-secondary)] hover:bg-[var(--card-hover)] hover:text-[var(--text-primary)]"
+                    ? "bg-[var(--bluey-text)] text-[var(--accent-foreground)]"
+                    : "text-[var(--text-secondary)] hover:bg-[var(--bluey-hover)] hover:text-[var(--text-primary)]"
                 }`}
               >
                 <item.icon
@@ -91,25 +104,29 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* User Button */}
-        <div className="p-4 border-t border-[var(--border-color)]">
-          <div className={`flex ${isSidebarCollapsed ? "justify-center" : "justify-between"} items-center`}>
+        <div className="p-4 border-t border-[var(--bluey)]">
+          <div
+            className={`flex ${isSidebarCollapsed ? "justify-center" : "justify-between"} items-center`}
+          >
             <UserButton
               afterSignOutUrl="/"
               appearance={{
                 elements: {
                   avatarBox:
                     "w-8 h-8 rounded-full border border-[var(--border-color)] hover:border-[var(--accent-color)]",
-                  userButtonPopoverCard: "bg-[var(--card-bg)] border border-[var(--border-color)] text-[var(--text-primary)]",
-                  userButtonPopoverActionButtonText: "text-[var(--text-primary)]",
-                  userButtonPopoverActionButtonIcon: "text-[var(--accent-color)]",
-                  userButtonPopoverFooter: "border-t border-[var(--border-color)]",
+                  userButtonPopoverCard:
+                    "bg-[var(--card-bg)] border border-[var(--border-color)] text-[var(--text-primary)]",
+                  userButtonPopoverActionButtonText:
+                    "text-[var(--text-primary)]",
+                  userButtonPopoverActionButtonIcon:
+                    "text-[var(--accent-color)]",
+                  userButtonPopoverFooter:
+                    "border-t border-[var(--border-color)]",
                 },
               }}
             />
             {!isSidebarCollapsed && (
-              <button 
-                className="p-2 rounded-md text-[var(--text-secondary)] hover:bg-[var(--card-hover)] hover:text-[var(--text-primary)] transition-colors"
-              >
+              <button className="p-2 rounded-md text-[var(--text-secondary)] hover:bg-[var(--card-hover)] hover:text-[var(--text-primary)] transition-colors">
                 <LogOut size={18} />
               </button>
             )}
@@ -129,7 +146,11 @@ const Sidebar: React.FC<SidebarProps> = ({
           >
             {/* Mobile Logo */}
             <div className="flex items-center h-16 px-4 border-b border-[var(--border-color)]">
-              <Link href="/dashboard" className="flex items-center" onClick={() => setIsMobileNavOpen(false)}>
+              <Link
+                href="/dashboard"
+                className="flex items-center"
+                onClick={() => setIsMobileNavOpen(false)}
+              >
                 <Image
                   src={Logo}
                   alt="Logo"
@@ -176,9 +197,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     },
                   }}
                 />
-                <button 
-                  className="p-2 rounded-md text-[var(--text-secondary)] hover:bg-[var(--card-hover)] hover:text-[var(--text-primary)] transition-colors"
-                >
+                <button className="p-2 rounded-md text-[var(--text-secondary)] hover:bg-[var(--card-hover)] hover:text-[var(--text-primary)] transition-colors">
                   <LogOut size={18} />
                 </button>
               </div>
