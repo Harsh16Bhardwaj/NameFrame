@@ -124,7 +124,7 @@ export const InteractivePreview: React.FC<InteractivePreviewProps> = ({
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
       // Apply font settings
-      ctx.font = `${fontSettings.size }px ${fontSettings.family}`; // Match the preview's font size
+      ctx.font = `${fontSettings.size}px ${fontSettings.family}`; // Match the preview's font size
       ctx.fillStyle = fontSettings.color;
       ctx.textAlign = "center"; // Center the text
       ctx.textBaseline = "middle";
@@ -136,7 +136,6 @@ export const InteractivePreview: React.FC<InteractivePreviewProps> = ({
 
       // Draw participant name
       ctx.fillText(previewName || "Your Name", x, y, maxWidth);
-
       // Create download link
       const link = document.createElement("a");
       link.download = `certificate-${(previewName || "your-name").replace(/\s+/g, "-").toLowerCase()}.png`;
@@ -181,7 +180,8 @@ export const InteractivePreview: React.FC<InteractivePreviewProps> = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            Type your name below to see how it looks on our certificate templates.
+            Type your name below to see how it looks on our certificate
+            templates.
           </motion.p>
         </motion.div>
 
@@ -226,9 +226,7 @@ export const InteractivePreview: React.FC<InteractivePreviewProps> = ({
                   className={`w-full p-3 px-5 ${delius.className} bg-[#141423] rounded-lg border border-gray-700 focus:border-violet-500 focus:outline-none text-sm sm:text-base`}
                   placeholder="Enter your name"
                   value={previewName}
-                  onChange={(e) =>
-                    setPreviewName(e.target.value || "Your Name")
-                  }
+                  onChange={(e) => setPreviewName(e.target.value)} // Allow empty string
                 />
               </motion.div>
 
@@ -273,7 +271,8 @@ export const InteractivePreview: React.FC<InteractivePreviewProps> = ({
                           color: fontSettings.color,
                         }}
                       >
-                        {previewName || "Your Name"}
+                        {previewName || "Your Name"}{" "}
+                        {/* Fallback to "Your Name" only for display */}
                       </div>
                     </motion.div>
                   </div>

@@ -275,9 +275,40 @@ const CertificateForm: React.FC = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-br from-bg-[var(--tealy)] via-purple-900/30 to-bg-[var(--tealy)] animate-holo-shift" />
           <div className="relative -mt-10 z-10 w-full max-w-6xl bg-gradient-to-br from-gray-900/20  to-black/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-gray-400/60">
-            <h2 className="text-4xl text-center underline-offset-8 unerline- decoration-white decoration-1 font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-neutral-300 mb-10 tracking-tight animate-glow">
-              Craft a Certificate Session
-            </h2>
+            <div className="w-full flex justify-between">
+              <h2 className="text-4xl text-center underline-offset-8 unerline- decoration-white decoration-1 font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-neutral-300 mb-10 tracking-tight animate-glow">
+                Craft a Certificate Session
+              </h2>
+              <div className="flex flex-col gap-y-2">
+                <h3 className="font-bold ">Download the Content for Quick Trial !</h3>
+                <div className="flex gap-x-2 justify-end">
+
+                <a href="https://res.cloudinary.com/dimoa9ymu/raw/upload/v1746895170/participants_2_k7owmj.xlsx"><button className="px-3 py-1 bg-[var(--love)] rounded-md cursor-pointer hover:scale-103 hover:bg-[var(--love-text)] font-semibold duration-200 ease-in-out">Excel File</button></a>
+<button
+  className="px-3 py-1 bg-[var(--pale)] rounded-md cursor-pointer hover:scale-103 hover:bg-[var(--pale)] text-black duration-200 font-semibold ease-in-out"
+  onClick={async () => {
+    const url = "https://res.cloudinary.com/dimoa9ymu/image/upload/v1746895169/certi_u38ffm.png";
+    try {
+      const response = await fetch(url, { mode: "cors" });
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.setAttribute("download", "certificate.png");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl); // Clean up
+    } catch (error) {
+      console.error("Download failed:", error);
+      alert("Failed to download. Please try again or check the image URL.");
+    }
+  }}
+>
+  Certificate
+</button>                </div>
+              </div>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="space-y-6">
                 <div>
