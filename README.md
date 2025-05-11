@@ -32,7 +32,7 @@ Get started in minutes:
 
 - **Dashboard Management** 📊  
   Monitor certificate generation and mailing status in a modern dashboard.  
-  ![Dashboard](./dash.JPG)
+  ![Dashboard](./public/dash.JPG)
 
 - **Lead Generation** 📈  
   Capture participant data for event analytics and follow-ups.
@@ -44,7 +44,7 @@ Watch NameFrame generate personalized certificates in seconds! 🚀
 [![NameFrame Demo](https://img.youtube.com/vi/placeholder/0.jpg)](https://youtube.com/watch?v=placeholder)  
 *Click to watch the demo on YouTube.*  
 
-![Certificate Preview](./ex4.JPG)  
+![Certificate Preview](./public/ex4.JPG)  
 *Real-time certificate rendering with dynamic text overlay.*
 
 ## Certificate Template Specifications 📄
@@ -54,19 +54,19 @@ Watch NameFrame generate personalized certificates in seconds! 🚀
 - **Text Placement**: Centered horizontally, at ~60% of template height (adjustable in UI).  
 - **Participant List**: Excel file with columns: **Name**, **Email**.  
 
-![Text Placement Diagram](./cordi.JPG)  
+![Text Placement Diagram](./public/cordi.JPG)  
 *Text placement coordinates for certificate templates.*
 
 ## Usage 🛠️
 
 1. **Upload Template**: Upload a 4:3 PNG/JPEG template (1440x1080 pixels).  
-   ![Template Upload](./1.png)
+   ![Template Upload](./public/1.png)
 
 2. **Upload Participant List**: Provide an Excel file (columns: Name, Email).  
-   ![Excel Upload](./parti.JPG)
+   ![Excel Upload](./public/parti.JPG)
 
 3. **Customize Text**: Adjust font size and placement using the preview.  
-   ![Text Customization](./screenshots/text-customization.png)
+   ![Text Customization](./public/screenshots/text-customization.png)
 
 4. **Generate Certificates**: Preview and download as PNGs.  
 5. **Send Emails**: Use the mailing system to distribute certificates.
