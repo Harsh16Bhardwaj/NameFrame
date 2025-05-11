@@ -21,7 +21,7 @@ export async function GET() {
       },
       orderBy: { createdAt: "desc" },
     });
-    console.log('Events data:',events)
+    console.log('Events data:', events);
     return NextResponse.json({ success: true, data: events });
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    
+
     // First, create a template using the Cloudinary URL
     const newTemplate = await prisma.certificateTemplate.create({
       data: {
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
         textHeight: textPosition?.height ?? 15,
       },
     });
-    
+
     // Then create the event with the new template ID
     const newEvent = await prisma.event.create({
       data: {
@@ -69,14 +69,31 @@ export async function POST(req: Request) {
         templateId: newTemplate.id,
       },
     });
-    
+
     return NextResponse.json({ success: true, data: newEvent }, { status: 201 });
-  } catch (error) {
-    console.error("Error creating event:", error);
-    return NextResponse.json(
-      { success: false, error: "Internal Server Error" },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Error creating event:', {
+        message: error.message,
+        stack: error.stack,
+        requestBody: req.body, // log request data for debugging
+        env: process.env.NODE_ENV,
+      });
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Failed to create event. Please try again later.',
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined,
+        },
+        { status: 500 }
+      );
+    } else {
+      console.error('Unknown error:', error);
+      return NextResponse.json(
+        { success: false, error: 'Unknown server error.' },
+        { status: 500 }
+      );
+    }
   } finally {
     await prisma.$disconnect();
   }
