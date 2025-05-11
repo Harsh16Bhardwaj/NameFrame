@@ -44,7 +44,7 @@ Watch NameFrame generate personalized certificates in seconds! 🚀
 [![NameFrame Demo](https://img.youtube.com/vi/placeholder/0.jpg)](https://youtube.com/watch?v=placeholder)  
 *Click to watch the demo on YouTube.*  
 
-![Certificate Preview](./public/ex4.JPG)  
+![Certificate Preview](./public/ex4.jpg)  
 *Real-time certificate rendering with dynamic text overlay.*
 
 ## Certificate Template Specifications 📄
@@ -54,7 +54,7 @@ Watch NameFrame generate personalized certificates in seconds! 🚀
 - **Text Placement**: Centered horizontally, at ~60% of template height (adjustable in UI).  
 - **Participant List**: Excel file with columns: **Name**, **Email**.  
 
-![Text Placement Diagram](./public/cordi.JPG)  
+![Text Placement Diagram](./public/cordi.jpg)  
 *Text placement coordinates for certificate templates.*
 
 ## Usage 🛠️
@@ -63,7 +63,7 @@ Watch NameFrame generate personalized certificates in seconds! 🚀
    ![Template Upload](./public/1.png)
 
 2. **Upload Participant List**: Provide an Excel file (columns: Name, Email).  
-   ![Excel Upload](./public/parti.JPG)
+   ![Excel Upload](./public/parti.jpg)
 
 3. **Customize Text**: Adjust font size and placement using the preview.  
    ![Text Customization](./public/screenshots/text-customization.png)
