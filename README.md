@@ -12,7 +12,7 @@ Tired of creating certificates manually? 😓 NameFrame is your solution! This d
 
 Get started in minutes:
 
-1. Visit the [NameFrame demo](#) (launching soon!).
+1. Visit the [NameFrame demo](https://nameframe.site/) (launching soon!).
 2. Upload a certificate template in **4:3 format** (1440x1080 pixels, PNG/JPEG).
 3. Upload an **Excel file** with participant details (columns: Name, Email).
 4. Generate and download personalized certificates!
