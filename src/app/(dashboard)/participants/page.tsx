@@ -662,7 +662,7 @@ export default function ParticipantsPage() {
                       >
                         <ChevronLeft className="w-5 h-5 text-[var(--tealy)]" />
                       </motion.button>
-                      <span className="px-4 py-2 rounded-lg bg-[var(--space)]/20 text-[var(--pale-text)]">
+                      <span className="px-4 py-2 rounded-lg bg-[var(--space)]/20 text-[var(--pale)]">
                         Page {pagination.page} of {pagination.totalPages}
                       </span>
                       <motion.button
