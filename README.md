@@ -32,7 +32,7 @@ Get started in minutes:
 
 - **Dashboard Management** 📊  
   Monitor certificate generation and mailing status in a modern dashboard.  
-  ![Dashboard](./public/dash.JPG)
+  ![Dashboard](./public/dash.jpg)
 
 - **Lead Generation** 📈  
   Capture participant data for event analytics and follow-ups.
