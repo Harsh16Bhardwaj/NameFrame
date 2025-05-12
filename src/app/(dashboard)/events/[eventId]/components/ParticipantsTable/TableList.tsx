@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Eye,
   Download,
@@ -12,9 +12,10 @@ import {
   Loader2,
   ChevronLeft,
   ChevronRight,
-  Send
-} from 'lucide-react';
-import axios from 'axios';
+  Send,
+} from "lucide-react";
+import axios from "axios";
+import { useParams } from "next/navigation";
 
 interface Participant {
   id: string;
@@ -25,7 +26,7 @@ interface Participant {
 }
 
 interface SendingStatus {
-  [participantId: string]: 'pending' | 'sending' | 'success' | 'error';
+  [participantId: string]: "pending" | "sending" | "success" | "error";
 }
 
 interface TableListProps {
@@ -45,66 +46,64 @@ export default function TableList({
   onSendCertificate,
   isSending,
   eventId,
-  itemsPerPage = 10
+  itemsPerPage = 10,
 }: TableListProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(participants.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentParticipants = participants.slice(indexOfFirstItem, indexOfLastItem);
+  const currentParticipants = participants.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
-  const goToNextPage = () => setCurrentPage((page) => Math.min(page + 1, totalPages));
+  const goToNextPage = () =>
+    setCurrentPage((page) => Math.min(page + 1, totalPages));
   const goToPrevPage = () => setCurrentPage((page) => Math.max(page - 1, 1));
-
+  const params = useParams();
   const handleDownloadCertificate = async (participant: Participant) => {
     try {
-      // First, check if we have a direct certificate URL
       if (participant.certificateUrl) {
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = participant.certificateUrl;
-        link.setAttribute('download', `${participant.name}_certificate.png`);
+        link.setAttribute("download", `${participant.name}_certificate.png`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         return;
       }
-
-      // Make sure eventId is defined before making the request
+      const { eventId } = await params;
       if (!eventId) {
-        console.error('Event ID is undefined');
-        alert('Cannot download certificate: Event ID is missing');
+        console.error("Event ID is not available");
         return;
       }
-
       const response = await axios.get(
         `/api/events/${eventId}/certificate/${participant.id}`,
         {
-          responseType: 'blob'
+          responseType: "blob",
         }
       );
 
-      const blob = new Blob([response.data], { type: 'image/png' });
+      const blob = new Blob([response.data], { type: "image/png" });
       const url = window.URL.createObjectURL(blob);
 
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
 
-      // Try to get filename from Content-Disposition header
-      const disposition = response.headers['content-disposition'];
+      const disposition = response.headers["content-disposition"];
       const match = disposition?.match(/filename="?([^"]+)"?/);
       const filename = match?.[1] || `${participant.name}_certificate.png`;
 
-      link.setAttribute('download', filename);
+      link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
-      // Always clean up the URL object
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error downloading certificate:', error);
-      alert(`Failed to download certificate: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error("Error downloading certificate:", error);
+      alert("Failed to download certificate. Please try again.");
     }
   };
 
@@ -131,7 +130,9 @@ export default function TableList({
                 <ArrowUpDown size={14} className="opacity-50" />
               </div>
             </th>
-            <th className="pb-3 text-right text-sm font-medium text-[#c5c3c4]/70">Actions</th>
+            <th className="pb-3 text-right text-sm font-medium text-[#c5c3c4]/70">
+              Actions
+            </th>
           </tr>
         </thead>
 
@@ -148,7 +149,7 @@ export default function TableList({
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2, delay: index * 0.03 }}
                   className={`group border-b border-[#4b3a70]/20 hover:bg-[#3a3c4a]/50 transition-colors ${
-                    index % 2 === 0 ? 'bg-[#272936]/50' : 'bg-transparent'
+                    index % 2 === 0 ? "bg-[#272936]/50" : "bg-transparent"
                   }`}
                 >
                   <td className="py-3 pl-4 pr-2">
@@ -156,19 +157,21 @@ export default function TableList({
                       {participant.name}
                     </div>
                   </td>
-                  <td className="py-3 px-2 text-sm text-[#c5c3c4]/80">{participant.email}</td>
+                  <td className="py-3 px-2 text-sm text-[#c5c3c4]/80">
+                    {participant.email}
+                  </td>
                   <td className="py-3 px-2">
-                    {status === 'sending' ? (
+                    {status === "sending" ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-blue-900/20 px-2.5 py-0.5 text-xs font-medium text-blue-400">
                         <Loader2 size={12} className="animate-spin" />
                         Sending...
                       </span>
-                    ) : status === 'error' ? (
+                    ) : status === "error" ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-red-900/20 px-2.5 py-0.5 text-xs font-medium text-red-400">
                         <XCircle size={12} />
                         Failed
                       </span>
-                    ) : participant.emailed || status === 'success' ? (
+                    ) : participant.emailed || status === "success" ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-green-900/20 px-2.5 py-0.5 text-xs font-medium text-green-400">
                         <CheckCircle size={12} />
                         Sent
@@ -198,12 +201,12 @@ export default function TableList({
                         <Download size={16} />
                       </button>
 
-                      {!participant.emailed && status !== 'sending' && (
+                      {!participant.emailed && status !== "sending" && (
                         <button
                           onClick={() => onSendCertificate(participant.id)}
                           disabled={isSending}
                           className={`p-1.5 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors ${
-                            isSending ? 'opacity-50 cursor-not-allowed' : ''
+                            isSending ? "opacity-50 cursor-not-allowed" : ""
                           }`}
                           title="Send Email"
                         >
@@ -230,11 +233,13 @@ export default function TableList({
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-6 px-2">
           <div className="text-sm text-[#c5c3c4]/70">
-            Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{' '}
+            Showing <span className="font-medium">{indexOfFirstItem + 1}</span>{" "}
+            to{" "}
             <span className="font-medium">
               {Math.min(indexOfLastItem, participants.length)}
-            </span>{' '}
-            of <span className="font-medium">{participants.length}</span> participants
+            </span>{" "}
+            of <span className="font-medium">{participants.length}</span>{" "}
+            participants
           </div>
 
           <div className="flex gap-2 items-center">
@@ -242,7 +247,7 @@ export default function TableList({
               onClick={goToPrevPage}
               disabled={currentPage === 1}
               className={`p-2 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors ${
-                currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
+                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
               }`}
               aria-label="Previous page"
             >
@@ -257,7 +262,9 @@ export default function TableList({
               onClick={goToNextPage}
               disabled={currentPage === totalPages}
               className={`p-2 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors ${
-                currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
               }`}
               aria-label="Next page"
             >
