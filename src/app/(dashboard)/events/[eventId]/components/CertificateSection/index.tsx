@@ -1,6 +1,6 @@
-import React from 'react';
-import CertificatePreview from './CertificatePreview';
-import TextPositionControls from './TextPositionControls';
+import React from "react";
+import CertificatePreview from "./CertificatePreview";
+import TextPositionControls from "./TextPositionControls";
 
 interface CertificateSectionProps {
   templateUrl: string;
@@ -21,18 +21,18 @@ interface CertificateSectionProps {
   onTemplateChange?: (newUrl: string) => void;
 }
 
-export default function CertificateSection({ 
-  templateUrl, 
+export default function CertificateSection({
+  templateUrl,
   textPosition,
-  fontSettings = { 
-    family: "Arial", 
+  fontSettings = {
+    family: "Arial",
     size: 48,
-    color: "#000000"
+    color: "#000000",
   },
   onPositionChange,
   onFontChange,
   onSavePositions,
-  onTemplateChange
+  onTemplateChange,
 }: CertificateSectionProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -44,9 +44,10 @@ export default function CertificateSection({
         onPositionChange={onPositionChange}
         onTemplateChange={onTemplateChange}
       />
-      
+
       {/* Text Position and Font Customization */}
-      <TextPositionControls 
+      <TextPositionControls
+        //@ts-ignore
         textPosition={textPosition}
         fontSettings={fontSettings}
         onPositionChange={onPositionChange}

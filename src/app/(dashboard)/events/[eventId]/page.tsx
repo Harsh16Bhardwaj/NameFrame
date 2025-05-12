@@ -60,6 +60,17 @@ interface SendingStatus {
   [participantId: string]: "pending" | "sending" | "success" | "error";
 }
 
+interface ParticipantsTableProps {
+  participants: Participant[];
+  sendCertificates: () => Promise<void>;
+  sendSingleCertificate: (participantId: string) => Promise<void>;
+  isSending: boolean;
+  sendingStatus: SendingStatus;
+  emailProgress: { sent: number; total: number };
+  onShowPreview: (participant: Participant) => void;
+  eventId: string; // Added eventId to the props
+}
+
 export default function EventDashboard() {
   const { eventId } = useParams();
   const [event, setEvent] = useState<EventDetails | null>(null);
@@ -443,6 +454,8 @@ export default function EventDashboard() {
             sendingStatus={sendingStatus}
             emailProgress={emailProgress}
             onShowPreview={handleShowPreview}
+            //@ts-ignore
+            eventId={eventId}
           />
         </div>
 

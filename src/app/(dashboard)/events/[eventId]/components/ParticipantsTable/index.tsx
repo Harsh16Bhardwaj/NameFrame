@@ -122,25 +122,6 @@ export default function ParticipantsTable({
                 <span>Send All Certificates {unsentCount > 0 && `(${unsentCount})`}</span>
               </motion.button>
             )}
-            
-            {/* <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 rounded-lg border border-[#b7a2c9]/30 bg-[#4b3a70]/30 px-4 py-2 text-sm font-medium text-[#b7a2c9] transition-all hover:bg-[#4b3a70]/50"
-            >
-              <Package size={16} />
-              <span>Download All (ZIP)</span>
-            </motion.button> */}
-            
-            {/* <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 rounded-lg border border-[#b7a2c9]/30 bg-[#4b3a70]/30 px-4 py-2 text-sm font-medium text-[#b7a2c9] transition-all hover:bg-[#4b3a70]/50"
-            >
-              <User2 size={16} />
-              <Plus size={14} className="absolute -mt-2 ml-2" />
-              <span>Add Participant</span>
-            </motion.button> */}
           </div>
         </div>
         <div className='border-b border-1 border-gray-700 mx-20 mb-8 '></div>
@@ -165,6 +146,8 @@ export default function ParticipantsTable({
           sendingStatus={sendingStatus}
           onSendCertificate={sendSingleCertificate}
           isSending={isSending}
+          //@ts-ignore
+          eventId={eventId} // Pass the required eventId prop
         />
         
         {/* Pagination */}

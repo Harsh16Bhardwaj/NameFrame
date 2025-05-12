@@ -59,6 +59,7 @@ export default function TableList({
 
   const handleDownloadCertificate = async (participant: Participant) => {
     try {
+      // First, check if we have a direct certificate URL
       if (participant.certificateUrl) {
         const link = document.createElement('a');
         link.href = participant.certificateUrl;
@@ -66,6 +67,13 @@ export default function TableList({
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        return;
+      }
+
+      // Make sure eventId is defined before making the request
+      if (!eventId) {
+        console.error('Event ID is undefined');
+        alert('Cannot download certificate: Event ID is missing');
         return;
       }
 
@@ -82,6 +90,7 @@ export default function TableList({
       const link = document.createElement('a');
       link.href = url;
 
+      // Try to get filename from Content-Disposition header
       const disposition = response.headers['content-disposition'];
       const match = disposition?.match(/filename="?([^"]+)"?/);
       const filename = match?.[1] || `${participant.name}_certificate.png`;
@@ -91,10 +100,11 @@ export default function TableList({
       link.click();
       document.body.removeChild(link);
 
+      // Always clean up the URL object
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error downloading certificate:', error);
-      alert('Failed to download certificate. Please try again.');
+      alert(`Failed to download certificate: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
