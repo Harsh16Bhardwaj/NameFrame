@@ -28,7 +28,7 @@ export default function CertificatePreview({
   templateUrl, 
   textPosition,
   fontSettings,
-  dummyName = "John Doe", // Default to John Doe if not provided
+  dummyName,
   onPositionChange,
   onTemplateChange
 }: CertificatePreviewProps) {

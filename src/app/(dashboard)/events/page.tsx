@@ -159,20 +159,21 @@ export default function EventsPage() {
               className="px-3 py-2 cursor-pointer bg-gradient-to-r from-[#4b3a70]/30 to-[#4b3a70]/20 hover:from-[#4b3a70]/40 hover:to-[#4b3a70]/30 text-[#c5c3c4] font-medium rounded-lg transition-all flex items-center gap-2 border border-[var(--bluey)] backdrop-blur-sm"
             >
               <RefreshCw className="w-4 h-4" />
-              
             </motion.button>
-            <button
-              className={`flex cursor-pointer items-center justify-center gap-x-1 rounded-md px-3 py-2 font-medium text-sm transition-all duration-200 ease-in-out transform
+            <Link href="/create">
+              <button
+                className={`flex cursor-pointer items-center justify-center gap-x-1 rounded-md px-3 py-2 font-medium text-sm transition-all duration-200 ease-in-out transform
                 ${
                   1
                     ? "bg-gradient-to-r from-[#1e293b] to-[#334155] text-gray-100 border border-[#475569] hover:from-[#2d3b50] hover:to-[#3b4c64] hover:shadow-md hover:scale-105"
                     : "bg-gradient-to-r from-[#f9fcff] to-[#fbfdff] text-gray-800 border border-[#cbd5e1] hover:from-[#d8e0ea] hover:to-[#bfc8d7] hover:shadow-sm hover:scale-105"
                 }
               `}
-            >
-              <Calendar className="w-4 h-4"></Calendar>
-              New 
-            </button>
+              >
+                <Calendar className="w-4 h-4"></Calendar>
+                New
+              </button>
+            </Link>
           </div>
         </div>
 

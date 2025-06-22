@@ -15,6 +15,7 @@ interface CertificateSectionProps {
     size: number;
     color: string;
   };
+  dummyName?: string;
   onPositionChange: (property: string, value: number) => void;
   onFontChange: (property: string, value: string | number) => void;
   onSavePositions: () => Promise<void>;
@@ -29,6 +30,7 @@ export default function CertificateSection({
     size: 48,
     color: "#000000",
   },
+  dummyName,
   onPositionChange,
   onFontChange,
   onSavePositions,
@@ -43,16 +45,17 @@ export default function CertificateSection({
         fontSettings={fontSettings}
         onPositionChange={onPositionChange}
         onTemplateChange={onTemplateChange}
+        dummyName={dummyName}
       />
 
       {/* Text Position and Font Customization */}
       <TextPositionControls
-        //@ts-ignore
         textPosition={textPosition}
         fontSettings={fontSettings}
         onPositionChange={onPositionChange}
         onFontChange={onFontChange}
         onSavePositions={onSavePositions}
+        dummyName={dummyName}
       />
     </div>
   );
