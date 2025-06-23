@@ -58,4 +58,10 @@ model Participant {
   certificateUrl String? // Optional: generated cert link
   emailed        Boolean  @default(false)
   createdAt      DateTime @default(now())
+  
+  // Certificate Verification Fields
+  verificationCode    String?   @unique // Unique code for verification
+  certificateHash     String?   // Hash of certificate for integrity
+  verifiedAt          DateTime? // When certificate was generated/verified
+  isVerified          Boolean   @default(false)
 }

@@ -55,11 +55,10 @@ export default function CertificatePreview({
     size: 48,
     color: "#000000"
   };
-
   // Use the defaults with the incoming props
   const actualFontSettings = {
     family: fontSettings?.family || defaultFontSettings.family,
-    size: fontSettings?.size || defaultFontSettings.size,
+    size: Math.max(12, fontSettings?.size || defaultFontSettings.size), // Ensure minimum font size
     color: fontSettings?.color || defaultFontSettings.color,
   };
 
@@ -155,13 +154,15 @@ export default function CertificatePreview({
 
     fetchUsedTemplates();
   }, []); // Empty dependency array - only run once
-
   // Debug info for troubleshooting
   useEffect(() => {
     console.log("Template URL props:", templateUrl);
     console.log("Current template URL:", currentTemplateUrl);
     console.log("Used templates:", usedTemplates);
-  }, [templateUrl, currentTemplateUrl, usedTemplates]);
+    console.log("Text position:", textPosition);
+    console.log("Font settings:", actualFontSettings);
+    console.log("Dummy name:", dummyName);
+  }, [templateUrl, currentTemplateUrl, usedTemplates, textPosition, actualFontSettings, dummyName]);
 
   // Keep local position in sync with props
   useEffect(() => {
@@ -326,26 +327,25 @@ export default function CertificatePreview({
                   setImageLoaded(false);
                 }}
               />
-            )}
-            
-            {/* Overlay for text position */}
-            {imageLoaded && currentTemplateUrl && (
+            )}            {/* Overlay for text position - Always visible when template URL exists */}
+            {currentTemplateUrl && (
               <div 
-                className={`absolute flex items-center justify-center ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+                className={`absolute flex items-center justify-center ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} z-10 ${!imageLoaded ? 'opacity-50' : 'opacity-100'}`}
                 style={{
-                  left: `${localPosition.x}%`,
-                  top: `${localPosition.y}%`,
-                  width: `${localPosition.width}%`,
-                  height: `${localPosition.height}%`,
+                  left: `${Math.max(5, Math.min(95, localPosition.x))}%`,
+                  top: `${Math.max(5, Math.min(95, localPosition.y))}%`,
+                  width: `${Math.max(10, Math.min(90, localPosition.width))}%`,
+                  height: `${Math.max(5, Math.min(50, localPosition.height))}%`,
                   transform: 'translate(-50%, -50%)',
-                  transition: isDragging ? 'none' : 'all 0.2s ease'
+                  transition: isDragging ? 'none' : 'all 0.2s ease',
+                  minWidth: '100px',
+                  minHeight: '40px'
                 }}
                 onMouseDown={handleMouseDown}
-              >
-                <div className={`bg-white/10 border ${isDragging ? 'border-blue-500' : 'border-[#b7a2c9]/50'} backdrop-blur-sm rounded-md px-4 py-2 w-full h-full flex items-center justify-center`}>
+              >                <div className={`border-2 ${isDragging ? 'border-blue-500 bg-blue-500/10' : 'border-[#b7a2c9]/50 hover:border-[#b7a2c9]'} backdrop-blur-sm rounded-md px-2 py-1 w-full h-full flex items-center justify-center transition-all`}>
                   <span style={{
                     fontFamily: actualFontSettings.family,
-                    fontSize: `${actualFontSettings.size}px`,
+                    fontSize: `${Math.max(16, actualFontSettings.size)}px`, // Ensure minimum visible size
                     color: actualFontSettings.color,
                     lineHeight: 1.2,
                     textAlign: 'center',
@@ -354,9 +354,11 @@ export default function CertificatePreview({
                     textOverflow: 'ellipsis',
                     WebkitLineClamp: 2,
                     display: '-webkit-box',
-                    WebkitBoxOrient: 'vertical'
+                    WebkitBoxOrient: 'vertical',
+                    // NO EFFECTS - show exactly as it will appear on certificate
+                    fontWeight: 'normal'
                   }}>
-                    {dummyName}
+                    {dummyName || 'John Doe'}
                   </span>
                 </div>
               </div>

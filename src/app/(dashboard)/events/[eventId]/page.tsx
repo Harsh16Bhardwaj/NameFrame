@@ -60,8 +60,9 @@ interface SendingStatus {
   [participantId: string]: "pending" | "sending" | "success" | "error";
 }
 
-export  default async function EventDashboard() {
-  const { eventId } = await useParams();
+export default function EventDashboard() {
+  const params = useParams();
+  const eventId = params?.eventId as string;
   const [event, setEvent] = useState<EventDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -95,13 +96,16 @@ export  default async function EventDashboard() {
 
   // Add personalized message state
   const [personalizedMessage, setPersonalizedMessage] = useState("");
-
   // Fetch event data
   useEffect(() => {
     const fetchEventData = async () => {
       try {
         setLoading(true);
+        setError("");
+        console.log("Fetching event data for eventId:", eventId);
         const response = await axios.get(`/api/events/${eventId}`);
+        console.log("API Response:", response.data);
+        
         if (response.data.success) {
           const eventData = response.data.data;
           setEvent(eventData);
@@ -119,12 +123,15 @@ export  default async function EventDashboard() {
             family: eventData.fontFamily || "Arial",
             size: eventData.fontSize || 48,
             color: eventData.fontColor || "#000000",
-          });
-
+          });          setLoading(false);
+        } else {
+          console.error("API returned success: false");
+          setError("Failed to load event data");
           setLoading(false);
         }
       } catch (error) {
         console.error("Error fetching event:", error);
+        setError("Failed to load event data");
         setLoading(false);
       }
     };
@@ -385,46 +392,55 @@ export  default async function EventDashboard() {
   // if (error || !event) {
   //   return <ErrorState error={error} />;
   // }
+  // Early return if no eventId (prevents issues during SSR/hydration)
+  if (!eventId) {
+    return <LoadingState />;
+  }
 
   return (
     <ProtectedPage>
       <div className="min-h-screen bg-gradient-to-br from-[#080711] to-[#0e1015] text-[#c5c3c4] overflow-y-auto">
         <div className="container mx-auto max-w-7xl px-4 py-8 pt-28">
-          {/* Top Section: Event Overview */}
-          <EventHeader event={event} />
+          
+          {loading && <LoadingState />}
+          {error && <ErrorState error={error} />}
+          
+          {!loading && !error && event && (
+            <>
+              {/* Top Section: Event Overview */}
+              <EventHeader event={event} />
 
-          {/* Dummy Name Input */}
-          <div className="mb-4 flex flex-col justify-center items-center pt-5">
-            <label
-              htmlFor="dummyName"
-              className="block text-lg ml-2 font-medium text-[#c5c3c4]"
-            >
-              Preview Name :
-            </label>
-            <div id="certPreview" className="mt-2 w-1/3">
-              <input
-                type="text"
-                id="dummyName"
-                value={dummyName}
-                onChange={(e) => setDummyName(e.target.value)}
-                className="w-full rounded-md border border-[#4b3a70]/30 font-semibold  bg-[#272936] px-4 py-2 text-gray-200 focus:text-white focus:border-[#b7a2c9] focus:outline-none focus:ring-1 focus:ring-[#b7a2c9]"
-                placeholder="Enter a name for preview"
-              />
-            </div>
-            <p className="mt-1 text-xs text-[#c5c3c4]/70 mb-4">
-              This name will be shown on the certificate preview.
-            </p>
-          </div>
-
-          {/* Bottom Section: Certificate Preview & Customization */}
+              {/* Dummy Name Input */}
+              <div className="mb-4 flex flex-col justify-center items-center pt-5">
+                <label
+                  htmlFor="dummyName"
+                  className="block text-lg ml-2 font-medium text-[#c5c3c4]"
+                >
+                  Preview Name :
+                </label>
+                <div id="certPreview" className="mt-2 w-1/3">
+                  <input
+                    type="text"
+                    id="dummyName"
+                    value={dummyName}
+                    onChange={(e) => setDummyName(e.target.value)}
+                    className="w-full rounded-md border border-[#4b3a70]/30 font-semibold  bg-[#272936] px-4 py-2 text-gray-200 focus:text-white focus:border-[#b7a2c9] focus:outline-none focus:ring-1 focus:ring-[#b7a2c9]"
+                    placeholder="Enter a name for preview"
+                  />
+                </div>
+                <p className="mt-1 text-xs text-[#c5c3c4]/70 mb-4">
+                  This name will be shown on the certificate preview.
+                </p>
+              </div>              {/* Bottom Section: Certificate Preview & Customization */}
           <CertificateSection
             templateUrl={event.templateUrl}
             textPosition={textPosition}
             fontSettings={fontSettings}
+            dummyName={dummyName}
             onPositionChange={handlePositionChange}
             onFontChange={handleFontChange}
             onSavePositions={savePositionChanges}
-            onTemplateChange={handleTemplateChange} // Add this line
+            onTemplateChange={handleTemplateChange}
           />
 
           {/* Save Button */}
@@ -480,21 +496,23 @@ export  default async function EventDashboard() {
                 </p>
               </div>
             )}
-          </div>          <ParticipantsTable
-            participants={event.participants}
-            sendCertificates={sendCertificates}
-            sendSingleCertificate={sendSingleCertificate}
-            isSending={isSending}
-            sendingStatus={sendingStatus}
-            emailProgress={emailProgress}
-            onShowPreview={handleShowPreview}
-            personalizedMessage={personalizedMessage}
-            eventId={eventId as string}
-          />
+          </div>              <ParticipantsTable
+                participants={event.participants}
+                sendCertificates={sendCertificates}
+                sendSingleCertificate={sendSingleCertificate}
+                isSending={isSending}
+                sendingStatus={sendingStatus}
+                emailProgress={emailProgress}
+                onShowPreview={handleShowPreview}
+                personalizedMessage={personalizedMessage}
+                eventId={eventId as string}
+              />
+            </>
+          )}
         </div>
 
         {/* Certificate Preview Modal */}
-        {showPreview && previewParticipant && (
+        {showPreview && previewParticipant && event && (
           <PreviewModal
             participant={previewParticipant}
             templateUrl={event.templateUrl}

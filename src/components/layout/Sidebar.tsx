@@ -40,14 +40,14 @@ const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Logo and Toggle */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-[var(--bluey)]">
-          <Link href="/">
-            <div className="flex items-center">
+          <Link href="/">            <div className="flex items-center">
               <Image
                 src={Logo}
                 alt="Logo"
                 width={32}
                 height={32}
                 className="rounded-md"
+                style={{ width: 'auto', height: 'auto' }}
               />
               {!isSidebarCollapsed && (
                 <span className={`ml-3 ${leckerliOne.className} font-medium text-xl text-[var(--text-primary)]`}>

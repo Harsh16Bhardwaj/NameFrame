@@ -17,11 +17,14 @@ export async function GET(_: Request, { params }: Params) {
       console.error("[API][Event GET] Unauthorized access attempt.");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const { eventId } = await params;
+    
+    const { eventId } = params;
     if (!eventId) {
       console.error("[API][Event GET] No eventId provided in params.");
       return NextResponse.json({ error: "No eventId provided." }, { status: 400 });
     }
+
+    console.log("[API][Event GET] Fetching event with ID:", eventId, "for user:", userId);
 
     const event = await prisma.event.findUnique({
       where: {
@@ -37,15 +40,16 @@ export async function GET(_: Request, { params }: Params) {
     if (!event) {
       console.error(`[API][Event GET] Event not found for eventId: ${eventId}, userId: ${userId}`);
       return NextResponse.json({ error: "Event not found" }, { status: 404 });
-    }
-
-    // Ensure participants is always an array
+    }    // Ensure participants is always an array
     const safeEvent = {
       ...event,
       participants: Array.isArray(event.participants) ? event.participants : [],
     };
 
-    return NextResponse.json(safeEvent);
+    return NextResponse.json({
+      success: true,
+      data: safeEvent
+    });
   } catch (error) {
     console.error("[API][Event GET] Unexpected error:", error);
     return NextResponse.json(

@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaHome, FaPhoneAlt, FaDollarSign } from "react-icons/fa";
+import { FaHome, FaPhoneAlt, FaDollarSign, FaShieldAlt } from "react-icons/fa";
 import { IoMdCreate } from "react-icons/io";
 import { HiMenu, HiX } from "react-icons/hi";
 import {
@@ -46,6 +46,11 @@ const navItems = [
     icon: <IoMdCreate className="h-4 w-4 text-gray-300" />,
   },
   {
+    name: "Verify",
+    link: "/verify",
+    icon: <FaShieldAlt className="h-4 w-4 text-gray-300" />,
+  },
+  {
     name: "Pricing",
     link: "/pricing",
     icon: <FaDollarSign className="h-4 w-4 text-gray-300" />,
@@ -62,10 +67,10 @@ const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(true);
-
   useMotionValueEvent(scrollYProgress, "change", (current) => {
     if (typeof current === "number") {
-      let direction = current - scrollYProgress.getPrevious();
+      const previous = scrollYProgress.getPrevious();
+      let direction = current - (previous || 0);
       if (scrollYProgress.get() < 0.05) {
         setVisible(true);
       } else {

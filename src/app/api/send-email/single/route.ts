@@ -5,6 +5,7 @@ import { Resend } from "resend";
 import { v2 as cloudinary } from "cloudinary";
 import { generateCertificateEmail } from "../emailTemplate";
 import { extractPublicId } from 'cloudinary-build-url';
+import { generateVerificationCode, generateCertificateHash } from "@/lib/verification";
 
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -79,7 +80,12 @@ export async function POST(req: Request) {
         { success: false, error: "Invalid template URL" },
         { status: 400 }
       );
+    }    // Generate verification code if not already present
+    let verificationCode = participant.verificationCode;
+    if (!verificationCode) {
+      verificationCode = generateVerificationCode();
     }
+
     // Use template settings from DB for Cloudinary transformations
     const certificateUrl = cloudinary.url(publicId, {
       transformation: [
@@ -97,27 +103,51 @@ export async function POST(req: Request) {
           y: typeof event.template.textPositionY === "number"
             ? Math.round((event.template.textPositionY - 50) * 10)
             : 0,
-          x: typeof event.template.textPositionX === "number"
-            ? Math.round((event.template.textPositionX - 50) * 10)
+          x: typeof event.template.textPositionX === "number"            ? Math.round((event.template.textPositionX - 50) * 10)
             : 0,
         },
-      ],  
-      format: "png",
+        // Add verification code as a small watermark
+        ...(verificationCode ? [{
+          overlay: {
+            font_family: "Arial",
+            font_size: 16,
+            font_weight: "normal",
+            text: `Verification: ${verificationCode}`,
+          },
+          color: "#666666",
+          gravity: "south_east",
+          x: 20,
+          y: 20,
+        }] : []),
+      ],      format: "png",
       quality: "auto:best",
     });
-    
 
-    await prisma.participant.update({
-      where: { id: participant.id },
-      data: { certificateUrl },
+    // Generate certificate hash for integrity
+    const certificateHash = generateCertificateHash({
+      recipientName: participant.name,
+      eventTitle: event.title,
+      issueDate: new Date().toISOString(),
+      verificationCode,
     });
 
-    const emailHtml = generateCertificateEmail({
+    // Update participant with certificate URL and verification data
+    await prisma.participant.update({
+      where: { id: participant.id },
+      data: { 
+        certificateUrl,
+        verificationCode,
+        certificateHash,
+        isVerified: true,
+        verifiedAt: new Date(),
+      },
+    });    const emailHtml = generateCertificateEmail({
       subject,
       eventTitle: event.title,
       participantName: participant.name,
       transcript,
       certificateUrl,
+      verificationCode, // Add verification code to email
     });
 
     try {

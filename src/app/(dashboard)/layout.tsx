@@ -15,6 +15,7 @@ export default function DashboardLayout({
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
   // Sidebar items with dynamic active state based on current path
@@ -44,7 +45,6 @@ export default function DashboardLayout({
       active: pathname === "/participants" || pathname.startsWith("/participants/") 
     },
   ];
-
   // Persist sidebar state in localStorage
   useEffect(() => {
     // Resize sidebar on small screens
@@ -57,7 +57,11 @@ export default function DashboardLayout({
     window.addEventListener("resize", handleResize);
     handleResize();
 
-    // Load saved preferences
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  // Load saved preferences after component mounts
+  useEffect(() => {
+    setMounted(true);
     const savedState = localStorage.getItem("sidebarCollapsed");
     if (savedState !== null) {
       setIsSidebarCollapsed(savedState === "true");
@@ -67,18 +71,24 @@ export default function DashboardLayout({
     if (savedDarkMode !== null) {
       setIsDarkMode(savedDarkMode === "true");
     }
-
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  // Save preferences when changed
+  // Save preferences when changed (only after mounted)
   useEffect(() => {
-    localStorage.setItem("sidebarCollapsed", String(isSidebarCollapsed));
-  }, [isSidebarCollapsed]);
+    if (mounted) {
+      localStorage.setItem("sidebarCollapsed", String(isSidebarCollapsed));
+    }
+  }, [isSidebarCollapsed, mounted]);
 
   useEffect(() => {
-    localStorage.setItem("darkMode", String(isDarkMode));
-  }, [isDarkMode]);
+    if (mounted) {
+      localStorage.setItem("darkMode", String(isDarkMode));
+    }
+  }, [isDarkMode, mounted]);
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div
