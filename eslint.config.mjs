@@ -13,7 +13,6 @@ const eslintConfig = [
   // 1) include Next.js defaults
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 
-  // 2) override specific rules so they only warn (not error)
   {
     rules: {
       // allow unescaped ' and " in JSX without build failure

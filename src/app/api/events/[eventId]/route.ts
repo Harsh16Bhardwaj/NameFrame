@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 
 interface Params {
-  params: { eventId: string }; // Changed from id to eventId
+  params: { eventId: string };
 }
 
 export async function GET(_: Request, { params }: Params) {
@@ -14,12 +14,18 @@ export async function GET(_: Request, { params }: Params) {
     // Authenticate the user
     const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+      console.error("[API][Event GET] Unauthorized access attempt.");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const { eventId } = await params; 
+    const { eventId } = await params;
+    if (!eventId) {
+      console.error("[API][Event GET] No eventId provided in params.");
+      return NextResponse.json({ error: "No eventId provided." }, { status: 400 });
+    }
+
     const event = await prisma.event.findUnique({
       where: {
-        id: eventId, 
+        id: eventId,
         userId,
       },
       include: {
@@ -28,22 +34,25 @@ export async function GET(_: Request, { params }: Params) {
       },
     });
 
-    // If the event is not found, return a 404 response
     if (!event) {
-      return NextResponse.json({ success: false, error: "Event not found" }, { status: 404 });
+      console.error(`[API][Event GET] Event not found for eventId: ${eventId}, userId: ${userId}`);
+      return NextResponse.json({ error: "Event not found" }, { status: 404 });
     }
 
-    // Return the event data
-    return NextResponse.json({ success: true, data: event });
+    // Ensure participants is always an array
+    const safeEvent = {
+      ...event,
+      participants: Array.isArray(event.participants) ? event.participants : [],
+    };
+
+    return NextResponse.json(safeEvent);
   } catch (error) {
-    // Handle unexpected errors
-    console.error("Error fetching event:", error);
+    console.error("[API][Event GET] Unexpected error:", error);
     return NextResponse.json(
-      { success: false, error: "An unexpected error occurred. Please try again later." },
+      { error: "An unexpected error occurred. Please try again later." },
       { status: 500 }
     );
   } finally {
-    // Ensure Prisma Client is properly disconnected
     await prisma.$disconnect();
   }
 }

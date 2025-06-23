@@ -23,6 +23,7 @@
     "cloudinary": "^2.6.0",
     "cloudinary-build-url": "^0.2.4",
     "clsx": "^2.1.1",
+    "csv-parser": "^3.2.0",
     "date-fns": "^3.6.0",
     "framer-motion": "^12.9.4",
     "html2canvas": "^1.4.1",

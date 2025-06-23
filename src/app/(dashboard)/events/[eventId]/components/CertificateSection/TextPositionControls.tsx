@@ -46,7 +46,6 @@ export default function TextPositionControls({
   const fontFamilies = [
     "Arial",
     "Times New Roman",
-    "Style Script",
     "Verdana",
     "Josefin",
     "Georgia",

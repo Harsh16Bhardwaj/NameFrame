@@ -9,7 +9,7 @@ export const faqs = [
   },
   {
     question: "Do participants need to create accounts?",
-    answer: "No! Participants receive their certificates directly via email without needing to create accounts or download any software."
+    answer: "No! Participants receive their certificates directly via email."
   },
   {
     question: "How does the automated email delivery work?",

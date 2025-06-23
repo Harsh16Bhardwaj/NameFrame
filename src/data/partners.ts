@@ -1,8 +1,7 @@
 export const partners = [
-  { name: "Acme Inc.", shortName: "Acme" },
-  { name: "TechCorp", shortName: "TC" },
+  { name: "GDG MAIT", shortName: "GDG" },
+  { name: "TechXtract MAIT", shortName: "TX" },
   { name: "Innovate Ltd", shortName: "IL" },
-  { name: "Global University", shortName: "GU" },
-  { name: "Future Systems", shortName: "FS" },
-  { name: "Enterprise Solutions", shortName: "ES" }
+  { name: "Maharaja Agrasen Institute of Technology", shortName: "MAIT" },
+  { name: "Future Systems", shortName: "FS" }
 ];

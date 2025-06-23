@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { parse } from "papaparse"; // For CSV parsing
@@ -13,8 +13,13 @@ type RouteParams = {
 
 const prisma = new PrismaClient();
 
-export async function POST(req: Request, { params }: RouteParams) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { eventId: string } }
+) {
   try {
+    const { eventId } = await params;
+
     // Authenticate the user
     const { userId } = await auth();
     if (!userId) {
@@ -24,7 +29,7 @@ export async function POST(req: Request, { params }: RouteParams) {
     // Verify the event exists and belongs to the user
     const event = await prisma.event.findUnique({
       where: {
-        id: params.eventId,
+        id: eventId,
         userId,
       },
     });
@@ -34,7 +39,7 @@ export async function POST(req: Request, { params }: RouteParams) {
     }
 
     // Process the uploaded file
-    const formData = await req.formData();
+    const formData = await request.formData();
     const file = formData.get("file") as File;
 
     if (!file) {
@@ -95,7 +100,7 @@ export async function POST(req: Request, { params }: RouteParams) {
         participants.push({
           name,
           email,
-          eventId: params.eventId,
+          eventId,
         });
       } else {
         invalidRows.push(row);

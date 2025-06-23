@@ -13,28 +13,29 @@ export async function POST(): Promise<NextResponse> {
       throw new Error("User is not authenticated");
     }
 
+    const userEmail = user.emailAddresses[0].emailAddress;
+
     // Check if the user already exists in the database
     const existingUser = await prisma.user.findUnique({
-      where: { id: user.id },
+      where: { email: userEmail },
     });
 
-    if (existingUser) {
-      console.log(`User already exists: ${user.id}`);
+    if (!existingUser) {
+      const fullName = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
+      await prisma.user.create({
+        data: {
+          id: user.id,
+          email: userEmail,
+          name: fullName,
+        },
+      });
+
+      console.log(`User created: ${user.id}`);
+      return NextResponse.json({ success: true });
+    } else {
+      console.log(`User with email ${userEmail} already exists.`);
       return NextResponse.json({ success: true, user: existingUser });
     }
-
-    // If the user doesn't exist, create the user
-    const fullName = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
-    await prisma.user.create({
-      data: {
-        id: user.id,
-        email: user.emailAddresses[0].emailAddress,
-        name: fullName,
-      },
-    });
-
-    console.log(`User created: ${user.id}`);
-    return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("User sync error:", error);
     return NextResponse.json(

@@ -60,8 +60,8 @@ interface SendingStatus {
   [participantId: string]: "pending" | "sending" | "success" | "error";
 }
 
-export default function EventDashboard() {
-  const { eventId } = useParams();
+export  default async function EventDashboard() {
+  const { eventId } = await useParams();
   const [event, setEvent] = useState<EventDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -381,10 +381,10 @@ export default function EventDashboard() {
     return <LoadingState />;
   }
 
-  // Render error state
-  if (error || !event) {
-    return <ErrorState error={error} />;
-  }
+  // // Render error state
+  // if (error || !event) {
+  //   return <ErrorState error={error} />;
+  // }
 
   return (
     <ProtectedPage>

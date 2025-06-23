@@ -1,4 +1,4 @@
-# NameFrame Certificate Generator
+# Sertify: The Certification Solution
 
 ![Hero Image](./public/Landing.png)
 
@@ -41,7 +41,7 @@ Get started in minutes:
 
 Watch NameFrame generate personalized certificates in seconds! 🚀  
 
-[![NameFrame Demo](https://img.youtube.com/vi/placeholder/0.jpg)](https://youtube.com/watch?v=placeholder)  
+[![NameFrame Demo]([https://img.youtube.com/vi/placeholder/0.jpg)](https://youtube.com/watch?v=placeholder](https://youtu.be/oW94ZgNGrec))  
 *Click to watch the demo on YouTube.*  
 
 ![Certificate Preview](./public/ex4.jpg)  
