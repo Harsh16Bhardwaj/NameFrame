@@ -1,4 +1,4 @@
-# NameFrame Certificate Generator
+# Sertify: The Certification Solution
 
 ![Hero Image](./public/Landing.png)
 

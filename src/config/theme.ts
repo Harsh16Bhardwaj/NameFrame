@@ -62,7 +62,7 @@ export const themeConfig: ThemeConfig = {
     gradient: {
       text: "bg-gradient-to-r from-[#8b7ba1] to-[#6b5b95]",
       button: "bg-gradient-to-r from-[#8b7ba1] to-[#6b5b95]",
-      idk: "bg-gradient-to-r from-[#eaebff] to-[#f0f4ff]"
+      idk: "bg-gradient-to-r from-[#eaebff] to-[#f0f4fg]"
     }
   }
 };
