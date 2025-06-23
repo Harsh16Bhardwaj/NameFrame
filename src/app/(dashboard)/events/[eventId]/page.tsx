@@ -93,6 +93,9 @@ export default function EventDashboard() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
+  // Add personalized message state
+  const [personalizedMessage, setPersonalizedMessage] = useState("");
+
   // Fetch event data
   useEffect(() => {
     const fetchEventData = async () => {
@@ -247,13 +250,17 @@ export default function EventDashboard() {
         // Process this batch
         await Promise.all(
           group.map(async (participant) => {
-            try {
-              // Make individual API call for real-time updates
+            try {              // Make individual API call for real-time updates
+              const defaultMessage = `Dear ${participant.name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`;
+              const finalMessage = personalizedMessage.trim() 
+                ? personalizedMessage.replace(/\{name\}/g, participant.name).replace(/\{event\}/g, event.title)
+                : defaultMessage;
+              
               const response = await axios.post(`/api/send-email/single`, {
                 participantId: participant.id,
                 eventId: eventId,
                 subject: `Your Certificate for ${event.title}`,
-                transcript: `Dear ${participant.name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`,
+                transcript: finalMessage,
                 fontFamily: fontSettings.family,
                 fontSize: fontSettings.size,
                 fontColor: fontSettings.color,
@@ -325,14 +332,17 @@ export default function EventDashboard() {
     if (!participant || participant.emailed) return;
 
     // Update status
-    setSendingStatus((prev) => ({ ...prev, [participantId]: "sending" }));
-
-    try {
+    setSendingStatus((prev) => ({ ...prev, [participantId]: "sending" }));    try {
+      const defaultMessage = `Dear ${participant.name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`;
+      const finalMessage = personalizedMessage.trim() 
+        ? personalizedMessage.replace(/\{name\}/g, participant.name).replace(/\{event\}/g, event.title)
+        : defaultMessage;
+        
       const response = await axios.post(`/api/send-email/single`, {
         participantId,
         eventId,
         subject: `Your Certificate for ${event.title}`,
-        transcript: `Dear ${participant.name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`,
+        transcript: finalMessage,
         fontFamily: fontSettings.family,
         fontSize: fontSettings.size,
         fontColor: fontSettings.color,
@@ -433,9 +443,44 @@ export default function EventDashboard() {
               <span className="ml-3 text-green-400 text-sm">
                 Settings saved successfully!
               </span>
+            )}          </div>
+            {/* Personalized Email Message Section */}
+          <div className="mb-8 p-6 bg-[#272936] rounded-lg border border-[#4b3a70]/30">
+            <label className="block text-lg font-medium text-[#c5c3c4] mb-2">
+              Personalized Email Message
+            </label>
+            <textarea
+              value={personalizedMessage}
+              onChange={(e) => setPersonalizedMessage(e.target.value)}
+              className="w-full h-32 rounded-md border border-[#4b3a70]/30 bg-[#1a1b23] px-4 py-3 text-gray-200 focus:text-white focus:border-[#b7a2c9] focus:outline-none focus:ring-1 focus:ring-[#b7a2c9] resize-none"
+              placeholder="Enter your personalized message here... (Leave empty for default message)&#10;&#10;You can use:&#10;{name} - Will be replaced with participant's name&#10;{event} - Will be replaced with event title"
+            />
+            <div className="mt-2 text-xs text-[#c5c3c4]/70">
+              <p className="mb-1">• Use <span className="text-[#b7a2c9]">{"{name}"}</span> to insert participant's name</p>
+              <p className="mb-1">• Use <span className="text-[#b7a2c9]">{"{event}"}</span> to insert event title</p>
+              <p>• Leave empty to use the default message</p>
+            </div>
+            
+            {/* Default Message Preview */}
+            {!personalizedMessage.trim() && (
+              <div className="mt-3 p-3 bg-[#1a1b23] rounded border border-[#4b3a70]/20">
+                <p className="text-xs text-[#c5c3c4]/70 mb-1">Default message preview:</p>
+                <p className="text-sm text-[#c5c3c4] whitespace-pre-wrap">
+                  {`Dear {name},\n\nCongratulations on completing the ${event?.title || 'Event'}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`}
+                </p>
+              </div>
             )}
-          </div>
-          <ParticipantsTable
+            
+            {/* Custom Message Preview */}
+            {personalizedMessage.trim() && (
+              <div className="mt-3 p-3 bg-[#1a1b23] rounded border border-[#4b3a70]/20">
+                <p className="text-xs text-[#c5c3c4]/70 mb-1">Custom message preview (for John Doe):</p>
+                <p className="text-sm text-[#c5c3c4] whitespace-pre-wrap">
+                  {personalizedMessage.replace(/\{name\}/g, 'John Doe').replace(/\{event\}/g, event?.title || 'Event')}
+                </p>
+              </div>
+            )}
+          </div>          <ParticipantsTable
             participants={event.participants}
             sendCertificates={sendCertificates}
             sendSingleCertificate={sendSingleCertificate}
@@ -443,6 +488,8 @@ export default function EventDashboard() {
             sendingStatus={sendingStatus}
             emailProgress={emailProgress}
             onShowPreview={handleShowPreview}
+            personalizedMessage={personalizedMessage}
+            eventId={eventId as string}
           />
         </div>
 

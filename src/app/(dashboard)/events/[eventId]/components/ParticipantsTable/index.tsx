@@ -31,6 +31,8 @@ interface ParticipantsTableProps {
   sendingStatus: SendingStatus;
   emailProgress: EmailProgress;
   onShowPreview: (participant: Participant) => void;
+  personalizedMessage?: string;
+  eventId: string;
 }
 
 export default function ParticipantsTable({ 
@@ -40,7 +42,9 @@ export default function ParticipantsTable({
   isSending,
   sendingStatus,
   emailProgress,
-  onShowPreview 
+  onShowPreview,
+  personalizedMessage,
+  eventId
 }: ParticipantsTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<"all" | "sent" | "unsent">("all");
@@ -81,9 +85,18 @@ export default function ParticipantsTable({
 
   return (
     <div className="mb-8 overflow-hidden rounded-2xl bg-[#322f42]/30 backdrop-blur-md shadow-lg border border-[#4b3a70]/30">
-      <div className="p-6">
-        <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-          <h2 className="text-4xl  flex justify-center items-center font-bold gap-x-4 text-[#ae98c0]"> <div className='border-2 border-purple-300 rounded-full p-1 text-xs'><User/></div> Participants</h2>
+      <div className="p-6">        <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-4xl  flex justify-center items-center font-bold gap-x-4 text-[#ae98c0]"> 
+              <div className='border-2 border-purple-300 rounded-full p-1 text-xs'><User/></div> Participants
+            </h2>
+            {personalizedMessage?.trim() && (
+              <div className="flex items-center gap-2 text-sm text-[#b7a2c9]">
+                <CheckCircle size={16} />
+                <span>Custom email message is active</span>
+              </div>
+            )}
+          </div>
           
           {/* Action buttons */}
           <div className="flex flex-wrap gap-3">
@@ -138,16 +151,14 @@ export default function ParticipantsTable({
             onFilterChange={setFilter}
           />
         </div>
-        
-        {/* Table */}
+          {/* Table */}
         <TableList 
           participants={paginatedParticipants}
           onShowPreview={onShowPreview}
           sendingStatus={sendingStatus}
           onSendCertificate={sendSingleCertificate}
           isSending={isSending}
-          //@ts-ignore
-          eventId={eventId} // Pass the required eventId prop
+          eventId={eventId}
         />
         
         {/* Pagination */}

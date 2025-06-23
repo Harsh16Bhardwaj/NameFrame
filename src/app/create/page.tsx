@@ -9,6 +9,7 @@ import { Manrope } from "next/font/google";
 import { Calendar, Loader2, Move, Package } from "lucide-react";
 import { SignIn } from "@clerk/nextjs";
 import ParticipantImport from "@/components/ParticipantImport";
+import TemplateModal from "@/components/TemplateModal";
 import axios from "axios";
 import Tilt from "react-parallax-tilt";
 import { useRouter } from "next/navigation";
@@ -46,13 +47,14 @@ const CertificateForm: React.FC = () => {
   const [participantsImported, setParticipantsImported] =
     useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [textPosition, setTextPosition] = useState({
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });  const [textPosition, setTextPosition] = useState({
     x: 50,
     y: 50,
     width: 80,
     height: 15,
   });
+  const [templateSelectionMode, setTemplateSelectionMode] = useState<'upload' | 'library'>('upload');
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
   const certificateFile = watch("certificateTemplate");
@@ -236,7 +238,6 @@ const CertificateForm: React.FC = () => {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isDragging]);
-
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     if (!uploadedTemplateUrl) {
       setError1(true);
@@ -246,6 +247,12 @@ const CertificateForm: React.FC = () => {
       const response = await axios.post("/api/events", {
         title: data.title,
         templateUrl: uploadedTemplateUrl,
+        textPosition: {
+          x: textPosition.x,
+          y: textPosition.y,
+          width: textPosition.width,
+          height: textPosition.height,
+        },
       });
       const createdEvent = response.data.data;
       setEventId(createdEvent.id);
@@ -256,11 +263,17 @@ const CertificateForm: React.FC = () => {
       alert("Failed to create event. Please try again.");
     }
   };
-
   const handleGoToDashboard = () => {
     if (eventId) {
       router.push(`/events/${eventId}`);
     }
+  };
+  const handleTemplateFromLibrary = (templateUrl: string) => {
+    setUploadedTemplateUrl(templateUrl);
+    setTemplatePreview(templateUrl);
+    setImageUploaded(true);
+    setError1(false);
+    setTemplateSelectionMode('library');
   };
 
   return (
@@ -331,50 +344,88 @@ const CertificateForm: React.FC = () => {
                       {errors.title.message}
                     </p>
                   )}
-                </div>
-
-                <div>
-                  <label
-                    className=" text-blue-200 flex gap-x-2 mb-2 font-semibold"
-                    htmlFor="certificateTemplate"
-                  >
-                    <Package></Package>
-                    Certificate Template (PNG/JPG)
+                </div>                <div>
+                  <label className="text-blue-200 flex gap-x-2 mb-4 font-semibold">
+                    <Package />
+                    Certificate Template
                   </label>
-                  <div className="flex gap-x-4 items-center">
-                    <input
-                      id="certificateTemplate"
-                      type="file"
-                      accept="image/png, image/jpeg"
-                      className="hidden"
-                      {...register("certificateTemplate", {
-                        required: "Certificate template is required",
-                        validate: {
-                          fileType: (files) =>
-                            files && files[0]
-                              ? ["image/png", "image/jpeg"].includes(
-                                  files[0].type
-                                ) || "Only PNG or JPG files are allowed"
-                              : true,
-                        },
-                      })}
-                    />
-                    <label
-                      htmlFor="certificateTemplate"
-                      className="flex-1 p-3 bg-black/50 border border-blue-500/50 text-white rounded-lg cursor-pointer transition-all duration-300 hover:bg-blue-900/30 hover:border-blue-400 truncate"
-                    >
-                      {certificateFile && certificateFile[0]
-                        ? certificateFile[0].name
-                        : "Select Template"}
-                    </label>
+                  
+                  {/* Template Selection Options */}
+                  <div className="flex mb-6 bg-black/30 rounded-lg p-1">
                     <button
-                      onClick={handleUpload}
-                      className="p-3 bg-gradient-to-br  ease-in-out hover:ease-in-out duration-150 cursor-pointer from-blue-600 to-purple-900 rounded-full text-white transition-all duration-300 hover:from-blue-900 hover:to-pruple-950 hover:scale-110 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={isUploading}
+                      type="button"
+                      onClick={() => setIsTemplateModalOpen(true)}
+                      className="flex-1 py-3 px-4 rounded-md text-sm font-medium transition-all duration-200 bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg hover:from-purple-700 hover:to-blue-700 hover:scale-105"
                     >
-                      <FaCloudUploadAlt className="text-xl" />
+                      📚 Browse Template Library
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTemplateSelectionMode('upload')}
+                      className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ml-2 ${
+                        templateSelectionMode === 'upload'
+                          ? 'bg-blue-600 text-white shadow-lg'
+                          : 'text-gray-300 hover:text-white hover:bg-white/10'
+                      }`}
+                    >
+                      ⬆️ Upload Custom
                     </button>
                   </div>
+
+                  {/* Show selected template from library */}
+                  {uploadedTemplateUrl && templateSelectionMode === 'library' && (
+                    <div className="mb-4 p-4 bg-gradient-to-r from-green-900/30 to-blue-900/30 rounded-lg border border-green-500/30">
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                        <span className="text-green-400 font-medium">Template selected from library</span>
+                        <button
+                          type="button"
+                          onClick={() => setIsTemplateModalOpen(true)}
+                          className="ml-auto text-blue-400 hover:text-blue-300 text-sm underline"
+                        >
+                          Change Template
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Custom Upload Section */}
+                  {templateSelectionMode === 'upload' && (
+                    <div className="flex gap-x-4 items-center">
+                      <input
+                        id="certificateTemplate"
+                        type="file"
+                        accept="image/png, image/jpeg"
+                        className="hidden"
+                        {...register("certificateTemplate", {
+                          required: templateSelectionMode === 'upload' && !uploadedTemplateUrl ? "Certificate template is required" : false,
+                          validate: {
+                            fileType: (files) =>
+                              files && files[0]
+                                ? ["image/png", "image/jpeg"].includes(files[0].type) || "Only PNG or JPG files are allowed"
+                                : true,
+                          },
+                        })}
+                      />
+                      <label
+                        htmlFor="certificateTemplate"
+                        className="flex-1 p-3 bg-black/50 border border-blue-500/50 text-white rounded-lg cursor-pointer transition-all duration-300 hover:bg-blue-900/30 hover:border-blue-400 truncate"
+                      >
+                        {certificateFile && certificateFile[0]
+                          ? certificateFile[0].name
+                          : "Select Template File"}
+                      </label>
+                      <button
+                        type="button"
+                        onClick={handleUpload}
+                        className="p-3 bg-gradient-to-br from-blue-600 to-purple-900 rounded-full text-white transition-all duration-300 hover:from-blue-900 hover:to-purple-950 hover:scale-110 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isUploading}
+                      >
+                        <FaCloudUploadAlt className="text-xl" />
+                      </button>
+                    </div>
+                  )}
+                  
                   {errors.certificateTemplate && (
                     <p className="text-pink-400 text-sm mt-1 animate-fadeIn">
                       {errors.certificateTemplate.message}
@@ -387,7 +438,7 @@ const CertificateForm: React.FC = () => {
                   )}
                   {uploadedTemplateUrl && !isUploading && (
                     <p className="text-green-400 text-sm mt-1 animate-fadeIn">
-                      ✓ Template uploaded successfully
+                      ✓ Template ready for use
                     </p>
                   )}
                 </div>
@@ -505,9 +556,16 @@ const CertificateForm: React.FC = () => {
                   </div>
                 </div>
               </Tilt>
-            </div>
-          )}
+            </div>          )}
         </div>
+
+        {/* Template Selection Modal */}
+        <TemplateModal
+          isOpen={isTemplateModalOpen}
+          onClose={() => setIsTemplateModalOpen(false)}
+          onTemplateSelect={handleTemplateFromLibrary}
+          selectedTemplate={uploadedTemplateUrl}
+        />
       </>
     </ProtectedPage>
   );
