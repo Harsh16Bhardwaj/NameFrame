@@ -1,4 +1,4 @@
-# Sertify: The Certification Solution
+# Sertify: Comprehensive Solution for Post Event Certification and AI Based Event Reports 
 
 ![Hero Image](./public/Landing.png)
 
