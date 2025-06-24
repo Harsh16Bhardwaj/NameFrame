@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/nameframe/nameframe.svg)](https://github.com/nameframe/nameframe/issues)
-[![GitHub stars](https://img.shields.io/github/stars/nameframe/nameframe.svg)](https://github.com/nameframe/nameframe)
+[![GitHub stars](https://img.shields.io/github/stars/nameframe/nameframe.svg)](https://github.com/nameframe/nameframe/stars)
 
 Tired of creating certificates manually? 😓 NameFrame is your solution! This dynamic certificate generator empowers event organizers to create and distribute personalized certificates effortlessly. Built with **Next.js**, **React**, and the **HTML5 Canvas API**, NameFrame offers unique certificate generation, content modification, and reliable mailing. Try it now and automate your workflow! ⭐
 
@@ -37,11 +37,14 @@ Get started in minutes:
 - **Lead Generation** 📈  
   Capture participant data for event analytics and follow-ups.
 
+- **AI-Based Event Reports & Insights** 🤖  
+  Generate comprehensive event reports and lead insights using a RAG-based solution, powered by user data analysis, with an integrated chatbot for interactive issue resolution.
+
 ## Demo 🎥
 
 Watch NameFrame generate personalized certificates in seconds! 🚀  
 
-[![NameFrame Demo]([https://img.youtube.com/vi/placeholder/0.jpg)](https://youtube.com/watch?v=placeholder](https://youtu.be/oW94ZgNGrec))  
+[![NameFrame Demo](https://img.youtube.com/vi/placeholder/0.jpg)](https://youtube.com/watch?v=placeholder)  
 *Click to watch the demo on YouTube.*  
 
 ![Certificate Preview](./public/ex4.jpg)  
@@ -74,6 +77,22 @@ Watch NameFrame generate personalized certificates in seconds! 🚀
 **Tips**:  
 - Use high-contrast templates for better text visibility.  
 - Ensure Excel file has no empty rows in Name/Email columns.
+
+## For Developers ⚙️
+
+### Installation & Setup
+
+**Prerequisites**:  
+- **Node.js** (>= 14.x)  
+- **npm** or **yarn**  
+- **Cloudinary** account (optional for production)
+
+**Quick Setup**:  
+
+1. Clone the repository:  
+   ```bash
+   git clone https://github.com/nameframe/nameframe.git
+   cd nameframe
 
 ## For Developers ⚙️
 
