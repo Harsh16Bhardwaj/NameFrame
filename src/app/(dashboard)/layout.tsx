@@ -107,7 +107,7 @@ export default function DashboardLayout({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             className={`fixed inset-0 ${
-              isDarkMode ? "bg-black/50" : "bg-black/30"
+              isDarkMode ? "bg-black/60" : "bg-black/30"
             } z-30 lg:hidden backdrop-blur-sm`}
             onClick={() => setIsMobileNavOpen(false)}
           />

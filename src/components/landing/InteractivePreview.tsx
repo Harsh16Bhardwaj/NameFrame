@@ -33,9 +33,9 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
-const   InteractivePreview = () => {
+const InteractivePreview = () => {
   const certificateRef = useRef(null);
-  const imageRef = useRef(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [previewName, setPreviewName] = useState("");
   const [currentTemplate, setCurrentTemplate] = useState(0);
@@ -132,13 +132,13 @@ const   InteractivePreview = () => {
   return (
     <motion.section
       id="action"
-      className="py-12 sm:py-16 bg-[var(--bg-primary)]"
+      className="py-12 sm:py-16 bg-gradient-to-r from-[#000000] via-[#171717] to-[#000000]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       style={{ fontFamily: inter.style.fontFamily }}
     >
-      <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-4">
+      <div className="container mx-auto px-4 grid grid-cols-1  gap-4">
         {/* Main Content */}
         <motion.div
           className="flex-1"
@@ -180,7 +180,7 @@ const   InteractivePreview = () => {
             >
               {/* Toolbar */}
               <motion.aside
-                className="p-4  bg-[var(--bg-secondary)] border border-[var(--onyx)] shadow-md max-h-[600px] overflow-y-auto"
+                className="p-4  bg-[var(--bg-secondary)] border border-[var(--onyx)] shadow-md max-h-[730px] "
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}

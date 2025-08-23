@@ -4,47 +4,48 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    question: "What makes NameFrame different from other certificate platforms?",
+    question:
+      "What makes NameFrame different from other certificate platforms?",
     answer:
-      "Unlike simple PDF generators, NameFrame integrates AI-powered insights to help you understand your audience and optimize future events. Our platform automates the entire process from creation to distribution, saving you significant time and effort."
+      "Unlike simple PDF generators, NameFrame integrates AI-powered insights to help you understand your audience and optimize future events. Our platform automates the entire process from creation to distribution, saving you significant time and effort.",
   },
   {
     question: "How secure is my data on NameFrame?",
     answer:
-      "We prioritize your data security with end-to-end encryption and robust access controls. Your event data and recipient information are handled with the utmost confidentiality, ensuring a safe and secure experience."
+      "We prioritize your data security with end-to-end encryption and robust access controls. Your event data and recipient information are handled with the utmost confidentiality, ensuring a safe and secure experience.",
   },
   {
     question: "Can I use my own certificate designs?",
     answer:
-      "Yes, you can! NameFrame allows you to upload your own design templates. Our platform seamlessly integrates your custom designs, enabling you to maintain your brand's unique identity while leveraging our automation features."
+      "Yes, you can! NameFrame allows you to upload your own design templates. Our platform seamlessly integrates your custom designs, enabling you to maintain your brand's unique identity while leveraging our automation features.",
   },
   {
     question: "What kind of events is NameFrame best for?",
     answer:
-      "NameFrame is versatile and can be used for a wide range of events, including professional workshops, online courses, corporate training sessions, and virtual conferences. Our platform adapts to your needs, regardless of event size or type."
+      "NameFrame is versatile and can be used for a wide range of events, including professional workshops, online courses, corporate training sessions, and virtual conferences. Our platform adapts to your needs, regardless of event size or type.",
   },
   {
     question: "Do you offer a free trial or a free tier?",
     answer:
-      "Yes, we offer a free tier that allows you to create and send a limited number of certificates to explore the platform's core features. This is a great way to test NameFrame before committing to a premium plan."
+      "Yes, we offer a free tier that allows you to create and send a limited number of certificates to explore the platform's core features. This is a great way to test NameFrame before committing to a premium plan.",
   },
   {
     question: "What if I need help getting started?",
     answer:
-      "Our dedicated support team is here to help! We offer comprehensive documentation, video tutorials, and direct support to ensure a smooth onboarding process. You can reach out to us at any time via the 'Contact Support' button below."
-  }
+      "Our dedicated support team is here to help! We offer comprehensive documentation, video tutorials, and direct support to ensure a smooth onboarding process. You can reach out to us at any time via the 'Contact Support' button below.",
+  },
 ];
 
 export const FAQ = () => {
   const [expandedFaq, setExpandedFaq] = useState(null);
 
-  const toggleFaq = (index:any) => {
+  const toggleFaq = (index: any) => {
     setExpandedFaq(expandedFaq === index ? null : index);
   };
 
   return (
     <motion.section
-      className="py-16 sm:py-24 bg-gradient-to-b from-[#111] via-[#141414] to-[#111] text-[#D3D3D3] font-sans relative overflow-hidden"
+      className="py-16 sm:py-24 bg-gradient-to-b from-[#000] via-[#0e0e0e] to-[#101010] text-[#D3D3D3] font-sans relative overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
@@ -55,6 +56,8 @@ export const FAQ = () => {
         animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 12, repeat: Infinity, repeatType: "reverse" }}
       />
+
+      <div className="sun-blob absolute left-5/6 mt-40 w-1/3 h-1/3 rounded-full bg-[#4C72B0] blur-[100px]"></div>
 
       {/* 🔹 Content container */}
       <div className="container mx-auto px-4 max-w-3xl relative z-10">
@@ -93,14 +96,16 @@ export const FAQ = () => {
           {faqs.map((faq, index) => (
             <motion.div
               key={index}
-              className={`relative rounded-xl border-2 ${
-                expandedFaq === index ? "border-[#4eb3a3]" : "border-transparent"
+              className={`relative rounded-lg border-2 ${
+                expandedFaq === index
+                  ? "border-[#4eb3a3]"
+                  : "border-transparent"
               }`}
               style={{
                 background:
                   "linear-gradient(135deg, rgba(31, 31, 31, 0.85) 0%, rgba(42, 42, 42, 0.85) 100%)",
                 backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)"
+                WebkitBackdropFilter: "blur(8px)",
               }}
               initial={{ opacity: 0, y: 20 }}
               animate={{
@@ -110,16 +115,16 @@ export const FAQ = () => {
                 boxShadow:
                   expandedFaq === index
                     ? "0 8px 30px rgba(78, 179, 163, 0.15)"
-                    : "0 2px 8px rgba(0, 0, 0, 0.2)"
+                    : "0 2px 8px rgba(0, 0, 0, 0.2)",
               }}
               transition={{
                 duration: 0.4,
                 ease: [0.25, 0.1, 0.25, 1],
-                delay: index * 0.05
+                delay: index * 0.05,
               }}
               whileHover={{
-                scale: 1.01,
-                transition: { duration: 0.2 }
+                scale: 1.08,
+                transition: { duration: 0.2 },
               }}
             >
               <button
@@ -131,7 +136,7 @@ export const FAQ = () => {
                     expandedFaq === index ? "text-[#4eb3a3]" : ""
                   }`}
                   animate={{
-                    color: expandedFaq === index ? "#4eb3a3" : ""
+                    color: expandedFaq === index ? "#4eb3a3" : "",
                   }}
                   transition={{ duration: 0.3 }}
                 >
@@ -141,13 +146,13 @@ export const FAQ = () => {
                   initial={false}
                   animate={{
                     rotate: expandedFaq === index ? 180 : 0,
-                    scale: expandedFaq === index ? 1.1 : 1
+                    scale: expandedFaq === index ? 1.1 : 1,
                   }}
                   transition={{
                     duration: 0.4,
                     type: "spring",
                     stiffness: 200,
-                    damping: 15
+                    damping: 15,
                   }}
                 >
                   {expandedFaq === index ? (
@@ -168,13 +173,13 @@ export const FAQ = () => {
                       transition: {
                         height: {
                           duration: 0.4,
-                          ease: [0.04, 0.62, 0.23, 0.98]
+                          ease: [0.04, 0.62, 0.23, 0.98],
                         },
                         opacity: {
                           duration: 0.25,
-                          delay: 0.15
-                        }
-                      }
+                          delay: 0.15,
+                        },
+                      },
                     }}
                     exit={{
                       height: 0,
@@ -182,10 +187,10 @@ export const FAQ = () => {
                       transition: {
                         height: {
                           duration: 0.3,
-                          ease: [0.04, 0.62, 0.23, 0.98]
+                          ease: [0.04, 0.62, 0.23, 0.98],
                         },
-                        opacity: { duration: 0.25 }
-                      }
+                        opacity: { duration: 0.25 },
+                      },
                     }}
                     className="overflow-hidden"
                   >
@@ -223,7 +228,7 @@ export const FAQ = () => {
               className="px-6 py-3 bg-transparent border-2 border-[#4eb3a3] text-[#4eb3a3] rounded-xl font-medium hover:bg-[#4eb3a3] hover:text-[#1F1F1F] transition-all duration-300"
               whileHover={{
                 scale: 1.05,
-                boxShadow: "0 0 15px rgba(78, 179, 163, 0.5)"
+                boxShadow: "0 0 15px rgba(78, 179, 163, 0.5)",
               }}
               whileTap={{ scale: 0.98 }}
             >
@@ -232,6 +237,49 @@ export const FAQ = () => {
           </a>
         </motion.div>
       </div>
+      <style jsx>{`
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.85;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes wave {
+      0%, 100% {
+        border-radius: 50% 50% 50% 50%;
+      }
+      25% {
+        border-radius: 55% 45% 55% 50%;
+      }
+      50% {
+        border-radius: 50% 60% 50% 55%;
+      }
+      75% {
+        border-radius: 55% 50% 50% 45%;
+      }
+    }
+
+    .sun-blob {
+      animation:
+        rotate 10s linear infinite,
+        wave 5s ease-in-out infinite;
+      transition: all 0.3s ease;
+    }
+  `}</style>
     </motion.section>
   );
 };

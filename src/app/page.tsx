@@ -3,13 +3,13 @@ import React from "react";
 import Hero from "@/components/landing/Hero";
 import { Features } from "@/components/landing/Features";
 import InteractivePreview from "@/components/landing/InteractivePreview";
-import { Testimonials } from "@/components/landing/Testimonials";
+import Testimonials from "@/components/landing/Testimonials";
 import { Pricing } from "@/components/landing/Pricing";
 import { FAQ } from "@/components/landing/FAQ";
 import { CTA } from "@/components/landing/CTA";
 import { CustomStyles } from "@/components/ui/CustomStyles";
 import Prism from "@/components/ui/Prism";
-import {Plasma} from "@/components/ui/plasma"
+import { Plasma } from "@/components/ui/plasma";
 
 // Certificate template images - these are imported in the Hero component
 import template1 from "@/../public/1.png";
@@ -34,7 +34,14 @@ const throttle = (func: Function, delay: number) => {
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#151423] overflow-x-hidden text-white">
-      <div style={{ width: "100%", height: "100vh", paddingLeft: "20rem", position: "absolute" }}>
+      <div
+        style={{
+          width: "100%",
+          height: "100vh",
+          paddingLeft: "20rem",
+          position: "absolute",
+        }}
+      >
         {/* <Plasma
           color="#4eb3a3"
           speed={0.6}

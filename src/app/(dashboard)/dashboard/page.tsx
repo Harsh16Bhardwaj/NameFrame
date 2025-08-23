@@ -165,7 +165,7 @@ export default function Dashboard() {
           isDarkMode={isDarkMode}
           setIsDarkMode={setIsDarkMode}
           setIsMobileNavOpen={setIsMobileNavOpen}
-          themeConfig={theme}
+
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           handleSearch={handleSearch}
@@ -173,7 +173,7 @@ export default function Dashboard() {
         />
 
         {/* Main scrollable area - Add the scrollbar-themed class */}
-        <div className="flex-1 p-6 overflow-y-auto onyx scrollbar-themed">
+        <div className="flex-1 p-6 overflow-y-auto bg-neutral-900 scrollbar-themed">
           <div className="w-full  h-10 mb-5">
             <Link href="/create">
               <div className="flex  flex-col md:flex-row   w-full px-5  justify-end gap-x-2">
