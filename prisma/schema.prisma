@@ -59,6 +59,12 @@ model Participant {
   emailed        Boolean  @default(false)
   createdAt      DateTime @default(now())
   
+  // Email Retry System
+  emailAttempts     Int      @default(0)        // Number of email attempts
+  emailStatus       String   @default("pending") // pending, sending, sent, failed
+  lastEmailAttempt  DateTime?                   // Last attempt timestamp
+  emailError        String?                     // Last error message
+  
   // Certificate Verification Fields
   verificationCode    String?   @unique // Unique code for verification
   certificateHash     String?   // Hash of certificate for integrity

@@ -1,25 +1,69 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import nodemailer from "nodemailer";
-import cloudinary from "cloudinary";
+import { Resend } from "resend";
+import { v2 as cloudinary } from "cloudinary";
+import { generateCertificateEmail } from "../emailTemplate";
+import { extractPublicId } from 'cloudinary-build-url';
+import { generateVerificationCode, generateCertificateHash } from "@/lib/verification";
 
 const prisma = new PrismaClient();
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Configure Cloudinary
-cloudinary.v2.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Configure Nodemailer
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+// Email retry configuration
+const MAX_RETRIES = 2;
+const RETRY_DELAY_BASE = 1000; // Base delay in milliseconds
+
+// Sleep function for delays
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Send email with retry logic
+async function sendEmailWithRetry(
+  emailData: any, 
+  participant: any, 
+  attemptNumber: number = 1
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const emailResult = await resend.emails.send(emailData);
+
+    if (emailResult.error) {
+      throw new Error(emailResult.error.message || "Email API error");
+    }
+
+    return { success: true };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error(`Email attempt ${attemptNumber} failed for ${participant.email}:`, errorMessage);
+
+    // Update attempt count and error in database
+    await prisma.participant.update({
+      where: { id: participant.id },
+      data: {
+        emailAttempts: attemptNumber,
+        emailStatus: attemptNumber >= MAX_RETRIES ? "failed" : "pending",
+        lastEmailAttempt: new Date(),
+        emailError: errorMessage,
+      },
+    });
+
+    if (attemptNumber < MAX_RETRIES) {
+      // Wait before retry with exponential backoff
+      const delay = RETRY_DELAY_BASE * Math.pow(2, attemptNumber - 1);
+      await sleep(delay);
+      
+      // Retry
+      return sendEmailWithRetry(emailData, participant, attemptNumber + 1);
+    }
+
+    return { success: false, error: errorMessage };
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -32,7 +76,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // First, get the event to find the associated certificate template
+    // Get the event with template
     const event = await prisma.event.findUnique({
       where: { id: eventId },
       include: { template: true },
@@ -45,84 +89,191 @@ export async function POST(req: Request) {
       );
     }
 
-    // Extract the template URL and get just the public ID part
+    // Extract public ID from template URL
     const templateUrl = event.template.backgroundUrl;
-    const publicIdMatch = templateUrl.match(/\/v\d+\/(.*?)\.(?:jpg|png|gif)/i);
-    const publicId = publicIdMatch ? publicIdMatch[1] : "certificate_templates/default";
+    const publicId = extractPublicId(templateUrl);
+    
+    if (!publicId) {
+      return NextResponse.json(
+        { success: false, error: "Invalid template URL" },
+        { status: 400 }
+      );
+    }
 
-    // Fetch participants who haven't been emailed yet
+    // Fetch participants who need emails (not yet successfully sent)
     const participants = await prisma.participant.findMany({
-      where: { eventId, emailed: false },
+      where: { 
+        eventId, 
+        emailStatus: { in: ["pending", "failed"] },
+        emailAttempts: { lt: MAX_RETRIES }
+      },
       take: 10, // Process in batches of 10
     });
 
     if (participants.length === 0) {
       return NextResponse.json(
-        { success: false, message: "No participants left to email" },
+        { success: true, message: "No participants need email processing" },
         { status: 200 }
       );
     }
 
-    // Add this logging before the email promises
-    console.log("Participants to email:", participants.map(p => ({ id: p.id, email: p.email })));
+    console.log(`Processing ${participants.length} participants for email retry...`);
 
-    const emailPromises = participants.map(async (participant) => {
+    const results = {
+      successful: 0,
+      failed: 0,
+      totalProcessed: participants.length
+    };
+
+    // Process participants sequentially to avoid overwhelming the email service
+    for (const participant of participants) {
       try {
-        // Generate certificate URL with proper text overlay positioning and formatting
-        const certificateUrl = cloudinary.v2.url(publicId, {
+        // Mark as sending
+        await prisma.participant.update({
+          where: { id: participant.id },
+          data: { emailStatus: "sending" },
+        });
+
+        // Generate verification code if not present
+        let verificationCode = participant.verificationCode;
+        if (!verificationCode) {
+          verificationCode = generateVerificationCode();
+        }
+
+        // Generate certificate URL using template settings
+        const certificateUrl = cloudinary.url(publicId, {
           transformation: [
             {
               overlay: {
-                font_family: "Arial",
-                font_size: 90,
+                font_family: event.template.fontFamily || "Arial",
+                font_size: event.template.fontSize || 48,
                 font_weight: "bold",
                 text: participant.name,
               },
-              color: "black",
-              gravity: "south",
-              y: 700,
-            }
-          ]
+              color: event.template.fontColor || "#000000",
+              width: (event.template.textWidth || 80) * 11,
+              height: (event.template.textHeight || 15) * 9,
+              gravity: "center",
+              y: typeof event.template.textPositionY === "number"
+                ? Math.round((event.template.textPositionY - 50) * 10)
+                : 0,
+              x: typeof event.template.textPositionX === "number"
+                ? Math.round((event.template.textPositionX - 50) * 10)
+                : 0,
+            },
+            // Add verification code as watermark
+            ...(verificationCode ? [{
+              overlay: {
+                font_family: "Arial",
+                font_size: 16,
+                font_weight: "normal",
+                text: `Verification: ${verificationCode}`,
+              },
+              color: "#666666",
+              gravity: "south_east",
+              x: 20,
+              y: 20,
+            }] : []),
+          ],
+          format: "png",
+          quality: "auto:best",
         });
-        console.log("Generated certificate URL:", certificateUrl);
-        
-        // Send email
-        await transporter.sendMail({
-          from: process.env.EMAIL_USER,
-          to: participant.email,
+
+        // Generate certificate hash
+        const certificateHash = generateCertificateHash({
+          recipientName: participant.name,
+          eventTitle: event.title,
+          issueDate: new Date().toISOString(),
+          verificationCode,
+        });
+
+        // Generate email HTML
+        const emailHtml = generateCertificateEmail({
           subject,
-          html: `
-            <p>${transcript}</p>
-            <p>Here is your certificate:</p>
-            <a href="${certificateUrl}" target="_blank">Download Certificate</a>
-          `,
+          eventTitle: event.title,
+          participantName: participant.name,
+          transcript,
+          certificateUrl,
+          verificationCode,
+        });
+
+        // Prepare email data
+        const emailData = {
+          from: `${event.title || 'Certificates'} <noreply@${process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL}>`,
+          to: [participant.email],
+          subject: subject,
+          html: emailHtml,
+          tags: [
+            {
+              name: "event_id",
+              value: eventId,
+            },
+          ],
+        };
+
+        // Attempt to send email with retry logic
+        const emailResult = await sendEmailWithRetry(emailData, participant);
+
+        if (emailResult.success) {
+          // Update participant as successfully emailed
+          await prisma.participant.update({
+            where: { id: participant.id },
+            data: {
+              emailed: true,
+              emailStatus: "sent",
+              certificateUrl,
+              verificationCode,
+              certificateHash,
+              isVerified: true,
+              verifiedAt: new Date(),
+              emailError: null, // Clear any previous errors
+            },
+          });
+
+          results.successful++;
+          console.log(`✅ Email sent successfully to ${participant.email}`);
+        } else {
+          results.failed++;
+          console.log(`❌ Failed to send email to ${participant.email} after ${MAX_RETRIES} attempts`);
+        }
+
+        // Small delay between emails to prevent rate limiting
+        await sleep(200);
+
+      } catch (error) {
+        console.error(`Error processing participant ${participant.email}:`, error);
+        
+        // Mark as failed
+        await prisma.participant.update({
+          where: { id: participant.id },
+          data: {
+            emailStatus: "failed",
+            emailError: error instanceof Error ? error.message : "Processing error",
+          },
         });
         
-        console.log(`Email sent successfully to ${participant.email}`);
-        return participant.id;
-      } catch (error) {
-        console.error(`Failed to send email to ${participant.email}:`, error);
-        throw error; // Re-throw to be caught by the main try/catch
+        results.failed++;
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `Batch processing completed`,
+      results: {
+        successful: results.successful,
+        failed: results.failed,
+        totalProcessed: results.totalProcessed,
+        successRate: `${Math.round((results.successful / results.totalProcessed) * 100)}%`
       }
     });
 
-    // Wait for all emails to be sent
-    const emailedParticipantIds = await Promise.all(emailPromises);
-
-    // Update database to mark participants as emailed
-    await prisma.participant.updateMany({
-      where: { id: { in: emailedParticipantIds } },
-      data: { emailed: true },
-    });
-
-    return NextResponse.json(
-      { success: true, message: "Emails sent successfully", count: emailedParticipantIds.length },
-      { status: 200 }
-    );
   } catch (error) {
-    console.error("Error sending emails:", error);
+    console.error("Error in bulk email processing:", error);
     return NextResponse.json(
-      { success: false, error: "An unexpected error occurred. Please try again later." },
+      { 
+        success: false, 
+        error: "Failed to process bulk emails. Please try again." 
+      },
       { status: 500 }
     );
   } finally {
