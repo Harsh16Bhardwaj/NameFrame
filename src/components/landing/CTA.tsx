@@ -25,7 +25,7 @@ const SignedIn = ({ children }) => {
 export const CTA = () => {
   return (
     <motion.section
-      className="py-16 sm:py-24 relative bg-[#1F1F1F] overflow-hidden" // Changed to a solid background to provide more contrast
+      className="py-16 flex justify-center items-center sm:py-24 min-h-screen relative bg-[#1F1F1F] overflow-hidden" // Changed to a solid background to provide more contrast
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
