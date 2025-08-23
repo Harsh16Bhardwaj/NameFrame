@@ -39,6 +39,9 @@ interface Participant {
   email: string;
   emailed: boolean;
   certificateUrl?: string;
+  emailAttempts?: number;
+  emailStatus?: string;
+  emailError?: string;
 }
 
 interface EventDetails {
@@ -217,11 +220,11 @@ export default function EventDashboard() {
     }
   };
 
-  // Send certificates to unsent participants with real-time status updates
+  // Send certificates to unsent participants with real-time status updates and retry logic
   const sendCertificates = async () => {
     if (!event) return;
 
-    // Find unsent participants
+    // Find unsent participants - now including those with pending/failed status
     const unsentParticipants = event.participants.filter((p) => !p.emailed);
     if (unsentParticipants.length === 0) return;
 
@@ -235,94 +238,100 @@ export default function EventDashboard() {
     setEmailProgress({ sent: 0, total: unsentParticipants.length });
     setIsSending(true);
 
-    // Process participants in small batches for smoother UI updates
-    const batchSize = 3;
-    const participantGroups = [];
-
-    for (let i = 0; i < unsentParticipants.length; i += batchSize) {
-      participantGroups.push(unsentParticipants.slice(i, i + batchSize));
-    }
-
     try {
-      for (const group of participantGroups) {
+      let totalSent = 0;
+      let processedParticipants = 0;
+
+      // Process in batches using the new bulk retry API
+      while (processedParticipants < unsentParticipants.length) {
+        const defaultMessage = `Dear {name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`;
+        const finalMessage = personalizedMessage.trim() 
+          ? personalizedMessage 
+          : defaultMessage;
+
         // Mark current batch as "sending"
+        const currentBatch = unsentParticipants.slice(processedParticipants, Math.min(processedParticipants + 10, unsentParticipants.length));
         setSendingStatus((prev) => {
           const updated = { ...prev };
-          group.forEach((p) => {
+          currentBatch.forEach((p) => {
             updated[p.id] = "sending";
           });
           return updated;
         });
 
-        // Process this batch
-        await Promise.all(
-          group.map(async (participant) => {
-            try {              // Make individual API call for real-time updates
-              const defaultMessage = `Dear ${participant.name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`;
-              const finalMessage = personalizedMessage.trim() 
-                ? personalizedMessage.replace(/\{name\}/g, participant.name).replace(/\{event\}/g, event.title)
-                : defaultMessage;
-              
-              const response = await axios.post(`/api/send-email/single`, {
-                participantId: participant.id,
-                eventId: eventId,
-                subject: `Your Certificate for ${event.title}`,
-                transcript: finalMessage,
-                fontFamily: fontSettings.family,
-                fontSize: fontSettings.size,
-                fontColor: fontSettings.color,
+        // Call the bulk retry API
+        const response = await axios.post(`/api/send-email/bulk-retry`, {
+          eventId,
+          subject: `Your Certificate for ${event.title}`,
+          transcript: finalMessage,
+        });
+
+        if (response.data.success && response.data.results) {
+          const { successful, failed, totalProcessed } = response.data.results;
+          
+          // Update progress
+          totalSent += successful;
+          setEmailProgress((prev) => ({ ...prev, sent: totalSent }));
+
+          // Fetch updated event data to get the latest email statuses
+          const updatedEventResponse = await axios.get(`/api/events/${eventId}`);
+          if (updatedEventResponse.data.success) {
+            const updatedEvent = updatedEventResponse.data.data;
+            setEvent(updatedEvent);
+
+            // Update individual statuses based on the actual database state
+            setSendingStatus((prev) => {
+              const updated = { ...prev };
+              updatedEvent.participants.forEach((p: any) => {
+                if (p.emailed) {
+                  updated[p.id] = "success";
+                } else if (prev[p.id] === "sending") {
+                  updated[p.id] = "error";
+                }
               });
+              return updated;
+            });
+          }
 
-              // Update status based on response
-              if (response.data.success) {
-                setSendingStatus((prev) => ({
-                  ...prev,
-                  [participant.id]: "success",
-                }));
-                setEmailProgress((prev) => ({ ...prev, sent: prev.sent + 1 }));
+          processedParticipants += totalProcessed;
+          console.log(`Batch completed: ${successful} successful, ${failed} failed`);
+        } else {
+          // Handle API error
+          currentBatch.forEach((p) => {
+            setSendingStatus((prev) => ({ ...prev, [p.id]: "error" }));
+          });
+          processedParticipants += currentBatch.length;
+        }
 
-                // Update the participant in the event state
-                setEvent((prevEvent) => {
-                  if (!prevEvent) return null;
-                  return {
-                    ...prevEvent,
-                    participants: prevEvent.participants.map((p) =>
-                      p.id === participant.id ? { ...p, emailed: true } : p
-                    ),
-                  };
-                });
-              } else {
-                setSendingStatus((prev) => ({
-                  ...prev,
-                  [participant.id]: "error",
-                }));
-              }
-            } catch (error) {
-              console.error(
-                `Error sending certificate to ${participant.email}:`,
-                error
-              );
-              setSendingStatus((prev) => ({
-                ...prev,
-                [participant.id]: "error",
-              }));
-            }
-          })
-        );
-
-        // Small delay between batches to prevent overwhelming the API
-        await new Promise((resolve) => setTimeout(resolve, 300));
+        // Delay between batches
+        if (processedParticipants < unsentParticipants.length) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
       }
+
+      console.log(`Email sending completed. Total sent: ${totalSent}`);
+
     } catch (error) {
       console.error("Error in certificate sending process:", error);
+      
+      // Mark remaining as error
+      setSendingStatus((prev) => {
+        const updated = { ...prev };
+        Object.keys(updated).forEach((id) => {
+          if (updated[id] === "pending" || updated[id] === "sending") {
+            updated[id] = "error";
+          }
+        });
+        return updated;
+      });
     } finally {
       setIsSending(false);
 
-      // Refresh event data to ensure UI is in sync with backend
+      // Final refresh to ensure UI is in sync with backend
       try {
-        const updatedEvent = await axios.get(`/api/events/${eventId}`);
-        if (updatedEvent.data.success) {
-          setEvent(updatedEvent.data.data);
+        const finalEventResponse = await axios.get(`/api/events/${eventId}`);
+        if (finalEventResponse.data.success) {
+          setEvent(finalEventResponse.data.data);
         }
       } catch (error) {
         console.error("Error refreshing event data:", error);
@@ -330,7 +339,7 @@ export default function EventDashboard() {
     }
   };
 
-  // Individual certificate sending function
+  // Individual certificate sending function with retry logic
   const sendSingleCertificate = async (participantId: string) => {
     if (!event) return;
 
@@ -339,7 +348,9 @@ export default function EventDashboard() {
     if (!participant || participant.emailed) return;
 
     // Update status
-    setSendingStatus((prev) => ({ ...prev, [participantId]: "sending" }));    try {
+    setSendingStatus((prev) => ({ ...prev, [participantId]: "sending" }));
+
+    try {
       const defaultMessage = `Dear ${participant.name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`;
       const finalMessage = personalizedMessage.trim() 
         ? personalizedMessage.replace(/\{name\}/g, participant.name).replace(/\{event\}/g, event.title)
@@ -370,10 +381,17 @@ export default function EventDashboard() {
         });
       } else {
         setSendingStatus((prev) => ({ ...prev, [participantId]: "error" }));
+        
+        // Show error message to user with retry info
+        console.error(`Failed to send email: ${response.data.error}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error sending certificate:`, error);
       setSendingStatus((prev) => ({ ...prev, [participantId]: "error" }));
+      
+      // Show user-friendly error message
+      const errorMessage = error.response?.data?.error || "Failed to send certificate";
+      console.error(errorMessage);
     }
   };
 

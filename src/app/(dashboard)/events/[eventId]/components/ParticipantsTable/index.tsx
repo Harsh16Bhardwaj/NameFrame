@@ -12,6 +12,9 @@ interface Participant {
   email: string;
   emailed: boolean;
   certificateUrl?: string;
+  emailAttempts?: number;
+  emailStatus?: string;
+  emailError?: string;
 }
 
 interface SendingStatus {

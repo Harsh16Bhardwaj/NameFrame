@@ -23,6 +23,9 @@ interface Participant {
   email: string;
   emailed: boolean;
   certificateUrl?: string;
+  emailAttempts?: number;
+  emailStatus?: string;
+  emailError?: string;
 }
 
 interface SendingStatus {
@@ -166,16 +169,33 @@ export default function TableList({
                         <Loader2 size={12} className="animate-spin" />
                         Sending...
                       </span>
-                    ) : status === "error" ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-red-900/20 px-2.5 py-0.5 text-xs font-medium text-red-400">
-                        <XCircle size={12} />
-                        Failed
-                      </span>
-                    ) : participant.emailed || status === "success" ? (
+                    ) : status === "error" || participant.emailStatus === "failed" ? (
+                      <div className="flex flex-col gap-1">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-red-900/20 px-2.5 py-0.5 text-xs font-medium text-red-400">
+                          <XCircle size={12} />
+                          Failed
+                        </span>
+                        {participant.emailAttempts !== undefined && participant.emailAttempts > 0 && (
+                          <span className="text-xs text-red-400/70">
+                            Attempted: {participant.emailAttempts}/2
+                          </span>
+                        )}
+                      </div>
+                    ) : participant.emailed || status === "success" || participant.emailStatus === "sent" ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-green-900/20 px-2.5 py-0.5 text-xs font-medium text-green-400">
                         <CheckCircle size={12} />
                         Sent
                       </span>
+                    ) : participant.emailStatus === "pending" && participant.emailAttempts !== undefined && participant.emailAttempts > 0 ? (
+                      <div className="flex flex-col gap-1">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-yellow-900/20 px-2.5 py-0.5 text-xs font-medium text-yellow-400">
+                          <span className="h-1.5 w-1.5 rounded-full bg-yellow-400"></span>
+                          Retrying...
+                        </span>
+                        <span className="text-xs text-yellow-400/70">
+                          Attempted: {participant.emailAttempts}/2
+                        </span>
+                      </div>
                     ) : (
                       <span className="inline-flex items-center gap-1 rounded-full bg-amber-900/20 px-2.5 py-0.5 text-xs font-medium text-amber-400">
                         <span className="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
@@ -201,14 +221,18 @@ export default function TableList({
                         <Download size={16} />
                       </button>
 
-                      {!participant.emailed && status !== "sending" && (
+                      {(!participant.emailed && participant.emailStatus !== "sent" && status !== "sending") && (
                         <button
                           onClick={() => onSendCertificate(participant.id)}
-                          disabled={isSending}
+                          disabled={isSending || (participant.emailAttempts !== undefined && participant.emailAttempts >= 2)}
                           className={`p-1.5 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors ${
-                            isSending ? "opacity-50 cursor-not-allowed" : ""
+                            isSending || (participant.emailAttempts !== undefined && participant.emailAttempts >= 2) ? "opacity-50 cursor-not-allowed" : ""
                           }`}
-                          title="Send Email"
+                          title={
+                            participant.emailAttempts !== undefined && participant.emailAttempts >= 2 
+                              ? "Maximum retry attempts reached" 
+                              : "Send Email"
+                          }
                         >
                           <Send size={16} />
                         </button>
