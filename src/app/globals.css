@@ -151,7 +151,24 @@
   --yellow: #F4B860;
   --yellow-text: #F4B860;
   --love: #C83E4D;
-  --love-text: #BC2658;
+  --love-text: #d00048;
+
+  /* --- Background & Font (Same as base) --- */
+  --bg-primary: #141414;
+  --bg-Mainprimary: #000000;
+  --bg-secondary: #1F1F1F;
+  --bg-tertiary: #2A2A2A;
+  --font-light: #FFFFFF;
+  --font-secondary: #D3D3D3;
+  --accent-secondary: #A9A9A9;
+
+  /* --- Accent Colors (New) --- */
+  --accent-primary: #4C72B0; /* A deep, rich blue */
+  
+  /* --- Call to Action Color (New) --- */
+  --cta: #4eb3a3;  /* A bright, energetic aqua */
+
+  
 }
 
 /* Custom Scrollbar */

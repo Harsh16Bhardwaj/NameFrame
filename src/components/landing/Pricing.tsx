@@ -64,9 +64,9 @@ export const justAnotherHand = Just_Another_Hand({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-just-another-hand",
-});
+}); 
 
-
+ 
 
 export const Pricing: React.FC = () => {
   const [isYearly, setIsYearly] = useState(false);

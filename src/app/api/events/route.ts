@@ -1,6 +1,6 @@
 // app/api/events/route.ts
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 
 // Use a single PrismaClient instance to avoid connection issues in production
@@ -58,20 +58,46 @@ export async function POST(req: Request) {
 
     console.log('Creating certificate template...'); // Debug log
     
-    // Ensure user exists in database before creating template
+    // Check if user exists in database before creating template
     try {
-      await prisma.user.upsert({
+      const existingUser = await prisma.user.findUnique({
         where: { id: userId },
-        update: {},
-        create: {
-          id: userId,
-          email: 'user@example.com', // Placeholder, will be updated by userSync
-          name: 'User', // Placeholder, will be updated by userSync
-        },
       });
-      console.log('User ensured in database'); // Debug log
+      
+      if (!existingUser) {
+        console.log('User not found in database. Attempting to create user...');
+        
+        // Get user details from Clerk
+        const clerkUser = await currentUser();
+        if (!clerkUser || !clerkUser.emailAddresses || clerkUser.emailAddresses.length === 0) {
+          return NextResponse.json(
+            { success: false, error: "Unable to retrieve user information" },
+            { status: 400 }
+          );
+        }
+        
+        const userEmail = clerkUser.emailAddresses[0].emailAddress;
+        const fullName = `${clerkUser.firstName ?? ""} ${clerkUser.lastName ?? ""}`.trim();
+        
+        // Create the user
+        await prisma.user.create({
+          data: {
+            id: userId,
+            email: userEmail,
+            name: fullName || 'New User',
+          },
+        });
+        
+        console.log(`User created: ${userId}`);
+      } else {
+        console.log('User found in database:', existingUser.id); // Debug log
+      }
     } catch (userError) {
-      console.log('User creation/check failed, continuing...', userError);
+      console.log('User creation/check failed:', userError);
+      return NextResponse.json(
+        { success: false, error: "Failed to verify or create user. Please try again." },
+        { status: 500 }
+      );
     }
     
     // First, create a template using the Cloudinary URL

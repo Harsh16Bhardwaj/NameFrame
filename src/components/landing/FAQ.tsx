@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import Link from "next/link";
 import { faqs } from '@/data/faqs';
-
+  
 export const FAQ: React.FC = () => {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
