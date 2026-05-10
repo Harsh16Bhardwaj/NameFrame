@@ -1,10 +1,9 @@
 // app/api/admin/add-verification/route.ts
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
 import { generateVerificationCode, generateCertificateHash } from "@/lib/verification";
 
-const prisma = new PrismaClient();
 
 // POST /api/admin/add-verification - Add verification codes to existing participants
 export async function POST(req: Request) {
@@ -46,8 +45,6 @@ export async function POST(req: Request) {
         data: {
           verificationCode,
           certificateHash,
-          isVerified: true,
-          verifiedAt: new Date(),
         },
       });
 
@@ -65,7 +62,5 @@ export async function POST(req: Request) {
       { success: false, error: "Internal Server Error" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

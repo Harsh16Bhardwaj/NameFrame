@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
 import { Resend } from "resend";
 import { v2 as cloudinary } from "cloudinary";
 import { generateCertificateEmail } from "../emailTemplate";
 import { extractPublicId } from 'cloudinary-build-url';
 import { generateVerificationCode, generateCertificateHash } from "@/lib/verification";
+import { toLegacyTemplateConfig } from "@/lib/certificate/editor-config";
 
-const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Configure Cloudinary
@@ -27,6 +27,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 async function sendEmailWithRetry(
   emailData: any, 
   participant: any, 
+  jobId: string,
   attemptNumber: number = 1
 ): Promise<{ success: boolean; error?: string }> {
   try {
@@ -41,14 +42,14 @@ async function sendEmailWithRetry(
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     console.error(`Email attempt ${attemptNumber} failed for ${participant.email}:`, errorMessage);
 
-    // Update attempt count and error in database
-    await prisma.participant.update({
-      where: { id: participant.id },
+    await prisma.deliveryAttempt.create({
       data: {
-        emailAttempts: attemptNumber,
-        emailStatus: attemptNumber >= MAX_RETRIES ? "failed" : "pending",
-        lastEmailAttempt: new Date(),
-        emailError: errorMessage,
+        participantId: participant.id,
+        jobId,
+        provider: "RESEND",
+        status: "FAILED",
+        attemptNo: attemptNumber,
+        errorMessage,
       },
     });
 
@@ -58,7 +59,7 @@ async function sendEmailWithRetry(
       await sleep(delay);
       
       // Retry
-      return sendEmailWithRetry(emailData, participant, attemptNumber + 1);
+      return sendEmailWithRetry(emailData, participant, jobId, attemptNumber + 1);
     }
 
     return { success: false, error: errorMessage };
@@ -89,6 +90,17 @@ export async function POST(req: Request) {
       );
     }
 
+    const job = await prisma.deliveryJob.create({
+      data: {
+        eventId,
+        provider: "RESEND",
+        mode: "BATCH",
+        status: "RUNNING",
+        startedAt: new Date(),
+        batchSize: 10,
+      },
+    });
+
     // Extract public ID from template URL
     const templateUrl = event.template.backgroundUrl;
     const publicId = extractPublicId(templateUrl);
@@ -104,8 +116,7 @@ export async function POST(req: Request) {
     const participants = await prisma.participant.findMany({
       where: { 
         eventId, 
-        emailStatus: { in: ["pending", "failed"] },
-        emailAttempts: { lt: MAX_RETRIES }
+        emailed: false,
       },
       take: 10, // Process in batches of 10
     });
@@ -129,11 +140,6 @@ export async function POST(req: Request) {
     for (const participant of participants) {
       try {
         // Mark as sending
-        await prisma.participant.update({
-          where: { id: participant.id },
-          data: { emailStatus: "sending" },
-        });
-
         // Generate verification code if not present
         let verificationCode = participant.verificationCode;
         if (!verificationCode) {
@@ -141,25 +147,22 @@ export async function POST(req: Request) {
         }
 
         // Generate certificate URL using template settings
+        const templateConfig = toLegacyTemplateConfig(event.template.editorConfigJson);
         const certificateUrl = cloudinary.url(publicId, {
           transformation: [
             {
               overlay: {
-                font_family: event.template.fontFamily || "Arial",
-                font_size: event.template.fontSize || 48,
+                font_family: templateConfig.fontFamily,
+                font_size: templateConfig.fontSize,
                 font_weight: "bold",
                 text: participant.name,
               },
-              color: event.template.fontColor || "#000000",
-              width: (event.template.textWidth || 80) * 11,
-              height: (event.template.textHeight || 15) * 9,
+              color: templateConfig.fontColor,
+              width: templateConfig.textWidth * 11,
+              height: templateConfig.textHeight * 9,
               gravity: "center",
-              y: typeof event.template.textPositionY === "number"
-                ? Math.round((event.template.textPositionY - 50) * 10)
-                : 0,
-              x: typeof event.template.textPositionX === "number"
-                ? Math.round((event.template.textPositionX - 50) * 10)
-                : 0,
+              y: Math.round((templateConfig.textPositionY - 50) * 10),
+              x: Math.round((templateConfig.textPositionX - 50) * 10),
             },
             // Add verification code as watermark
             ...(verificationCode ? [{
@@ -212,7 +215,7 @@ export async function POST(req: Request) {
         };
 
         // Attempt to send email with retry logic
-        const emailResult = await sendEmailWithRetry(emailData, participant);
+        const emailResult = await sendEmailWithRetry(emailData, participant, job.id);
 
         if (emailResult.success) {
           // Update participant as successfully emailed
@@ -220,13 +223,20 @@ export async function POST(req: Request) {
             where: { id: participant.id },
             data: {
               emailed: true,
-              emailStatus: "sent",
               certificateUrl,
               verificationCode,
               certificateHash,
-              isVerified: true,
-              verifiedAt: new Date(),
-              emailError: null, // Clear any previous errors
+            },
+          });
+
+          await prisma.deliveryAttempt.create({
+            data: {
+              participantId: participant.id,
+              jobId: job.id,
+              provider: "RESEND",
+              status: "SENT",
+              attemptNo: 1,
+              sentAt: new Date(),
             },
           });
 
@@ -247,14 +257,32 @@ export async function POST(req: Request) {
         await prisma.participant.update({
           where: { id: participant.id },
           data: {
-            emailStatus: "failed",
-            emailError: error instanceof Error ? error.message : "Processing error",
+            emailed: false,
+          },
+        });
+
+        await prisma.deliveryAttempt.create({
+          data: {
+            participantId: participant.id,
+            jobId: job.id,
+            provider: "RESEND",
+            status: "FAILED",
+            attemptNo: 1,
+            errorMessage: error instanceof Error ? error.message : "Processing error",
           },
         });
         
         results.failed++;
       }
     }
+
+    await prisma.deliveryJob.update({
+      where: { id: job.id },
+      data: {
+        status: results.failed > 0 ? "FAILED" : "COMPLETED",
+        completedAt: new Date(),
+      },
+    });
 
     return NextResponse.json({
       success: true,
@@ -276,7 +304,5 @@ export async function POST(req: Request) {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

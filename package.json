@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.14.2",
-    "@prisma/client": "^6.7.0",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
     "@radix-ui/react-popover": "^1.1.7",
     "@radix-ui/react-select": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.0",
@@ -25,6 +26,7 @@
     "clsx": "^2.1.1",
     "csv-parser": "^3.2.0",
     "date-fns": "^3.6.0",
+    "dotenv": "^17.4.2",
     "framer-motion": "^12.9.4",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.487.0",
@@ -60,7 +62,7 @@
     "@types/three": "^0.176.0",
     "eslint": "^9",
     "eslint-config-next": "15.2.5",
-    "prisma": "^6.7.0",
+    "prisma": "^7.8.0",
     "tailwindcss": "^4",
     "typescript": "^5.8.3"
   }

@@ -1,8 +1,7 @@
 // app/api/verify/[code]/route.ts
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
 
-const prisma = new PrismaClient();
 
 // GET /api/verify/[code] - Public endpoint to verify certificates
 export async function GET(
@@ -48,18 +47,6 @@ export async function GET(
       );
     }
 
-    // Check if certificate is verified
-    if (!participant.isVerified) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: "Certificate is not verified", 
-          verified: false 
-        },
-        { status: 400 }
-      );
-    }
-
     // Return verification details
     const verificationData = {
       success: true,
@@ -68,7 +55,7 @@ export async function GET(
         recipientName: participant.name,
         recipientEmail: participant.email,
         eventTitle: participant.event.title,
-        issueDate: participant.verifiedAt,
+        issueDate: participant.createdAt,
         createdAt: participant.createdAt,
         issuer: {
           name: participant.event.user.name,
@@ -86,7 +73,5 @@ export async function GET(
       { success: false, error: "Internal Server Error", verified: false },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

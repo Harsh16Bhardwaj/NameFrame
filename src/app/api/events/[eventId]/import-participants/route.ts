@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
 import { parse } from "papaparse"; // For CSV parsing
 import * as XLSX from 'xlsx';
 
@@ -11,7 +11,6 @@ type RouteParams = {
   }
 }
 
-const prisma = new PrismaClient();
 
 export async function POST(
   request: NextRequest,
@@ -139,7 +138,5 @@ export async function POST(
       { success: false, error: "An unexpected error occurred. Please try again later." },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

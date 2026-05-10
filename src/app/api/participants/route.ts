@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
 
-const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {
@@ -37,11 +36,13 @@ export async function GET(request: Request) {
 
     // Add status filters
     if (certificateStatus && certificateStatus !== 'all') {
-      where.certificateStatus = certificateStatus;
+      where.certificateUrl = certificateStatus.toLowerCase() === 'generated'
+        ? { not: null }
+        : null;
     }
 
     if (emailStatus && emailStatus !== 'all') {
-      where.emailStatus = emailStatus;
+      where.emailed = emailStatus.toLowerCase() === 'sent';
     }
 
     // Add date range filter
@@ -85,10 +86,15 @@ export async function GET(request: Request) {
     // Get total count for pagination
     const total = await prisma.participant.count({ where });
 
+    const participantsWithStatus = participants.map((participant) => ({
+      ...participant,
+      emailStatus: participant.emailed ? "SENT" : "PENDING",
+    }));
+
     return NextResponse.json({
       success: true,
       data: {
-        participants,
+        participants: participantsWithStatus,
         pagination: {
           total,
           page,
@@ -104,7 +110,5 @@ export async function GET(request: Request) {
       { success: false, error: "Internal Server Error" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 } 

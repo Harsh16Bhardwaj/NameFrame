@@ -1,9 +1,8 @@
 // app/api/user-sync/route.ts
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 
-const prisma = new PrismaClient();
 
 export async function POST(): Promise<NextResponse> {
   try {
@@ -42,8 +41,5 @@ export async function POST(): Promise<NextResponse> {
       { error: "Failed to sync user", success: false },
       { status: 500 }
     );
-  } finally {
-    // Always disconnect the Prisma client
-    await prisma.$disconnect();
   }
 }

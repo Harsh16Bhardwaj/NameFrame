@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
 import { Resend } from "resend";
 import { v2 as cloudinary } from "cloudinary";
 import { generateCertificateEmail } from "../emailTemplate";
 import { extractPublicId } from 'cloudinary-build-url';
 import { generateVerificationCode, generateCertificateHash } from "@/lib/verification";
+import { toLegacyTemplateConfig } from "@/lib/certificate/editor-config";
 
-const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -87,24 +87,22 @@ export async function POST(req: Request) {
     }
 
     // Use template settings from DB for Cloudinary transformations
+    const templateConfig = toLegacyTemplateConfig(event.template.editorConfigJson);
     const certificateUrl = cloudinary.url(publicId, {
       transformation: [
         {
           overlay: {
-            font_family: event.template.fontFamily || "Arial",
-            font_size: event.template.fontSize || 48,
+            font_family: templateConfig.fontFamily,
+            font_size: templateConfig.fontSize,
             font_weight: "bold",
             text: participant.name,
           },
-          color: event.template.fontColor || "#000000",
-          width: event.template.textWidth*11 || 800,
-          height: event.template.textHeight*9 || 150,
+          color: templateConfig.fontColor,
+          width: templateConfig.textWidth * 11,
+          height: templateConfig.textHeight * 9,
           gravity: "center",
-          y: typeof event.template.textPositionY === "number"
-            ? Math.round((event.template.textPositionY - 50) * 10)
-            : 0,
-          x: typeof event.template.textPositionX === "number"            ? Math.round((event.template.textPositionX - 50) * 10)
-            : 0,
+          y: Math.round((templateConfig.textPositionY - 50) * 10),
+          x: Math.round((templateConfig.textPositionX - 50) * 10),
         },
         // Add verification code as a small watermark
         ...(verificationCode ? [{
@@ -138,8 +136,6 @@ export async function POST(req: Request) {
         certificateUrl,
         verificationCode,
         certificateHash,
-        isVerified: true,
-        verifiedAt: new Date(),
       },
     });    const emailHtml = generateCertificateEmail({
       subject,
@@ -206,7 +202,5 @@ export async function POST(req: Request) {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

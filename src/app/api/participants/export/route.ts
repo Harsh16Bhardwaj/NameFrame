@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
 import * as XLSX from 'xlsx';
 
-const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {
@@ -36,8 +35,8 @@ export async function GET(request: Request) {
       'Email': participant.email,
       'Event': participant.event.title,
       'Event Date': new Date(participant.event.createdAt).toLocaleDateString(),
-      'Certificate Status': participant.certificateStatus,
-      'Email Status': participant.emailStatus,
+      'Certificate Status': participant.certificateUrl ? 'GENERATED' : 'PENDING',
+      'Email Status': participant.emailed ? 'SENT' : 'PENDING',
       'Created At': new Date(participant.createdAt).toLocaleString()
     }));
 
@@ -65,7 +64,5 @@ export async function GET(request: Request) {
       { success: false, error: "Internal Server Error" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 } 

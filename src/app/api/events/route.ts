@@ -1,10 +1,10 @@
 // app/api/events/route.ts
 import { NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import { buildEditorConfig } from "@/lib/certificate/editor-config";
 
 // Use a single PrismaClient instance to avoid connection issues in production
-const prisma = new PrismaClient();
 
 // GET /api/events - Get all events for the current user
 export async function GET() {
@@ -106,10 +106,12 @@ export async function POST(req: Request) {
         name: `Template for ${title}`,
         backgroundUrl: templateUrl,
         userId: userId,
-        textPositionX: textPosition?.x || 50,
-        textPositionY: textPosition?.y || 50,
-        textWidth: textPosition?.width || 80,
-        textHeight: textPosition?.height || 15,
+        editorConfigJson: buildEditorConfig({
+          textPositionX: textPosition?.x,
+          textPositionY: textPosition?.y,
+          textWidth: textPosition?.width,
+          textHeight: textPosition?.height,
+        }),
       },
     });
     console.log('Template created:', newTemplate.id); // Debug log
@@ -150,8 +152,5 @@ export async function POST(req: Request) {
         { status: 500 }
       );
     }
-  } finally {
-    console.log('Disconnecting Prisma client...'); // Debug log
-    await prisma.$disconnect();
   }
 }

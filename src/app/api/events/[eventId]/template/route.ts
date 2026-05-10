@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import { buildEditorConfig, toLegacyTemplateConfig } from "@/lib/certificate/editor-config";
 
-const prisma = new PrismaClient();
 
 // Handle PATCH request to update template settings
 export async function PATCH(
@@ -65,13 +65,15 @@ export async function PATCH(
     const updated = await prisma.certificateTemplate.update({
       where: { id: event.templateId },
       data: {
-        textPositionX,
-        textPositionY,
-        textWidth,
-        textHeight,
-        fontFamily,
-        fontSize,
-        fontColor
+        editorConfigJson: buildEditorConfig({
+          textPositionX,
+          textPositionY,
+          textWidth,
+          textHeight,
+          fontFamily,
+          fontSize,
+          fontColor,
+        })
       },
     });
 
@@ -85,8 +87,6 @@ export async function PATCH(
       { success: false, error: "Failed to update template settings" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -115,13 +115,7 @@ export async function GET(
         userId: true,
         template: {
           select: {
-            textPositionX: true,
-            textPositionY: true,
-            textWidth: true,
-            textHeight: true,
-            fontFamily: true,
-            fontSize: true,
-            fontColor: true,
+            editorConfigJson: true,
           },
         },
       },
@@ -148,19 +142,21 @@ export async function GET(
       );
     }
 
+    const legacyConfig = toLegacyTemplateConfig(event.template.editorConfigJson);
+
     // Return the template settings
     return NextResponse.json({
       success: true,
       textPosition: {
-        x: event.template.textPositionX,
-        y: event.template.textPositionY,
-        width: event.template.textWidth,
-        height: event.template.textHeight,
+        x: legacyConfig.textPositionX,
+        y: legacyConfig.textPositionY,
+        width: legacyConfig.textWidth,
+        height: legacyConfig.textHeight,
       },
       fontSettings: {
-        family: event.template.fontFamily,
-        size: event.template.fontSize,
-        color: event.template.fontColor,
+        family: legacyConfig.fontFamily,
+        size: legacyConfig.fontSize,
+        color: legacyConfig.fontColor,
       },
     });
   } catch (error) {
@@ -169,8 +165,6 @@ export async function GET(
       { success: false, error: "Failed to fetch template settings" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 

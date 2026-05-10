@@ -5,10 +5,17 @@
 /.pnp
 .pnp.*
 .yarn/*
+/agents
+/.agents
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+
+/AGENTS.md
+/agents.md
+/PLANS.md
+/skills-lock.json
 
 # testing
 /coverage
