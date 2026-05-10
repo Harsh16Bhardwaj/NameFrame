@@ -47,6 +47,7 @@ export async function GET(_: Request, { params }: Params) {
     const legacyConfig = event.template ? toLegacyTemplateConfig(event.template.editorConfigJson) : {};
     const safeEvent = {
       ...event,
+      templateUrl: event.template?.backgroundUrl ?? "",
       ...legacyConfig,
       roleTemplates: groupTemplateBindings(event.templateBindings),
       participants: Array.isArray(event.participants)

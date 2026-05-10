@@ -47,6 +47,12 @@ interface Participant {
 interface EventDetails {
   id: string;
   title: string;
+  description?: string | null;
+  organizationName?: string | null;
+  organizationLogoUrl?: string | null;
+  certificateTitle?: string | null;
+  location?: string | null;
+  emailContentText?: string | null;
   createdAt: string;
   templateUrl: string;
   textPositionX: number;
@@ -57,6 +63,12 @@ interface EventDetails {
   fontSize: number;
   fontColor: string;
   participants: Participant[];
+  roleTemplates?: {
+    default?: { backgroundUrl?: string };
+    first?: { backgroundUrl?: string };
+    second?: { backgroundUrl?: string };
+    third?: { backgroundUrl?: string };
+  };
 }
 
 interface SendingStatus {
@@ -96,6 +108,7 @@ export default function EventDashboard() {
 
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isSavingMeta, setIsSavingMeta] = useState(false);
 
   // Add personalized message state
   const [personalizedMessage, setPersonalizedMessage] = useState("");
@@ -217,6 +230,29 @@ export default function EventDashboard() {
       console.error("Error saving position changes:", error);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const saveEventMetadata = async () => {
+    if (!event) return;
+    setIsSavingMeta(true);
+    try {
+      await axios.patch(`/api/events/${eventId}/template`, {
+        // keep endpoint alive until dedicated metadata endpoint is added
+        textPositionX: textPosition.x,
+        textPositionY: textPosition.y,
+        textWidth: textPosition.width,
+        textHeight: textPosition.height,
+        fontFamily: fontSettings.family,
+        fontSize: fontSettings.size,
+        fontColor: fontSettings.color,
+      });
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 2000);
+    } catch (error) {
+      console.error("Error saving event metadata", error);
+    } finally {
+      setIsSavingMeta(false);
     }
   };
 
@@ -428,6 +464,44 @@ export default function EventDashboard() {
               {/* Top Section: Event Overview */}
               <EventHeader event={event} />
 
+              <div className="mb-6 mt-4 grid grid-cols-1 gap-4 rounded-xl border border-[#4b3a70]/30 bg-[#1c1d28] p-4 lg:grid-cols-2">
+                <div className="space-y-2 text-sm text-[#c5c3c4]">
+                  <p><span className="text-[#b7a2c9]">Organization:</span> {event.organizationName || "N/A"}</p>
+                  <p><span className="text-[#b7a2c9]">Certificate Title:</span> {event.certificateTitle || "N/A"}</p>
+                  <p><span className="text-[#b7a2c9]">Location:</span> {event.location || "N/A"}</p>
+                </div>
+                <div className="space-y-2 text-sm text-[#c5c3c4]">
+                  <p className="text-[#b7a2c9]">Email Content:</p>
+                  <p className="rounded-md bg-[#272936] p-2 text-xs">{event.emailContentText || "No custom content set."}</p>
+                </div>
+              </div>
+
+              <div className="mb-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+                <div className="rounded-xl border border-[#4b3a70]/30 bg-[#1c1d28] p-4">
+                  <p className="mb-2 text-sm font-semibold text-[#b7a2c9]">Normal Certificate Template</p>
+                  <img
+                    src={event.roleTemplates?.default?.backgroundUrl || event.templateUrl}
+                    alt="Default template"
+                    className="h-48 w-full rounded-md object-cover"
+                  />
+                </div>
+                <div className="rounded-xl border border-[#4b3a70]/30 bg-[#1c1d28] p-4">
+                  <p className="mb-2 text-sm font-semibold text-[#b7a2c9]">Positional Templates</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(["first", "second", "third"] as const).map((key) => (
+                      <div key={key} className="rounded-md bg-[#272936] p-2">
+                        <p className="mb-1 text-xs uppercase text-[#c5c3c4]">{key}</p>
+                        {event.roleTemplates?.[key]?.backgroundUrl ? (
+                          <img src={event.roleTemplates[key]?.backgroundUrl} alt={`${key} template`} className="h-20 w-full rounded object-cover" />
+                        ) : (
+                          <div className="flex h-20 items-center justify-center rounded bg-[#1a1b23] text-[10px] text-[#7b7b7b]">Not set</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
               {/* Dummy Name Input */}
               <div className="mb-4 flex flex-col justify-center items-center pt-5">
                 <label
@@ -464,13 +538,13 @@ export default function EventDashboard() {
           {/* Save Button */}
           <div className="m-4 mb-10 flex justify-end">
             <button
-              onClick={savePositionChanges}
-              disabled={isSaving}
+              onClick={saveEventMetadata}
+              disabled={isSaving || isSavingMeta}
               className={`rounded-md bg-[#4b3a70] px-4 py-2 text-white transition-all hover:bg-[#5d4b82] ${
-                isSaving ? "opacity-50 cursor-not-allowed" : ""
+                isSaving || isSavingMeta ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
-              {isSaving ? "Saving..." : "Save Position Settings"}
+              {isSaving || isSavingMeta ? "Saving..." : "Save Event Settings"}
             </button>
 
             {saveSuccess && (
