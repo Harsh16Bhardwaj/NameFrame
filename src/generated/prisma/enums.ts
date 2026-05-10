@@ -101,3 +101,11 @@ export const PlanCode = {
 } as const
 
 export type PlanCode = (typeof PlanCode)[keyof typeof PlanCode]
+
+
+export const UserRole = {
+  FREE: 'FREE',
+  PRO: 'PRO'
+} as const
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]

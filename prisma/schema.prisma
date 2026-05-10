@@ -71,10 +71,16 @@ enum PlanCode {
   PRO_ANNUAL
 }
 
+enum UserRole {
+  FREE
+  PRO
+}
+
 model User {
   id                  String   @id
   email               String   @unique
   name                String
+  role                UserRole @default(FREE)
   isPro               Boolean  @default(false)
   razorpayCustomerId  String?
   groqApiKeyEncrypted String?
@@ -96,6 +102,7 @@ model Event {
   organizationLogoUrl  String?
   certificateTitle     String?
   location             String?
+  emailContentText     String?
   status               EventStatus @default(DRAFT)
   scheduledSendAt      DateTime?
   emailTemplateId      String?
@@ -111,6 +118,7 @@ model Event {
   templateBindings  EventCertificateTemplate[]
   awardAssignments  EventAwardAssignment[]
   deliveryJobs      DeliveryJob[]
+  certificateIssues CertificateIssue[]
   insightSnapshot   InsightSnapshot?
 
   @@index([userId, createdAt])
@@ -128,6 +136,7 @@ model CertificateTemplate {
   user             User                       @relation(fields: [userId], references: [id])
   events           Event[]                    @relation("DefaultEventTemplate")
   eventBindings    EventCertificateTemplate[]
+  certificateIssues CertificateIssue[]
 }
 
 model EventCertificateTemplate {
@@ -192,9 +201,32 @@ model Participant {
   event            Event                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
   awardAssignments EventAwardAssignment[]
   deliveryAttempts DeliveryAttempt[]
+  certificateIssues CertificateIssue[]
 
   @@unique([eventId, email])
   @@index([eventId, createdAt])
+}
+
+model CertificateIssue {
+  id               String                  @id @default(uuid())
+  eventId          String
+  participantId    String
+  templateId       String
+  role             CertificateTemplateRole @default(DEFAULT)
+  certificateUrl   String?
+  qrCodeUrl        String?
+  verificationCode String                  @unique
+  certificateHash  String?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  event       Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  participant Participant         @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  template    CertificateTemplate @relation(fields: [templateId], references: [id], onDelete: Restrict)
+
+  @@unique([eventId, participantId, role])
+  @@index([participantId, createdAt])
+  @@index([eventId, role])
 }
 
 model DeliveryJob {

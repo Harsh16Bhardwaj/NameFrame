@@ -28,6 +28,7 @@ export type UserMinAggregateOutputType = {
   id: string | null
   email: string | null
   name: string | null
+  role: $Enums.UserRole | null
   isPro: boolean | null
   razorpayCustomerId: string | null
   groqApiKeyEncrypted: string | null
@@ -39,6 +40,7 @@ export type UserMaxAggregateOutputType = {
   id: string | null
   email: string | null
   name: string | null
+  role: $Enums.UserRole | null
   isPro: boolean | null
   razorpayCustomerId: string | null
   groqApiKeyEncrypted: string | null
@@ -50,6 +52,7 @@ export type UserCountAggregateOutputType = {
   id: number
   email: number
   name: number
+  role: number
   isPro: number
   razorpayCustomerId: number
   groqApiKeyEncrypted: number
@@ -63,6 +66,7 @@ export type UserMinAggregateInputType = {
   id?: true
   email?: true
   name?: true
+  role?: true
   isPro?: true
   razorpayCustomerId?: true
   groqApiKeyEncrypted?: true
@@ -74,6 +78,7 @@ export type UserMaxAggregateInputType = {
   id?: true
   email?: true
   name?: true
+  role?: true
   isPro?: true
   razorpayCustomerId?: true
   groqApiKeyEncrypted?: true
@@ -85,6 +90,7 @@ export type UserCountAggregateInputType = {
   id?: true
   email?: true
   name?: true
+  role?: true
   isPro?: true
   razorpayCustomerId?: true
   groqApiKeyEncrypted?: true
@@ -169,6 +175,7 @@ export type UserGroupByOutputType = {
   id: string
   email: string
   name: string
+  role: $Enums.UserRole
   isPro: boolean
   razorpayCustomerId: string | null
   groqApiKeyEncrypted: string | null
@@ -201,6 +208,7 @@ export type UserWhereInput = {
   id?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringFilter<"User"> | string
+  role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   isPro?: Prisma.BoolFilter<"User"> | boolean
   razorpayCustomerId?: Prisma.StringNullableFilter<"User"> | string | null
   groqApiKeyEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
@@ -216,6 +224,7 @@ export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   isPro?: Prisma.SortOrder
   razorpayCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   groqApiKeyEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -234,6 +243,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringFilter<"User"> | string
+  role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   isPro?: Prisma.BoolFilter<"User"> | boolean
   razorpayCustomerId?: Prisma.StringNullableFilter<"User"> | string | null
   groqApiKeyEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
@@ -249,6 +259,7 @@ export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   isPro?: Prisma.SortOrder
   razorpayCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   groqApiKeyEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -266,6 +277,7 @@ export type UserScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
+  role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
   isPro?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   razorpayCustomerId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   groqApiKeyEncrypted?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -277,6 +289,7 @@ export type UserCreateInput = {
   id: string
   email: string
   name: string
+  role?: $Enums.UserRole
   isPro?: boolean
   razorpayCustomerId?: string | null
   groqApiKeyEncrypted?: string | null
@@ -292,6 +305,7 @@ export type UserUncheckedCreateInput = {
   id: string
   email: string
   name: string
+  role?: $Enums.UserRole
   isPro?: boolean
   razorpayCustomerId?: string | null
   groqApiKeyEncrypted?: string | null
@@ -307,6 +321,7 @@ export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -322,6 +337,7 @@ export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -337,6 +353,7 @@ export type UserCreateManyInput = {
   id: string
   email: string
   name: string
+  role?: $Enums.UserRole
   isPro?: boolean
   razorpayCustomerId?: string | null
   groqApiKeyEncrypted?: string | null
@@ -348,6 +365,7 @@ export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -359,6 +377,7 @@ export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -370,6 +389,7 @@ export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   isPro?: Prisma.SortOrder
   razorpayCustomerId?: Prisma.SortOrder
   groqApiKeyEncrypted?: Prisma.SortOrder
@@ -381,6 +401,7 @@ export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   isPro?: Prisma.SortOrder
   razorpayCustomerId?: Prisma.SortOrder
   groqApiKeyEncrypted?: Prisma.SortOrder
@@ -392,6 +413,7 @@ export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   isPro?: Prisma.SortOrder
   razorpayCustomerId?: Prisma.SortOrder
   groqApiKeyEncrypted?: Prisma.SortOrder
@@ -406,6 +428,10 @@ export type UserScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type EnumUserRoleFieldUpdateOperationsInput = {
+  set?: $Enums.UserRole
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -480,6 +506,7 @@ export type UserCreateWithoutEventsInput = {
   id: string
   email: string
   name: string
+  role?: $Enums.UserRole
   isPro?: boolean
   razorpayCustomerId?: string | null
   groqApiKeyEncrypted?: string | null
@@ -494,6 +521,7 @@ export type UserUncheckedCreateWithoutEventsInput = {
   id: string
   email: string
   name: string
+  role?: $Enums.UserRole
   isPro?: boolean
   razorpayCustomerId?: string | null
   groqApiKeyEncrypted?: string | null
@@ -524,6 +552,7 @@ export type UserUpdateWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -538,6 +567,7 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -552,6 +582,7 @@ export type UserCreateWithoutTemplatesInput = {
   id: string
   email: string
   name: string
+  role?: $Enums.UserRole
   isPro?: boolean
   razorpayCustomerId?: string | null
   groqApiKeyEncrypted?: string | null
@@ -566,6 +597,7 @@ export type UserUncheckedCreateWithoutTemplatesInput = {
   id: string
   email: string
   name: string
+  role?: $Enums.UserRole
   isPro?: boolean
   razorpayCustomerId?: string | null
   groqApiKeyEncrypted?: string | null
@@ -596,6 +628,7 @@ export type UserUpdateWithoutTemplatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -610,6 +643,7 @@ export type UserUncheckedUpdateWithoutTemplatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -624,6 +658,7 @@ export type UserCreateWithoutEmailTemplatesInput = {
   id: string
   email: string
   name: string
+  role?: $Enums.UserRole
   isPro?: boolean
   razorpayCustomerId?: string | null
   groqApiKeyEncrypted?: string | null
@@ -638,6 +673,7 @@ export type UserUncheckedCreateWithoutEmailTemplatesInput = {
   id: string
   email: string
   name: string
+  role?: $Enums.UserRole
   isPro?: boolean
   razorpayCustomerId?: string | null
   groqApiKeyEncrypted?: string | null
@@ -668,6 +704,7 @@ export type UserUpdateWithoutEmailTemplatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -682,6 +719,7 @@ export type UserUncheckedUpdateWithoutEmailTemplatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -696,6 +734,7 @@ export type UserCreateWithoutPaymentRecordsInput = {
   id: string
   email: string
   name: string
+  role?: $Enums.UserRole
   isPro?: boolean
   razorpayCustomerId?: string | null
   groqApiKeyEncrypted?: string | null
@@ -710,6 +749,7 @@ export type UserUncheckedCreateWithoutPaymentRecordsInput = {
   id: string
   email: string
   name: string
+  role?: $Enums.UserRole
   isPro?: boolean
   razorpayCustomerId?: string | null
   groqApiKeyEncrypted?: string | null
@@ -740,6 +780,7 @@ export type UserUpdateWithoutPaymentRecordsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -754,6 +795,7 @@ export type UserUncheckedUpdateWithoutPaymentRecordsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
   razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -826,6 +868,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   email?: boolean
   name?: boolean
+  role?: boolean
   isPro?: boolean
   razorpayCustomerId?: boolean
   groqApiKeyEncrypted?: boolean
@@ -842,6 +885,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   email?: boolean
   name?: boolean
+  role?: boolean
   isPro?: boolean
   razorpayCustomerId?: boolean
   groqApiKeyEncrypted?: boolean
@@ -853,6 +897,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   email?: boolean
   name?: boolean
+  role?: boolean
   isPro?: boolean
   razorpayCustomerId?: boolean
   groqApiKeyEncrypted?: boolean
@@ -864,6 +909,7 @@ export type UserSelectScalar = {
   id?: boolean
   email?: boolean
   name?: boolean
+  role?: boolean
   isPro?: boolean
   razorpayCustomerId?: boolean
   groqApiKeyEncrypted?: boolean
@@ -871,7 +917,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "isPro" | "razorpayCustomerId" | "groqApiKeyEncrypted" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "role" | "isPro" | "razorpayCustomerId" | "groqApiKeyEncrypted" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
   templates?: boolean | Prisma.User$templatesArgs<ExtArgs>
@@ -894,6 +940,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     email: string
     name: string
+    role: $Enums.UserRole
     isPro: boolean
     razorpayCustomerId: string | null
     groqApiKeyEncrypted: string | null
@@ -1329,6 +1376,7 @@ export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
+  readonly role: Prisma.FieldRef<"User", 'UserRole'>
   readonly isPro: Prisma.FieldRef<"User", 'Boolean'>
   readonly razorpayCustomerId: Prisma.FieldRef<"User", 'String'>
   readonly groqApiKeyEncrypted: Prisma.FieldRef<"User", 'String'>

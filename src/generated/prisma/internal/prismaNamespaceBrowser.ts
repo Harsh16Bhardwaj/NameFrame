@@ -58,6 +58,7 @@ export const ModelName = {
   EventAwardAssignment: 'EventAwardAssignment',
   EmailTemplate: 'EmailTemplate',
   Participant: 'Participant',
+  CertificateIssue: 'CertificateIssue',
   DeliveryJob: 'DeliveryJob',
   DeliveryAttempt: 'DeliveryAttempt',
   PaymentRecord: 'PaymentRecord',
@@ -84,6 +85,7 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
+  role: 'role',
   isPro: 'isPro',
   razorpayCustomerId: 'razorpayCustomerId',
   groqApiKeyEncrypted: 'groqApiKeyEncrypted',
@@ -103,6 +105,7 @@ export const EventScalarFieldEnum = {
   organizationLogoUrl: 'organizationLogoUrl',
   certificateTitle: 'certificateTitle',
   location: 'location',
+  emailContentText: 'emailContentText',
   status: 'status',
   scheduledSendAt: 'scheduledSendAt',
   emailTemplateId: 'emailTemplateId',
@@ -183,6 +186,23 @@ export const ParticipantScalarFieldEnum = {
 } as const
 
 export type ParticipantScalarFieldEnum = (typeof ParticipantScalarFieldEnum)[keyof typeof ParticipantScalarFieldEnum]
+
+
+export const CertificateIssueScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  participantId: 'participantId',
+  templateId: 'templateId',
+  role: 'role',
+  certificateUrl: 'certificateUrl',
+  qrCodeUrl: 'qrCodeUrl',
+  verificationCode: 'verificationCode',
+  certificateHash: 'certificateHash',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CertificateIssueScalarFieldEnum = (typeof CertificateIssueScalarFieldEnum)[keyof typeof CertificateIssueScalarFieldEnum]
 
 
 export const DeliveryJobScalarFieldEnum = {

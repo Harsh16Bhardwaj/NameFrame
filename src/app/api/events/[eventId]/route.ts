@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/db";
 import { toLegacyTemplateConfig } from "@/lib/certificate/editor-config";
+import { groupTemplateBindings } from "@/lib/events/templates";
 
 interface Params {
   params: { eventId: string };
@@ -34,6 +35,8 @@ export async function GET(_: Request, { params }: Params) {
       include: {
         template: true,
         participants: true,
+        templateBindings: { include: { template: true } },
+        awardAssignments: { include: { participant: true } },
       },
     });
 
@@ -45,6 +48,7 @@ export async function GET(_: Request, { params }: Params) {
     const safeEvent = {
       ...event,
       ...legacyConfig,
+      roleTemplates: groupTemplateBindings(event.templateBindings),
       participants: Array.isArray(event.participants)
         ? event.participants.map((participant) => ({
             ...participant,
@@ -52,6 +56,7 @@ export async function GET(_: Request, { params }: Params) {
             emailAttempts: 0,
           }))
         : [],
+      awards: event.awardAssignments,
     };
 
     return NextResponse.json({

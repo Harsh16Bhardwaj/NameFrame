@@ -16,7 +16,6 @@ import {
 } from "@clerk/nextjs";
 import { Manrope, Style_Script, Poppins } from "next/font/google";
 import Logo from "../../public/nameframelogo.png";
-import UserSync from "./userSync";
 import {
   motion,
   AnimatePresence,
@@ -122,7 +121,6 @@ const Header: React.FC = () => {
         </Link>
 
         <SignedIn>
-          <UserSync />
           <nav className="hidden md:flex items-center gap-x-8">
             <div className="flex gap-x-4 lg:gap-x-6 text-gray-300 font-medium">
               {navItems.map((item, idx) => (

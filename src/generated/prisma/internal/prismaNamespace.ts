@@ -391,6 +391,7 @@ export const ModelName = {
   EventAwardAssignment: 'EventAwardAssignment',
   EmailTemplate: 'EmailTemplate',
   Participant: 'Participant',
+  CertificateIssue: 'CertificateIssue',
   DeliveryJob: 'DeliveryJob',
   DeliveryAttempt: 'DeliveryAttempt',
   PaymentRecord: 'PaymentRecord',
@@ -410,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "event" | "certificateTemplate" | "eventCertificateTemplate" | "eventAwardAssignment" | "emailTemplate" | "participant" | "deliveryJob" | "deliveryAttempt" | "paymentRecord" | "insightSnapshot"
+    modelProps: "user" | "event" | "certificateTemplate" | "eventCertificateTemplate" | "eventAwardAssignment" | "emailTemplate" | "participant" | "certificateIssue" | "deliveryJob" | "deliveryAttempt" | "paymentRecord" | "insightSnapshot"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -932,6 +933,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CertificateIssue: {
+      payload: Prisma.$CertificateIssuePayload<ExtArgs>
+      fields: Prisma.CertificateIssueFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CertificateIssueFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateIssuePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CertificateIssueFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateIssuePayload>
+        }
+        findFirst: {
+          args: Prisma.CertificateIssueFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateIssuePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CertificateIssueFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateIssuePayload>
+        }
+        findMany: {
+          args: Prisma.CertificateIssueFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateIssuePayload>[]
+        }
+        create: {
+          args: Prisma.CertificateIssueCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateIssuePayload>
+        }
+        createMany: {
+          args: Prisma.CertificateIssueCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CertificateIssueCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateIssuePayload>[]
+        }
+        delete: {
+          args: Prisma.CertificateIssueDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateIssuePayload>
+        }
+        update: {
+          args: Prisma.CertificateIssueUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateIssuePayload>
+        }
+        deleteMany: {
+          args: Prisma.CertificateIssueDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CertificateIssueUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CertificateIssueUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateIssuePayload>[]
+        }
+        upsert: {
+          args: Prisma.CertificateIssueUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateIssuePayload>
+        }
+        aggregate: {
+          args: Prisma.CertificateIssueAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCertificateIssue>
+        }
+        groupBy: {
+          args: Prisma.CertificateIssueGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CertificateIssueGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CertificateIssueCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CertificateIssueCountAggregateOutputType> | number
+        }
+      }
+    }
     DeliveryJob: {
       payload: Prisma.$DeliveryJobPayload<ExtArgs>
       fields: Prisma.DeliveryJobFieldRefs
@@ -1271,6 +1346,7 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
+  role: 'role',
   isPro: 'isPro',
   razorpayCustomerId: 'razorpayCustomerId',
   groqApiKeyEncrypted: 'groqApiKeyEncrypted',
@@ -1290,6 +1366,7 @@ export const EventScalarFieldEnum = {
   organizationLogoUrl: 'organizationLogoUrl',
   certificateTitle: 'certificateTitle',
   location: 'location',
+  emailContentText: 'emailContentText',
   status: 'status',
   scheduledSendAt: 'scheduledSendAt',
   emailTemplateId: 'emailTemplateId',
@@ -1370,6 +1447,23 @@ export const ParticipantScalarFieldEnum = {
 } as const
 
 export type ParticipantScalarFieldEnum = (typeof ParticipantScalarFieldEnum)[keyof typeof ParticipantScalarFieldEnum]
+
+
+export const CertificateIssueScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  participantId: 'participantId',
+  templateId: 'templateId',
+  role: 'role',
+  certificateUrl: 'certificateUrl',
+  qrCodeUrl: 'qrCodeUrl',
+  verificationCode: 'verificationCode',
+  certificateHash: 'certificateHash',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CertificateIssueScalarFieldEnum = (typeof CertificateIssueScalarFieldEnum)[keyof typeof CertificateIssueScalarFieldEnum]
 
 
 export const DeliveryJobScalarFieldEnum = {
@@ -1495,6 +1589,20 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'String[]'
  */
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+/**
+ * Reference to a field of type 'UserRole'
+ */
+export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
+    
+
+
+/**
+ * Reference to a field of type 'UserRole[]'
+ */
+export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole[]'>
     
 
 
@@ -1817,6 +1925,7 @@ export type GlobalOmitConfig = {
   eventAwardAssignment?: Prisma.EventAwardAssignmentOmit
   emailTemplate?: Prisma.EmailTemplateOmit
   participant?: Prisma.ParticipantOmit
+  certificateIssue?: Prisma.CertificateIssueOmit
   deliveryJob?: Prisma.DeliveryJobOmit
   deliveryAttempt?: Prisma.DeliveryAttemptOmit
   paymentRecord?: Prisma.PaymentRecordOmit

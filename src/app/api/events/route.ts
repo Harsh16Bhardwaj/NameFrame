@@ -1,28 +1,37 @@
 // app/api/events/route.ts
 import { NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/db";
 import { buildEditorConfig } from "@/lib/certificate/editor-config";
+import { ensureCurrentUser } from "@/lib/auth/user";
+import { groupTemplateBindings } from "@/lib/events/templates";
 
 // Use a single PrismaClient instance to avoid connection issues in production
 
 // GET /api/events - Get all events for the current user
 export async function GET() {
   try {
-    const { userId } = await auth();
-    if (!userId) {
+    const user = await ensureCurrentUser();
+    if (!user) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
     const events = await prisma.event.findMany({
-      where: { userId },
+      where: { userId: user.id },
       include: {
         template: true,
         participants: true,
+        templateBindings: {
+          include: { template: true },
+        },
       },
       orderBy: { createdAt: "desc" },
     });
-    console.log('Events data:', events);
-    return NextResponse.json({ success: true, data: events });
+    return NextResponse.json({
+      success: true,
+      data: events.map((event) => ({
+        ...event,
+        roleTemplates: groupTemplateBindings(event.templateBindings),
+      })),
+    });
   } catch (error) {
     console.error("Error fetching events:", error);
     return NextResponse.json(
@@ -34,98 +43,95 @@ export async function GET() {
 
 // POST /api/events - Create a new event
 export async function POST(req: Request) {
-  console.log('POST /api/events called'); // Debug log
-  
   try {
-    const { userId } = await auth();
-    console.log('Auth userId:', userId); // Debug log
-    
-    if (!userId) {
-      console.log('No userId found, returning unauthorized'); // Debug log
+    const user = await ensureCurrentUser();
+
+    if (!user) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
     
     const body = await req.json();
-    console.log('Received POST body:', JSON.stringify(body, null, 2)); // Debug log
-    
-    const { title, templateUrl, textPosition } = body;
+    const {
+      title,
+      description,
+      imageUrl,
+      organizationName,
+      organizationLogoUrl,
+      certificateTitle,
+      location,
+      emailContentText,
+      templateUrl,
+      roleTemplateUrls,
+      textPosition,
+    } = body;
+
     if (!title || !templateUrl) {
-      console.log('Missing required fields:', { title, templateUrl }); // Debug log
       return NextResponse.json(
         { success: false, error: "Missing required fields: title or templateUrl" },
         { status: 400 }
       );    }
+    
+    const editorConfigJson = buildEditorConfig({
+      textPositionX: textPosition?.x,
+      textPositionY: textPosition?.y,
+      textWidth: textPosition?.width,
+      textHeight: textPosition?.height,
+    });
 
-    console.log('Creating certificate template...'); // Debug log
-    
-    // Check if user exists in database before creating template
-    try {
-      const existingUser = await prisma.user.findUnique({
-        where: { id: userId },
-      });
-      
-      if (!existingUser) {
-        console.log('User not found in database. Attempting to create user...');
-        
-        // Get user details from Clerk
-        const clerkUser = await currentUser();
-        if (!clerkUser || !clerkUser.emailAddresses || clerkUser.emailAddresses.length === 0) {
-          return NextResponse.json(
-            { success: false, error: "Unable to retrieve user information" },
-            { status: 400 }
-          );
-        }
-        
-        const userEmail = clerkUser.emailAddresses[0].emailAddress;
-        const fullName = `${clerkUser.firstName ?? ""} ${clerkUser.lastName ?? ""}`.trim();
-        
-        // Create the user
-        await prisma.user.create({
-          data: {
-            id: userId,
-            email: userEmail,
-            name: fullName || 'New User',
-          },
-        });
-        
-        console.log(`User created: ${userId}`);
-      } else {
-        console.log('User found in database:', existingUser.id); // Debug log
-      }
-    } catch (userError) {
-      console.log('User creation/check failed:', userError);
-      return NextResponse.json(
-        { success: false, error: "Failed to verify or create user. Please try again." },
-        { status: 500 }
-      );
-    }
-    
-    // First, create a template using the Cloudinary URL
-    const newTemplate = await prisma.certificateTemplate.create({
+    const defaultTemplate = await prisma.certificateTemplate.create({
       data: {
-        name: `Template for ${title}`,
+        name: `${title} Default Template`,
         backgroundUrl: templateUrl,
-        userId: userId,
-        editorConfigJson: buildEditorConfig({
-          textPositionX: textPosition?.x,
-          textPositionY: textPosition?.y,
-          textWidth: textPosition?.width,
-          textHeight: textPosition?.height,
-        }),
+        userId: user.id,
+        editorConfigJson,
       },
     });
-    console.log('Template created:', newTemplate.id); // Debug log
 
-    console.log('Creating event...'); // Debug log
-    // Then create the event with the new template ID
     const newEvent = await prisma.event.create({
       data: {
         title,
-        userId: userId,
-        templateId: newTemplate.id,
+        description,
+        imageUrl,
+        organizationName,
+        organizationLogoUrl,
+        certificateTitle,
+        location,
+        emailContentText,
+        userId: user.id,
+        templateId: defaultTemplate.id,
       },
     });
-    console.log('Event created:', newEvent.id); // Debug log
+
+    const bindings: Array<{ role: "DEFAULT" | "FIRST" | "SECOND" | "THIRD"; templateId: string }> = [
+      { role: "DEFAULT", templateId: defaultTemplate.id },
+    ];
+    const optionalRoles = [
+      ["FIRST", roleTemplateUrls?.first],
+      ["SECOND", roleTemplateUrls?.second],
+      ["THIRD", roleTemplateUrls?.third],
+    ] as const;
+
+    for (const [role, url] of optionalRoles) {
+      if (!url) continue;
+
+      const template = await prisma.certificateTemplate.create({
+        data: {
+          name: `${title} ${role.toLowerCase()} Template`,
+          backgroundUrl: url,
+          userId: user.id,
+          editorConfigJson,
+        },
+      });
+      bindings.push({ role, templateId: template.id });
+    }
+
+    await prisma.eventCertificateTemplate.createMany({
+      data: bindings.map((binding) => ({
+        eventId: newEvent.id,
+        templateId: binding.templateId,
+        role: binding.role,
+      })),
+    });
 
     return NextResponse.json({ success: true, data: newEvent }, { status: 201 });
   } catch (error: unknown) {

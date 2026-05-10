@@ -197,6 +197,7 @@ export type CertificateTemplateWhereInput = {
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   events?: Prisma.EventListRelationFilter
   eventBindings?: Prisma.EventCertificateTemplateListRelationFilter
+  certificateIssues?: Prisma.CertificateIssueListRelationFilter
 }
 
 export type CertificateTemplateOrderByWithRelationInput = {
@@ -210,6 +211,7 @@ export type CertificateTemplateOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   events?: Prisma.EventOrderByRelationAggregateInput
   eventBindings?: Prisma.EventCertificateTemplateOrderByRelationAggregateInput
+  certificateIssues?: Prisma.CertificateIssueOrderByRelationAggregateInput
 }
 
 export type CertificateTemplateWhereUniqueInput = Prisma.AtLeast<{
@@ -226,6 +228,7 @@ export type CertificateTemplateWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   events?: Prisma.EventListRelationFilter
   eventBindings?: Prisma.EventCertificateTemplateListRelationFilter
+  certificateIssues?: Prisma.CertificateIssueListRelationFilter
 }, "id">
 
 export type CertificateTemplateOrderByWithAggregationInput = {
@@ -264,6 +267,7 @@ export type CertificateTemplateCreateInput = {
   user: Prisma.UserCreateNestedOneWithoutTemplatesInput
   events?: Prisma.EventCreateNestedManyWithoutTemplateInput
   eventBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutTemplateInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutTemplateInput
 }
 
 export type CertificateTemplateUncheckedCreateInput = {
@@ -276,6 +280,7 @@ export type CertificateTemplateUncheckedCreateInput = {
   updatedAt?: Date | string
   events?: Prisma.EventUncheckedCreateNestedManyWithoutTemplateInput
   eventBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutTemplateInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutTemplateInput
 }
 
 export type CertificateTemplateUpdateInput = {
@@ -288,6 +293,7 @@ export type CertificateTemplateUpdateInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutTemplatesNestedInput
   events?: Prisma.EventUpdateManyWithoutTemplateNestedInput
   eventBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutTemplateNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutTemplateNestedInput
 }
 
 export type CertificateTemplateUncheckedUpdateInput = {
@@ -300,6 +306,7 @@ export type CertificateTemplateUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.EventUncheckedUpdateManyWithoutTemplateNestedInput
   eventBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutTemplateNestedInput
 }
 
 export type CertificateTemplateCreateManyInput = {
@@ -451,6 +458,20 @@ export type CertificateTemplateUpdateOneRequiredWithoutEventBindingsNestedInput 
   update?: Prisma.XOR<Prisma.XOR<Prisma.CertificateTemplateUpdateToOneWithWhereWithoutEventBindingsInput, Prisma.CertificateTemplateUpdateWithoutEventBindingsInput>, Prisma.CertificateTemplateUncheckedUpdateWithoutEventBindingsInput>
 }
 
+export type CertificateTemplateCreateNestedOneWithoutCertificateIssuesInput = {
+  create?: Prisma.XOR<Prisma.CertificateTemplateCreateWithoutCertificateIssuesInput, Prisma.CertificateTemplateUncheckedCreateWithoutCertificateIssuesInput>
+  connectOrCreate?: Prisma.CertificateTemplateCreateOrConnectWithoutCertificateIssuesInput
+  connect?: Prisma.CertificateTemplateWhereUniqueInput
+}
+
+export type CertificateTemplateUpdateOneRequiredWithoutCertificateIssuesNestedInput = {
+  create?: Prisma.XOR<Prisma.CertificateTemplateCreateWithoutCertificateIssuesInput, Prisma.CertificateTemplateUncheckedCreateWithoutCertificateIssuesInput>
+  connectOrCreate?: Prisma.CertificateTemplateCreateOrConnectWithoutCertificateIssuesInput
+  upsert?: Prisma.CertificateTemplateUpsertWithoutCertificateIssuesInput
+  connect?: Prisma.CertificateTemplateWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CertificateTemplateUpdateToOneWithWhereWithoutCertificateIssuesInput, Prisma.CertificateTemplateUpdateWithoutCertificateIssuesInput>, Prisma.CertificateTemplateUncheckedUpdateWithoutCertificateIssuesInput>
+}
+
 export type CertificateTemplateCreateWithoutUserInput = {
   id?: string
   name: string
@@ -460,6 +481,7 @@ export type CertificateTemplateCreateWithoutUserInput = {
   updatedAt?: Date | string
   events?: Prisma.EventCreateNestedManyWithoutTemplateInput
   eventBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutTemplateInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutTemplateInput
 }
 
 export type CertificateTemplateUncheckedCreateWithoutUserInput = {
@@ -471,6 +493,7 @@ export type CertificateTemplateUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
   events?: Prisma.EventUncheckedCreateNestedManyWithoutTemplateInput
   eventBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutTemplateInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutTemplateInput
 }
 
 export type CertificateTemplateCreateOrConnectWithoutUserInput = {
@@ -521,6 +544,7 @@ export type CertificateTemplateCreateWithoutEventsInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTemplatesInput
   eventBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutTemplateInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutTemplateInput
 }
 
 export type CertificateTemplateUncheckedCreateWithoutEventsInput = {
@@ -532,6 +556,7 @@ export type CertificateTemplateUncheckedCreateWithoutEventsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   eventBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutTemplateInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutTemplateInput
 }
 
 export type CertificateTemplateCreateOrConnectWithoutEventsInput = {
@@ -559,6 +584,7 @@ export type CertificateTemplateUpdateWithoutEventsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTemplatesNestedInput
   eventBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutTemplateNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutTemplateNestedInput
 }
 
 export type CertificateTemplateUncheckedUpdateWithoutEventsInput = {
@@ -570,6 +596,7 @@ export type CertificateTemplateUncheckedUpdateWithoutEventsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutTemplateNestedInput
 }
 
 export type CertificateTemplateCreateWithoutEventBindingsInput = {
@@ -581,6 +608,7 @@ export type CertificateTemplateCreateWithoutEventBindingsInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTemplatesInput
   events?: Prisma.EventCreateNestedManyWithoutTemplateInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutTemplateInput
 }
 
 export type CertificateTemplateUncheckedCreateWithoutEventBindingsInput = {
@@ -592,6 +620,7 @@ export type CertificateTemplateUncheckedCreateWithoutEventBindingsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   events?: Prisma.EventUncheckedCreateNestedManyWithoutTemplateInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutTemplateInput
 }
 
 export type CertificateTemplateCreateOrConnectWithoutEventBindingsInput = {
@@ -619,6 +648,7 @@ export type CertificateTemplateUpdateWithoutEventBindingsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTemplatesNestedInput
   events?: Prisma.EventUpdateManyWithoutTemplateNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutTemplateNestedInput
 }
 
 export type CertificateTemplateUncheckedUpdateWithoutEventBindingsInput = {
@@ -630,6 +660,71 @@ export type CertificateTemplateUncheckedUpdateWithoutEventBindingsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.EventUncheckedUpdateManyWithoutTemplateNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutTemplateNestedInput
+}
+
+export type CertificateTemplateCreateWithoutCertificateIssuesInput = {
+  id?: string
+  name: string
+  backgroundUrl: string
+  editorConfigJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTemplatesInput
+  events?: Prisma.EventCreateNestedManyWithoutTemplateInput
+  eventBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutTemplateInput
+}
+
+export type CertificateTemplateUncheckedCreateWithoutCertificateIssuesInput = {
+  id?: string
+  name: string
+  backgroundUrl: string
+  editorConfigJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutTemplateInput
+  eventBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutTemplateInput
+}
+
+export type CertificateTemplateCreateOrConnectWithoutCertificateIssuesInput = {
+  where: Prisma.CertificateTemplateWhereUniqueInput
+  create: Prisma.XOR<Prisma.CertificateTemplateCreateWithoutCertificateIssuesInput, Prisma.CertificateTemplateUncheckedCreateWithoutCertificateIssuesInput>
+}
+
+export type CertificateTemplateUpsertWithoutCertificateIssuesInput = {
+  update: Prisma.XOR<Prisma.CertificateTemplateUpdateWithoutCertificateIssuesInput, Prisma.CertificateTemplateUncheckedUpdateWithoutCertificateIssuesInput>
+  create: Prisma.XOR<Prisma.CertificateTemplateCreateWithoutCertificateIssuesInput, Prisma.CertificateTemplateUncheckedCreateWithoutCertificateIssuesInput>
+  where?: Prisma.CertificateTemplateWhereInput
+}
+
+export type CertificateTemplateUpdateToOneWithWhereWithoutCertificateIssuesInput = {
+  where?: Prisma.CertificateTemplateWhereInput
+  data: Prisma.XOR<Prisma.CertificateTemplateUpdateWithoutCertificateIssuesInput, Prisma.CertificateTemplateUncheckedUpdateWithoutCertificateIssuesInput>
+}
+
+export type CertificateTemplateUpdateWithoutCertificateIssuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  backgroundUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  editorConfigJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTemplatesNestedInput
+  events?: Prisma.EventUpdateManyWithoutTemplateNestedInput
+  eventBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutTemplateNestedInput
+}
+
+export type CertificateTemplateUncheckedUpdateWithoutCertificateIssuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  backgroundUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  editorConfigJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.EventUncheckedUpdateManyWithoutTemplateNestedInput
+  eventBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutTemplateNestedInput
 }
 
 export type CertificateTemplateCreateManyUserInput = {
@@ -650,6 +745,7 @@ export type CertificateTemplateUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.EventUpdateManyWithoutTemplateNestedInput
   eventBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutTemplateNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutTemplateNestedInput
 }
 
 export type CertificateTemplateUncheckedUpdateWithoutUserInput = {
@@ -661,6 +757,7 @@ export type CertificateTemplateUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.EventUncheckedUpdateManyWithoutTemplateNestedInput
   eventBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutTemplateNestedInput
 }
 
 export type CertificateTemplateUncheckedUpdateManyWithoutUserInput = {
@@ -680,11 +777,13 @@ export type CertificateTemplateUncheckedUpdateManyWithoutUserInput = {
 export type CertificateTemplateCountOutputType = {
   events: number
   eventBindings: number
+  certificateIssues: number
 }
 
 export type CertificateTemplateCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   events?: boolean | CertificateTemplateCountOutputTypeCountEventsArgs
   eventBindings?: boolean | CertificateTemplateCountOutputTypeCountEventBindingsArgs
+  certificateIssues?: boolean | CertificateTemplateCountOutputTypeCountCertificateIssuesArgs
 }
 
 /**
@@ -711,6 +810,13 @@ export type CertificateTemplateCountOutputTypeCountEventBindingsArgs<ExtArgs ext
   where?: Prisma.EventCertificateTemplateWhereInput
 }
 
+/**
+ * CertificateTemplateCountOutputType without action
+ */
+export type CertificateTemplateCountOutputTypeCountCertificateIssuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CertificateIssueWhereInput
+}
+
 
 export type CertificateTemplateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -723,6 +829,7 @@ export type CertificateTemplateSelect<ExtArgs extends runtime.Types.Extensions.I
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   events?: boolean | Prisma.CertificateTemplate$eventsArgs<ExtArgs>
   eventBindings?: boolean | Prisma.CertificateTemplate$eventBindingsArgs<ExtArgs>
+  certificateIssues?: boolean | Prisma.CertificateTemplate$certificateIssuesArgs<ExtArgs>
   _count?: boolean | Prisma.CertificateTemplateCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["certificateTemplate"]>
 
@@ -763,6 +870,7 @@ export type CertificateTemplateInclude<ExtArgs extends runtime.Types.Extensions.
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   events?: boolean | Prisma.CertificateTemplate$eventsArgs<ExtArgs>
   eventBindings?: boolean | Prisma.CertificateTemplate$eventBindingsArgs<ExtArgs>
+  certificateIssues?: boolean | Prisma.CertificateTemplate$certificateIssuesArgs<ExtArgs>
   _count?: boolean | Prisma.CertificateTemplateCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CertificateTemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -778,6 +886,7 @@ export type $CertificateTemplatePayload<ExtArgs extends runtime.Types.Extensions
     user: Prisma.$UserPayload<ExtArgs>
     events: Prisma.$EventPayload<ExtArgs>[]
     eventBindings: Prisma.$EventCertificateTemplatePayload<ExtArgs>[]
+    certificateIssues: Prisma.$CertificateIssuePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1184,6 +1293,7 @@ export interface Prisma__CertificateTemplateClient<T, Null = never, ExtArgs exte
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   events<T extends Prisma.CertificateTemplate$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CertificateTemplate$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   eventBindings<T extends Prisma.CertificateTemplate$eventBindingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CertificateTemplate$eventBindingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventCertificateTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  certificateIssues<T extends Prisma.CertificateTemplate$certificateIssuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CertificateTemplate$certificateIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificateIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1666,6 +1776,30 @@ export type CertificateTemplate$eventBindingsArgs<ExtArgs extends runtime.Types.
   take?: number
   skip?: number
   distinct?: Prisma.EventCertificateTemplateScalarFieldEnum | Prisma.EventCertificateTemplateScalarFieldEnum[]
+}
+
+/**
+ * CertificateTemplate.certificateIssues
+ */
+export type CertificateTemplate$certificateIssuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CertificateIssue
+   */
+  select?: Prisma.CertificateIssueSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CertificateIssue
+   */
+  omit?: Prisma.CertificateIssueOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CertificateIssueInclude<ExtArgs> | null
+  where?: Prisma.CertificateIssueWhereInput
+  orderBy?: Prisma.CertificateIssueOrderByWithRelationInput | Prisma.CertificateIssueOrderByWithRelationInput[]
+  cursor?: Prisma.CertificateIssueWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CertificateIssueScalarFieldEnum | Prisma.CertificateIssueScalarFieldEnum[]
 }
 
 /**

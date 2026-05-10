@@ -18,7 +18,45 @@ export async function GET(
       );
     }
 
-    // Find participant by verification code
+    const issue = await prisma.certificateIssue.findUnique({
+      where: { verificationCode: code },
+      include: {
+        participant: true,
+        event: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        template: true,
+      },
+    });
+
+    if (issue) {
+      return NextResponse.json({
+        success: true,
+        verified: true,
+        certificate: {
+          recipientName: issue.participant.name,
+          recipientEmail: issue.participant.email,
+          eventTitle: issue.event.title,
+          issueDate: issue.createdAt,
+          createdAt: issue.createdAt,
+          role: issue.role,
+          issuer: {
+            name: issue.event.user.name,
+            email: issue.event.user.email,
+          },
+          verificationCode: issue.verificationCode,
+          certificateUrl: issue.certificateUrl,
+        },
+      });
+    }
+
     const participant = await prisma.participant.findUnique({
       where: { verificationCode: code },
       include: {
@@ -30,7 +68,6 @@ export async function GET(
                 email: true,
               },
             },
-            template: true,
           },
         },
       },
@@ -47,7 +84,6 @@ export async function GET(
       );
     }
 
-    // Return verification details
     const verificationData = {
       success: true,
       verified: true,

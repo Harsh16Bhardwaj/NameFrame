@@ -33,6 +33,7 @@ export type EventMinAggregateOutputType = {
   organizationLogoUrl: string | null
   certificateTitle: string | null
   location: string | null
+  emailContentText: string | null
   status: $Enums.EventStatus | null
   scheduledSendAt: Date | null
   emailTemplateId: string | null
@@ -51,6 +52,7 @@ export type EventMaxAggregateOutputType = {
   organizationLogoUrl: string | null
   certificateTitle: string | null
   location: string | null
+  emailContentText: string | null
   status: $Enums.EventStatus | null
   scheduledSendAt: Date | null
   emailTemplateId: string | null
@@ -69,6 +71,7 @@ export type EventCountAggregateOutputType = {
   organizationLogoUrl: number
   certificateTitle: number
   location: number
+  emailContentText: number
   status: number
   scheduledSendAt: number
   emailTemplateId: number
@@ -89,6 +92,7 @@ export type EventMinAggregateInputType = {
   organizationLogoUrl?: true
   certificateTitle?: true
   location?: true
+  emailContentText?: true
   status?: true
   scheduledSendAt?: true
   emailTemplateId?: true
@@ -107,6 +111,7 @@ export type EventMaxAggregateInputType = {
   organizationLogoUrl?: true
   certificateTitle?: true
   location?: true
+  emailContentText?: true
   status?: true
   scheduledSendAt?: true
   emailTemplateId?: true
@@ -125,6 +130,7 @@ export type EventCountAggregateInputType = {
   organizationLogoUrl?: true
   certificateTitle?: true
   location?: true
+  emailContentText?: true
   status?: true
   scheduledSendAt?: true
   emailTemplateId?: true
@@ -216,6 +222,7 @@ export type EventGroupByOutputType = {
   organizationLogoUrl: string | null
   certificateTitle: string | null
   location: string | null
+  emailContentText: string | null
   status: $Enums.EventStatus
   scheduledSendAt: Date | null
   emailTemplateId: string | null
@@ -255,6 +262,7 @@ export type EventWhereInput = {
   organizationLogoUrl?: Prisma.StringNullableFilter<"Event"> | string | null
   certificateTitle?: Prisma.StringNullableFilter<"Event"> | string | null
   location?: Prisma.StringNullableFilter<"Event"> | string | null
+  emailContentText?: Prisma.StringNullableFilter<"Event"> | string | null
   status?: Prisma.EnumEventStatusFilter<"Event"> | $Enums.EventStatus
   scheduledSendAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   emailTemplateId?: Prisma.StringNullableFilter<"Event"> | string | null
@@ -269,6 +277,7 @@ export type EventWhereInput = {
   templateBindings?: Prisma.EventCertificateTemplateListRelationFilter
   awardAssignments?: Prisma.EventAwardAssignmentListRelationFilter
   deliveryJobs?: Prisma.DeliveryJobListRelationFilter
+  certificateIssues?: Prisma.CertificateIssueListRelationFilter
   insightSnapshot?: Prisma.XOR<Prisma.InsightSnapshotNullableScalarRelationFilter, Prisma.InsightSnapshotWhereInput> | null
 }
 
@@ -281,6 +290,7 @@ export type EventOrderByWithRelationInput = {
   organizationLogoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   certificateTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailContentText?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   scheduledSendAt?: Prisma.SortOrderInput | Prisma.SortOrder
   emailTemplateId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -295,6 +305,7 @@ export type EventOrderByWithRelationInput = {
   templateBindings?: Prisma.EventCertificateTemplateOrderByRelationAggregateInput
   awardAssignments?: Prisma.EventAwardAssignmentOrderByRelationAggregateInput
   deliveryJobs?: Prisma.DeliveryJobOrderByRelationAggregateInput
+  certificateIssues?: Prisma.CertificateIssueOrderByRelationAggregateInput
   insightSnapshot?: Prisma.InsightSnapshotOrderByWithRelationInput
 }
 
@@ -310,6 +321,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   organizationLogoUrl?: Prisma.StringNullableFilter<"Event"> | string | null
   certificateTitle?: Prisma.StringNullableFilter<"Event"> | string | null
   location?: Prisma.StringNullableFilter<"Event"> | string | null
+  emailContentText?: Prisma.StringNullableFilter<"Event"> | string | null
   status?: Prisma.EnumEventStatusFilter<"Event"> | $Enums.EventStatus
   scheduledSendAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   emailTemplateId?: Prisma.StringNullableFilter<"Event"> | string | null
@@ -324,6 +336,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   templateBindings?: Prisma.EventCertificateTemplateListRelationFilter
   awardAssignments?: Prisma.EventAwardAssignmentListRelationFilter
   deliveryJobs?: Prisma.DeliveryJobListRelationFilter
+  certificateIssues?: Prisma.CertificateIssueListRelationFilter
   insightSnapshot?: Prisma.XOR<Prisma.InsightSnapshotNullableScalarRelationFilter, Prisma.InsightSnapshotWhereInput> | null
 }, "id">
 
@@ -336,6 +349,7 @@ export type EventOrderByWithAggregationInput = {
   organizationLogoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   certificateTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailContentText?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   scheduledSendAt?: Prisma.SortOrderInput | Prisma.SortOrder
   emailTemplateId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -360,6 +374,7 @@ export type EventScalarWhereWithAggregatesInput = {
   organizationLogoUrl?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   certificateTitle?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   location?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
+  emailContentText?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   status?: Prisma.EnumEventStatusWithAggregatesFilter<"Event"> | $Enums.EventStatus
   scheduledSendAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
   emailTemplateId?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
@@ -378,6 +393,7 @@ export type EventCreateInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   createdAt?: Date | string
@@ -389,6 +405,7 @@ export type EventCreateInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
 
@@ -401,6 +418,7 @@ export type EventUncheckedCreateInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   emailTemplateId?: string | null
@@ -412,6 +430,7 @@ export type EventUncheckedCreateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
 
@@ -424,6 +443,7 @@ export type EventUpdateInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -435,6 +455,7 @@ export type EventUpdateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
 
@@ -447,6 +468,7 @@ export type EventUncheckedUpdateInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -458,6 +480,7 @@ export type EventUncheckedUpdateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
 
@@ -470,6 +493,7 @@ export type EventCreateManyInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   emailTemplateId?: string | null
@@ -488,6 +512,7 @@ export type EventUpdateManyMutationInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -503,6 +528,7 @@ export type EventUncheckedUpdateManyInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -531,6 +557,7 @@ export type EventCountOrderByAggregateInput = {
   organizationLogoUrl?: Prisma.SortOrder
   certificateTitle?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  emailContentText?: Prisma.SortOrder
   status?: Prisma.SortOrder
   scheduledSendAt?: Prisma.SortOrder
   emailTemplateId?: Prisma.SortOrder
@@ -549,6 +576,7 @@ export type EventMaxOrderByAggregateInput = {
   organizationLogoUrl?: Prisma.SortOrder
   certificateTitle?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  emailContentText?: Prisma.SortOrder
   status?: Prisma.SortOrder
   scheduledSendAt?: Prisma.SortOrder
   emailTemplateId?: Prisma.SortOrder
@@ -567,6 +595,7 @@ export type EventMinOrderByAggregateInput = {
   organizationLogoUrl?: Prisma.SortOrder
   certificateTitle?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  emailContentText?: Prisma.SortOrder
   status?: Prisma.SortOrder
   scheduledSendAt?: Prisma.SortOrder
   emailTemplateId?: Prisma.SortOrder
@@ -757,6 +786,20 @@ export type EventUpdateOneRequiredWithoutParticipantsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutParticipantsInput, Prisma.EventUpdateWithoutParticipantsInput>, Prisma.EventUncheckedUpdateWithoutParticipantsInput>
 }
 
+export type EventCreateNestedOneWithoutCertificateIssuesInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutCertificateIssuesInput, Prisma.EventUncheckedCreateWithoutCertificateIssuesInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutCertificateIssuesInput
+  connect?: Prisma.EventWhereUniqueInput
+}
+
+export type EventUpdateOneRequiredWithoutCertificateIssuesNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutCertificateIssuesInput, Prisma.EventUncheckedCreateWithoutCertificateIssuesInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutCertificateIssuesInput
+  upsert?: Prisma.EventUpsertWithoutCertificateIssuesInput
+  connect?: Prisma.EventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutCertificateIssuesInput, Prisma.EventUpdateWithoutCertificateIssuesInput>, Prisma.EventUncheckedUpdateWithoutCertificateIssuesInput>
+}
+
 export type EventCreateNestedOneWithoutDeliveryJobsInput = {
   create?: Prisma.XOR<Prisma.EventCreateWithoutDeliveryJobsInput, Prisma.EventUncheckedCreateWithoutDeliveryJobsInput>
   connectOrCreate?: Prisma.EventCreateOrConnectWithoutDeliveryJobsInput
@@ -794,6 +837,7 @@ export type EventCreateWithoutUserInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   createdAt?: Date | string
@@ -804,6 +848,7 @@ export type EventCreateWithoutUserInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
 
@@ -816,6 +861,7 @@ export type EventUncheckedCreateWithoutUserInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   emailTemplateId?: string | null
@@ -826,6 +872,7 @@ export type EventUncheckedCreateWithoutUserInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
 
@@ -867,6 +914,7 @@ export type EventScalarWhereInput = {
   organizationLogoUrl?: Prisma.StringNullableFilter<"Event"> | string | null
   certificateTitle?: Prisma.StringNullableFilter<"Event"> | string | null
   location?: Prisma.StringNullableFilter<"Event"> | string | null
+  emailContentText?: Prisma.StringNullableFilter<"Event"> | string | null
   status?: Prisma.EnumEventStatusFilter<"Event"> | $Enums.EventStatus
   scheduledSendAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   emailTemplateId?: Prisma.StringNullableFilter<"Event"> | string | null
@@ -885,6 +933,7 @@ export type EventCreateWithoutTemplateInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   createdAt?: Date | string
@@ -895,6 +944,7 @@ export type EventCreateWithoutTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
 
@@ -907,6 +957,7 @@ export type EventUncheckedCreateWithoutTemplateInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   emailTemplateId?: string | null
@@ -917,6 +968,7 @@ export type EventUncheckedCreateWithoutTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
 
@@ -955,6 +1007,7 @@ export type EventCreateWithoutTemplateBindingsInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   createdAt?: Date | string
@@ -965,6 +1018,7 @@ export type EventCreateWithoutTemplateBindingsInput = {
   participants?: Prisma.ParticipantCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
 
@@ -977,6 +1031,7 @@ export type EventUncheckedCreateWithoutTemplateBindingsInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   emailTemplateId?: string | null
@@ -987,6 +1042,7 @@ export type EventUncheckedCreateWithoutTemplateBindingsInput = {
   participants?: Prisma.ParticipantUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
 
@@ -1015,6 +1071,7 @@ export type EventUpdateWithoutTemplateBindingsInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1025,6 +1082,7 @@ export type EventUpdateWithoutTemplateBindingsInput = {
   participants?: Prisma.ParticipantUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
 
@@ -1037,6 +1095,7 @@ export type EventUncheckedUpdateWithoutTemplateBindingsInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1047,6 +1106,7 @@ export type EventUncheckedUpdateWithoutTemplateBindingsInput = {
   participants?: Prisma.ParticipantUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
 
@@ -1059,6 +1119,7 @@ export type EventCreateWithoutAwardAssignmentsInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   createdAt?: Date | string
@@ -1069,6 +1130,7 @@ export type EventCreateWithoutAwardAssignmentsInput = {
   participants?: Prisma.ParticipantCreateNestedManyWithoutEventInput
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
 
@@ -1081,6 +1143,7 @@ export type EventUncheckedCreateWithoutAwardAssignmentsInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   emailTemplateId?: string | null
@@ -1091,6 +1154,7 @@ export type EventUncheckedCreateWithoutAwardAssignmentsInput = {
   participants?: Prisma.ParticipantUncheckedCreateNestedManyWithoutEventInput
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
 
@@ -1119,6 +1183,7 @@ export type EventUpdateWithoutAwardAssignmentsInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1129,6 +1194,7 @@ export type EventUpdateWithoutAwardAssignmentsInput = {
   participants?: Prisma.ParticipantUpdateManyWithoutEventNestedInput
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
 
@@ -1141,6 +1207,7 @@ export type EventUncheckedUpdateWithoutAwardAssignmentsInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1151,6 +1218,7 @@ export type EventUncheckedUpdateWithoutAwardAssignmentsInput = {
   participants?: Prisma.ParticipantUncheckedUpdateManyWithoutEventNestedInput
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
 
@@ -1163,6 +1231,7 @@ export type EventCreateWithoutEmailTemplateInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   createdAt?: Date | string
@@ -1173,6 +1242,7 @@ export type EventCreateWithoutEmailTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
 
@@ -1185,6 +1255,7 @@ export type EventUncheckedCreateWithoutEmailTemplateInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   userId: string
@@ -1195,6 +1266,7 @@ export type EventUncheckedCreateWithoutEmailTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
 
@@ -1233,6 +1305,7 @@ export type EventCreateWithoutParticipantsInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   createdAt?: Date | string
@@ -1243,6 +1316,7 @@ export type EventCreateWithoutParticipantsInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
 
@@ -1255,6 +1329,7 @@ export type EventUncheckedCreateWithoutParticipantsInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   emailTemplateId?: string | null
@@ -1265,6 +1340,7 @@ export type EventUncheckedCreateWithoutParticipantsInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
 
@@ -1293,6 +1369,7 @@ export type EventUpdateWithoutParticipantsInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1303,6 +1380,7 @@ export type EventUpdateWithoutParticipantsInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
 
@@ -1315,6 +1393,7 @@ export type EventUncheckedUpdateWithoutParticipantsInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1322,6 +1401,119 @@ export type EventUncheckedUpdateWithoutParticipantsInput = {
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
+  awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
+  deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
+  insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
+}
+
+export type EventCreateWithoutCertificateIssuesInput = {
+  id?: string
+  title: string
+  description?: string | null
+  imageUrl?: string | null
+  organizationName?: string | null
+  organizationLogoUrl?: string | null
+  certificateTitle?: string | null
+  location?: string | null
+  emailContentText?: string | null
+  status?: $Enums.EventStatus
+  scheduledSendAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEventsInput
+  template?: Prisma.CertificateTemplateCreateNestedOneWithoutEventsInput
+  emailTemplate?: Prisma.EmailTemplateCreateNestedOneWithoutEventsInput
+  participants?: Prisma.ParticipantCreateNestedManyWithoutEventInput
+  templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
+  awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
+  deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
+}
+
+export type EventUncheckedCreateWithoutCertificateIssuesInput = {
+  id?: string
+  title: string
+  description?: string | null
+  imageUrl?: string | null
+  organizationName?: string | null
+  organizationLogoUrl?: string | null
+  certificateTitle?: string | null
+  location?: string | null
+  emailContentText?: string | null
+  status?: $Enums.EventStatus
+  scheduledSendAt?: Date | string | null
+  emailTemplateId?: string | null
+  userId: string
+  templateId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  participants?: Prisma.ParticipantUncheckedCreateNestedManyWithoutEventInput
+  templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
+  awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
+  deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
+}
+
+export type EventCreateOrConnectWithoutCertificateIssuesInput = {
+  where: Prisma.EventWhereUniqueInput
+  create: Prisma.XOR<Prisma.EventCreateWithoutCertificateIssuesInput, Prisma.EventUncheckedCreateWithoutCertificateIssuesInput>
+}
+
+export type EventUpsertWithoutCertificateIssuesInput = {
+  update: Prisma.XOR<Prisma.EventUpdateWithoutCertificateIssuesInput, Prisma.EventUncheckedUpdateWithoutCertificateIssuesInput>
+  create: Prisma.XOR<Prisma.EventCreateWithoutCertificateIssuesInput, Prisma.EventUncheckedCreateWithoutCertificateIssuesInput>
+  where?: Prisma.EventWhereInput
+}
+
+export type EventUpdateToOneWithWhereWithoutCertificateIssuesInput = {
+  where?: Prisma.EventWhereInput
+  data: Prisma.XOR<Prisma.EventUpdateWithoutCertificateIssuesInput, Prisma.EventUncheckedUpdateWithoutCertificateIssuesInput>
+}
+
+export type EventUpdateWithoutCertificateIssuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEventsNestedInput
+  template?: Prisma.CertificateTemplateUpdateOneWithoutEventsNestedInput
+  emailTemplate?: Prisma.EmailTemplateUpdateOneWithoutEventsNestedInput
+  participants?: Prisma.ParticipantUpdateManyWithoutEventNestedInput
+  templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
+  awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
+  deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
+}
+
+export type EventUncheckedUpdateWithoutCertificateIssuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participants?: Prisma.ParticipantUncheckedUpdateManyWithoutEventNestedInput
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
@@ -1337,6 +1529,7 @@ export type EventCreateWithoutDeliveryJobsInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   createdAt?: Date | string
@@ -1347,6 +1540,7 @@ export type EventCreateWithoutDeliveryJobsInput = {
   participants?: Prisma.ParticipantCreateNestedManyWithoutEventInput
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
 
@@ -1359,6 +1553,7 @@ export type EventUncheckedCreateWithoutDeliveryJobsInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   emailTemplateId?: string | null
@@ -1369,6 +1564,7 @@ export type EventUncheckedCreateWithoutDeliveryJobsInput = {
   participants?: Prisma.ParticipantUncheckedCreateNestedManyWithoutEventInput
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
 
@@ -1397,6 +1593,7 @@ export type EventUpdateWithoutDeliveryJobsInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1407,6 +1604,7 @@ export type EventUpdateWithoutDeliveryJobsInput = {
   participants?: Prisma.ParticipantUpdateManyWithoutEventNestedInput
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
 
@@ -1419,6 +1617,7 @@ export type EventUncheckedUpdateWithoutDeliveryJobsInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1429,6 +1628,7 @@ export type EventUncheckedUpdateWithoutDeliveryJobsInput = {
   participants?: Prisma.ParticipantUncheckedUpdateManyWithoutEventNestedInput
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
 
@@ -1441,6 +1641,7 @@ export type EventCreateWithoutInsightSnapshotInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   createdAt?: Date | string
@@ -1452,6 +1653,7 @@ export type EventCreateWithoutInsightSnapshotInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutInsightSnapshotInput = {
@@ -1463,6 +1665,7 @@ export type EventUncheckedCreateWithoutInsightSnapshotInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   emailTemplateId?: string | null
@@ -1474,6 +1677,7 @@ export type EventUncheckedCreateWithoutInsightSnapshotInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutInsightSnapshotInput = {
@@ -1501,6 +1705,7 @@ export type EventUpdateWithoutInsightSnapshotInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1512,6 +1717,7 @@ export type EventUpdateWithoutInsightSnapshotInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutInsightSnapshotInput = {
@@ -1523,6 +1729,7 @@ export type EventUncheckedUpdateWithoutInsightSnapshotInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1534,6 +1741,7 @@ export type EventUncheckedUpdateWithoutInsightSnapshotInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateManyUserInput = {
@@ -1545,6 +1753,7 @@ export type EventCreateManyUserInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   emailTemplateId?: string | null
@@ -1562,6 +1771,7 @@ export type EventUpdateWithoutUserInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1572,6 +1782,7 @@ export type EventUpdateWithoutUserInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
 
@@ -1584,6 +1795,7 @@ export type EventUncheckedUpdateWithoutUserInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1594,6 +1806,7 @@ export type EventUncheckedUpdateWithoutUserInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
 
@@ -1606,6 +1819,7 @@ export type EventUncheckedUpdateManyWithoutUserInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1623,6 +1837,7 @@ export type EventCreateManyTemplateInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   emailTemplateId?: string | null
@@ -1640,6 +1855,7 @@ export type EventUpdateWithoutTemplateInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1650,6 +1866,7 @@ export type EventUpdateWithoutTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
 
@@ -1662,6 +1879,7 @@ export type EventUncheckedUpdateWithoutTemplateInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1672,6 +1890,7 @@ export type EventUncheckedUpdateWithoutTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
 
@@ -1684,6 +1903,7 @@ export type EventUncheckedUpdateManyWithoutTemplateInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1701,6 +1921,7 @@ export type EventCreateManyEmailTemplateInput = {
   organizationLogoUrl?: string | null
   certificateTitle?: string | null
   location?: string | null
+  emailContentText?: string | null
   status?: $Enums.EventStatus
   scheduledSendAt?: Date | string | null
   userId: string
@@ -1718,6 +1939,7 @@ export type EventUpdateWithoutEmailTemplateInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1728,6 +1950,7 @@ export type EventUpdateWithoutEmailTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
 
@@ -1740,6 +1963,7 @@ export type EventUncheckedUpdateWithoutEmailTemplateInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1750,6 +1974,7 @@ export type EventUncheckedUpdateWithoutEmailTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
 
@@ -1762,6 +1987,7 @@ export type EventUncheckedUpdateManyWithoutEmailTemplateInput = {
   organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1780,6 +2006,7 @@ export type EventCountOutputType = {
   templateBindings: number
   awardAssignments: number
   deliveryJobs: number
+  certificateIssues: number
 }
 
 export type EventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1787,6 +2014,7 @@ export type EventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   templateBindings?: boolean | EventCountOutputTypeCountTemplateBindingsArgs
   awardAssignments?: boolean | EventCountOutputTypeCountAwardAssignmentsArgs
   deliveryJobs?: boolean | EventCountOutputTypeCountDeliveryJobsArgs
+  certificateIssues?: boolean | EventCountOutputTypeCountCertificateIssuesArgs
 }
 
 /**
@@ -1827,6 +2055,13 @@ export type EventCountOutputTypeCountDeliveryJobsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.DeliveryJobWhereInput
 }
 
+/**
+ * EventCountOutputType without action
+ */
+export type EventCountOutputTypeCountCertificateIssuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CertificateIssueWhereInput
+}
+
 
 export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1837,6 +2072,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   organizationLogoUrl?: boolean
   certificateTitle?: boolean
   location?: boolean
+  emailContentText?: boolean
   status?: boolean
   scheduledSendAt?: boolean
   emailTemplateId?: boolean
@@ -1851,6 +2087,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   templateBindings?: boolean | Prisma.Event$templateBindingsArgs<ExtArgs>
   awardAssignments?: boolean | Prisma.Event$awardAssignmentsArgs<ExtArgs>
   deliveryJobs?: boolean | Prisma.Event$deliveryJobsArgs<ExtArgs>
+  certificateIssues?: boolean | Prisma.Event$certificateIssuesArgs<ExtArgs>
   insightSnapshot?: boolean | Prisma.Event$insightSnapshotArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
@@ -1864,6 +2101,7 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   organizationLogoUrl?: boolean
   certificateTitle?: boolean
   location?: boolean
+  emailContentText?: boolean
   status?: boolean
   scheduledSendAt?: boolean
   emailTemplateId?: boolean
@@ -1885,6 +2123,7 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   organizationLogoUrl?: boolean
   certificateTitle?: boolean
   location?: boolean
+  emailContentText?: boolean
   status?: boolean
   scheduledSendAt?: boolean
   emailTemplateId?: boolean
@@ -1906,6 +2145,7 @@ export type EventSelectScalar = {
   organizationLogoUrl?: boolean
   certificateTitle?: boolean
   location?: boolean
+  emailContentText?: boolean
   status?: boolean
   scheduledSendAt?: boolean
   emailTemplateId?: boolean
@@ -1915,7 +2155,7 @@ export type EventSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "imageUrl" | "organizationName" | "organizationLogoUrl" | "certificateTitle" | "location" | "status" | "scheduledSendAt" | "emailTemplateId" | "userId" | "templateId" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "imageUrl" | "organizationName" | "organizationLogoUrl" | "certificateTitle" | "location" | "emailContentText" | "status" | "scheduledSendAt" | "emailTemplateId" | "userId" | "templateId" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   template?: boolean | Prisma.Event$templateArgs<ExtArgs>
@@ -1924,6 +2164,7 @@ export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   templateBindings?: boolean | Prisma.Event$templateBindingsArgs<ExtArgs>
   awardAssignments?: boolean | Prisma.Event$awardAssignmentsArgs<ExtArgs>
   deliveryJobs?: boolean | Prisma.Event$deliveryJobsArgs<ExtArgs>
+  certificateIssues?: boolean | Prisma.Event$certificateIssuesArgs<ExtArgs>
   insightSnapshot?: boolean | Prisma.Event$insightSnapshotArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1948,6 +2189,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     templateBindings: Prisma.$EventCertificateTemplatePayload<ExtArgs>[]
     awardAssignments: Prisma.$EventAwardAssignmentPayload<ExtArgs>[]
     deliveryJobs: Prisma.$DeliveryJobPayload<ExtArgs>[]
+    certificateIssues: Prisma.$CertificateIssuePayload<ExtArgs>[]
     insightSnapshot: Prisma.$InsightSnapshotPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1959,6 +2201,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     organizationLogoUrl: string | null
     certificateTitle: string | null
     location: string | null
+    emailContentText: string | null
     status: $Enums.EventStatus
     scheduledSendAt: Date | null
     emailTemplateId: string | null
@@ -2367,6 +2610,7 @@ export interface Prisma__EventClient<T, Null = never, ExtArgs extends runtime.Ty
   templateBindings<T extends Prisma.Event$templateBindingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$templateBindingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventCertificateTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   awardAssignments<T extends Prisma.Event$awardAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$awardAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventAwardAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deliveryJobs<T extends Prisma.Event$deliveryJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$deliveryJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeliveryJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  certificateIssues<T extends Prisma.Event$certificateIssuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$certificateIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificateIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   insightSnapshot<T extends Prisma.Event$insightSnapshotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$insightSnapshotArgs<ExtArgs>>): Prisma.Prisma__InsightSnapshotClient<runtime.Types.Result.GetResult<Prisma.$InsightSnapshotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2405,6 +2649,7 @@ export interface EventFieldRefs {
   readonly organizationLogoUrl: Prisma.FieldRef<"Event", 'String'>
   readonly certificateTitle: Prisma.FieldRef<"Event", 'String'>
   readonly location: Prisma.FieldRef<"Event", 'String'>
+  readonly emailContentText: Prisma.FieldRef<"Event", 'String'>
   readonly status: Prisma.FieldRef<"Event", 'EventStatus'>
   readonly scheduledSendAt: Prisma.FieldRef<"Event", 'DateTime'>
   readonly emailTemplateId: Prisma.FieldRef<"Event", 'String'>
@@ -2944,6 +3189,30 @@ export type Event$deliveryJobsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.DeliveryJobScalarFieldEnum | Prisma.DeliveryJobScalarFieldEnum[]
+}
+
+/**
+ * Event.certificateIssues
+ */
+export type Event$certificateIssuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CertificateIssue
+   */
+  select?: Prisma.CertificateIssueSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CertificateIssue
+   */
+  omit?: Prisma.CertificateIssueOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CertificateIssueInclude<ExtArgs> | null
+  where?: Prisma.CertificateIssueWhereInput
+  orderBy?: Prisma.CertificateIssueOrderByWithRelationInput | Prisma.CertificateIssueOrderByWithRelationInput[]
+  cursor?: Prisma.CertificateIssueWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CertificateIssueScalarFieldEnum | Prisma.CertificateIssueScalarFieldEnum[]
 }
 
 /**

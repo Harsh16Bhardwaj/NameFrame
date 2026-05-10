@@ -241,6 +241,7 @@ export type ParticipantWhereInput = {
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
   awardAssignments?: Prisma.EventAwardAssignmentListRelationFilter
   deliveryAttempts?: Prisma.DeliveryAttemptListRelationFilter
+  certificateIssues?: Prisma.CertificateIssueListRelationFilter
 }
 
 export type ParticipantOrderByWithRelationInput = {
@@ -259,6 +260,7 @@ export type ParticipantOrderByWithRelationInput = {
   event?: Prisma.EventOrderByWithRelationInput
   awardAssignments?: Prisma.EventAwardAssignmentOrderByRelationAggregateInput
   deliveryAttempts?: Prisma.DeliveryAttemptOrderByRelationAggregateInput
+  certificateIssues?: Prisma.CertificateIssueOrderByRelationAggregateInput
 }
 
 export type ParticipantWhereUniqueInput = Prisma.AtLeast<{
@@ -281,6 +283,7 @@ export type ParticipantWhereUniqueInput = Prisma.AtLeast<{
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
   awardAssignments?: Prisma.EventAwardAssignmentListRelationFilter
   deliveryAttempts?: Prisma.DeliveryAttemptListRelationFilter
+  certificateIssues?: Prisma.CertificateIssueListRelationFilter
 }, "id" | "verificationCode" | "eventId_email">
 
 export type ParticipantOrderByWithAggregationInput = {
@@ -334,6 +337,7 @@ export type ParticipantCreateInput = {
   event: Prisma.EventCreateNestedOneWithoutParticipantsInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutParticipantInput
   deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutParticipantInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantUncheckedCreateInput = {
@@ -351,6 +355,7 @@ export type ParticipantUncheckedCreateInput = {
   updatedAt?: Date | string
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutParticipantInput
   deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutParticipantInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantUpdateInput = {
@@ -368,6 +373,7 @@ export type ParticipantUpdateInput = {
   event?: Prisma.EventUpdateOneRequiredWithoutParticipantsNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutParticipantNestedInput
   deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutParticipantNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantUncheckedUpdateInput = {
@@ -385,6 +391,7 @@ export type ParticipantUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutParticipantNestedInput
   deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutParticipantNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantCreateManyInput = {
@@ -552,6 +559,20 @@ export type ParticipantUpdateOneRequiredWithoutAwardAssignmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ParticipantUpdateToOneWithWhereWithoutAwardAssignmentsInput, Prisma.ParticipantUpdateWithoutAwardAssignmentsInput>, Prisma.ParticipantUncheckedUpdateWithoutAwardAssignmentsInput>
 }
 
+export type ParticipantCreateNestedOneWithoutCertificateIssuesInput = {
+  create?: Prisma.XOR<Prisma.ParticipantCreateWithoutCertificateIssuesInput, Prisma.ParticipantUncheckedCreateWithoutCertificateIssuesInput>
+  connectOrCreate?: Prisma.ParticipantCreateOrConnectWithoutCertificateIssuesInput
+  connect?: Prisma.ParticipantWhereUniqueInput
+}
+
+export type ParticipantUpdateOneRequiredWithoutCertificateIssuesNestedInput = {
+  create?: Prisma.XOR<Prisma.ParticipantCreateWithoutCertificateIssuesInput, Prisma.ParticipantUncheckedCreateWithoutCertificateIssuesInput>
+  connectOrCreate?: Prisma.ParticipantCreateOrConnectWithoutCertificateIssuesInput
+  upsert?: Prisma.ParticipantUpsertWithoutCertificateIssuesInput
+  connect?: Prisma.ParticipantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ParticipantUpdateToOneWithWhereWithoutCertificateIssuesInput, Prisma.ParticipantUpdateWithoutCertificateIssuesInput>, Prisma.ParticipantUncheckedUpdateWithoutCertificateIssuesInput>
+}
+
 export type ParticipantCreateNestedOneWithoutDeliveryAttemptsInput = {
   create?: Prisma.XOR<Prisma.ParticipantCreateWithoutDeliveryAttemptsInput, Prisma.ParticipantUncheckedCreateWithoutDeliveryAttemptsInput>
   connectOrCreate?: Prisma.ParticipantCreateOrConnectWithoutDeliveryAttemptsInput
@@ -580,6 +601,7 @@ export type ParticipantCreateWithoutEventInput = {
   updatedAt?: Date | string
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutParticipantInput
   deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutParticipantInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantUncheckedCreateWithoutEventInput = {
@@ -596,6 +618,7 @@ export type ParticipantUncheckedCreateWithoutEventInput = {
   updatedAt?: Date | string
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutParticipantInput
   deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutParticipantInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantCreateOrConnectWithoutEventInput = {
@@ -656,6 +679,7 @@ export type ParticipantCreateWithoutAwardAssignmentsInput = {
   updatedAt?: Date | string
   event: Prisma.EventCreateNestedOneWithoutParticipantsInput
   deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutParticipantInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantUncheckedCreateWithoutAwardAssignmentsInput = {
@@ -672,6 +696,7 @@ export type ParticipantUncheckedCreateWithoutAwardAssignmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutParticipantInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantCreateOrConnectWithoutAwardAssignmentsInput = {
@@ -704,6 +729,7 @@ export type ParticipantUpdateWithoutAwardAssignmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   event?: Prisma.EventUpdateOneRequiredWithoutParticipantsNestedInput
   deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutParticipantNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantUncheckedUpdateWithoutAwardAssignmentsInput = {
@@ -719,6 +745,91 @@ export type ParticipantUncheckedUpdateWithoutAwardAssignmentsInput = {
   certificateHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutParticipantNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutParticipantNestedInput
+}
+
+export type ParticipantCreateWithoutCertificateIssuesInput = {
+  id?: string
+  name: string
+  email: string
+  certificateUrl?: string | null
+  qrCodeUrl?: string | null
+  emailed?: boolean
+  participated?: boolean
+  verificationCode?: string | null
+  certificateHash?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  event: Prisma.EventCreateNestedOneWithoutParticipantsInput
+  awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutParticipantInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutParticipantInput
+}
+
+export type ParticipantUncheckedCreateWithoutCertificateIssuesInput = {
+  id?: string
+  name: string
+  email: string
+  eventId: string
+  certificateUrl?: string | null
+  qrCodeUrl?: string | null
+  emailed?: boolean
+  participated?: boolean
+  verificationCode?: string | null
+  certificateHash?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutParticipantInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutParticipantInput
+}
+
+export type ParticipantCreateOrConnectWithoutCertificateIssuesInput = {
+  where: Prisma.ParticipantWhereUniqueInput
+  create: Prisma.XOR<Prisma.ParticipantCreateWithoutCertificateIssuesInput, Prisma.ParticipantUncheckedCreateWithoutCertificateIssuesInput>
+}
+
+export type ParticipantUpsertWithoutCertificateIssuesInput = {
+  update: Prisma.XOR<Prisma.ParticipantUpdateWithoutCertificateIssuesInput, Prisma.ParticipantUncheckedUpdateWithoutCertificateIssuesInput>
+  create: Prisma.XOR<Prisma.ParticipantCreateWithoutCertificateIssuesInput, Prisma.ParticipantUncheckedCreateWithoutCertificateIssuesInput>
+  where?: Prisma.ParticipantWhereInput
+}
+
+export type ParticipantUpdateToOneWithWhereWithoutCertificateIssuesInput = {
+  where?: Prisma.ParticipantWhereInput
+  data: Prisma.XOR<Prisma.ParticipantUpdateWithoutCertificateIssuesInput, Prisma.ParticipantUncheckedUpdateWithoutCertificateIssuesInput>
+}
+
+export type ParticipantUpdateWithoutCertificateIssuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  participated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certificateHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  event?: Prisma.EventUpdateOneRequiredWithoutParticipantsNestedInput
+  awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutParticipantNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutParticipantNestedInput
+}
+
+export type ParticipantUncheckedUpdateWithoutCertificateIssuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  participated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certificateHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutParticipantNestedInput
   deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutParticipantNestedInput
 }
 
@@ -736,6 +847,7 @@ export type ParticipantCreateWithoutDeliveryAttemptsInput = {
   updatedAt?: Date | string
   event: Prisma.EventCreateNestedOneWithoutParticipantsInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutParticipantInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantUncheckedCreateWithoutDeliveryAttemptsInput = {
@@ -752,6 +864,7 @@ export type ParticipantUncheckedCreateWithoutDeliveryAttemptsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutParticipantInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutParticipantInput
 }
 
 export type ParticipantCreateOrConnectWithoutDeliveryAttemptsInput = {
@@ -784,6 +897,7 @@ export type ParticipantUpdateWithoutDeliveryAttemptsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   event?: Prisma.EventUpdateOneRequiredWithoutParticipantsNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutParticipantNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantUncheckedUpdateWithoutDeliveryAttemptsInput = {
@@ -800,6 +914,7 @@ export type ParticipantUncheckedUpdateWithoutDeliveryAttemptsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutParticipantNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantCreateManyEventInput = {
@@ -830,6 +945,7 @@ export type ParticipantUpdateWithoutEventInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutParticipantNestedInput
   deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutParticipantNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantUncheckedUpdateWithoutEventInput = {
@@ -846,6 +962,7 @@ export type ParticipantUncheckedUpdateWithoutEventInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutParticipantNestedInput
   deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutParticipantNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutParticipantNestedInput
 }
 
 export type ParticipantUncheckedUpdateManyWithoutEventInput = {
@@ -870,11 +987,13 @@ export type ParticipantUncheckedUpdateManyWithoutEventInput = {
 export type ParticipantCountOutputType = {
   awardAssignments: number
   deliveryAttempts: number
+  certificateIssues: number
 }
 
 export type ParticipantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   awardAssignments?: boolean | ParticipantCountOutputTypeCountAwardAssignmentsArgs
   deliveryAttempts?: boolean | ParticipantCountOutputTypeCountDeliveryAttemptsArgs
+  certificateIssues?: boolean | ParticipantCountOutputTypeCountCertificateIssuesArgs
 }
 
 /**
@@ -901,6 +1020,13 @@ export type ParticipantCountOutputTypeCountDeliveryAttemptsArgs<ExtArgs extends 
   where?: Prisma.DeliveryAttemptWhereInput
 }
 
+/**
+ * ParticipantCountOutputType without action
+ */
+export type ParticipantCountOutputTypeCountCertificateIssuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CertificateIssueWhereInput
+}
+
 
 export type ParticipantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -918,6 +1044,7 @@ export type ParticipantSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   awardAssignments?: boolean | Prisma.Participant$awardAssignmentsArgs<ExtArgs>
   deliveryAttempts?: boolean | Prisma.Participant$deliveryAttemptsArgs<ExtArgs>
+  certificateIssues?: boolean | Prisma.Participant$certificateIssuesArgs<ExtArgs>
   _count?: boolean | Prisma.ParticipantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["participant"]>
 
@@ -973,6 +1100,7 @@ export type ParticipantInclude<ExtArgs extends runtime.Types.Extensions.Internal
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   awardAssignments?: boolean | Prisma.Participant$awardAssignmentsArgs<ExtArgs>
   deliveryAttempts?: boolean | Prisma.Participant$deliveryAttemptsArgs<ExtArgs>
+  certificateIssues?: boolean | Prisma.Participant$certificateIssuesArgs<ExtArgs>
   _count?: boolean | Prisma.ParticipantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ParticipantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -988,6 +1116,7 @@ export type $ParticipantPayload<ExtArgs extends runtime.Types.Extensions.Interna
     event: Prisma.$EventPayload<ExtArgs>
     awardAssignments: Prisma.$EventAwardAssignmentPayload<ExtArgs>[]
     deliveryAttempts: Prisma.$DeliveryAttemptPayload<ExtArgs>[]
+    certificateIssues: Prisma.$CertificateIssuePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1399,6 +1528,7 @@ export interface Prisma__ParticipantClient<T, Null = never, ExtArgs extends runt
   event<T extends Prisma.EventDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventDefaultArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   awardAssignments<T extends Prisma.Participant$awardAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participant$awardAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventAwardAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deliveryAttempts<T extends Prisma.Participant$deliveryAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participant$deliveryAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeliveryAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  certificateIssues<T extends Prisma.Participant$certificateIssuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participant$certificateIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificateIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1886,6 +2016,30 @@ export type Participant$deliveryAttemptsArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.DeliveryAttemptScalarFieldEnum | Prisma.DeliveryAttemptScalarFieldEnum[]
+}
+
+/**
+ * Participant.certificateIssues
+ */
+export type Participant$certificateIssuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CertificateIssue
+   */
+  select?: Prisma.CertificateIssueSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CertificateIssue
+   */
+  omit?: Prisma.CertificateIssueOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CertificateIssueInclude<ExtArgs> | null
+  where?: Prisma.CertificateIssueWhereInput
+  orderBy?: Prisma.CertificateIssueOrderByWithRelationInput | Prisma.CertificateIssueOrderByWithRelationInput[]
+  cursor?: Prisma.CertificateIssueWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CertificateIssueScalarFieldEnum | Prisma.CertificateIssueScalarFieldEnum[]
 }
 
 /**

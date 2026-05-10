@@ -1,14 +1,22 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const publicRoutes = ["/", "/sign-in", "/sign-up", "/contact", "/pricing"];
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+  "/contact(.*)",
+  "/pricing(.*)",
+  "/verify(.*)",
+  "/api/verify(.*)",
+  "/api/webhooks/clerk",
+]);
 
-const isPublic = (path: string) => {
-  return publicRoutes.some(
-    (route) => path === route || path.startsWith(`${route}/`)
-  );
-};
-export default clerkMiddleware()
+export default clerkMiddleware(async (auth, request) => {
+  if (!isPublicRoute(request)) {
+    await auth.protect();
+  }
+});
+
 export const config = {
   matcher: [
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',

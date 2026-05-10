@@ -77,6 +77,11 @@ export type EmailTemplate = Prisma.EmailTemplateModel
  */
 export type Participant = Prisma.ParticipantModel
 /**
+ * Model CertificateIssue
+ * 
+ */
+export type CertificateIssue = Prisma.CertificateIssueModel
+/**
  * Model DeliveryJob
  * 
  */
