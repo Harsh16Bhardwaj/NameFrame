@@ -259,12 +259,9 @@ export default function EventDashboard() {
   // Send certificates to unsent participants with real-time status updates and retry logic
   const sendCertificates = async () => {
     if (!event) return;
-
-    // Find unsent participants - now including those with pending/failed status
     const unsentParticipants = event.participants.filter((p) => !p.emailed);
     if (unsentParticipants.length === 0) return;
 
-    // Initialize sending status for all unsent participants
     const initialStatus: SendingStatus = {};
     unsentParticipants.forEach((p) => {
       initialStatus[p.id] = "pending";
@@ -275,78 +272,30 @@ export default function EventDashboard() {
     setIsSending(true);
 
     try {
-      let totalSent = 0;
-      let processedParticipants = 0;
+      const defaultMessage = `Dear {name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`;
+      const finalMessage = personalizedMessage.trim() ? personalizedMessage : defaultMessage;
 
-      // Process in batches using the new bulk retry API
-      while (processedParticipants < unsentParticipants.length) {
-        const defaultMessage = `Dear {name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`;
-        const finalMessage = personalizedMessage.trim() 
-          ? personalizedMessage 
-          : defaultMessage;
+      unsentParticipants.forEach((p) => {
+        initialStatus[p.id] = "sending";
+      });
+      setSendingStatus({ ...initialStatus });
 
-        // Mark current batch as "sending"
-        const currentBatch = unsentParticipants.slice(processedParticipants, Math.min(processedParticipants + 10, unsentParticipants.length));
-        setSendingStatus((prev) => {
-          const updated = { ...prev };
-          currentBatch.forEach((p) => {
-            updated[p.id] = "sending";
-          });
-          return updated;
+      const response = await axios.post(`/api/send-email/bulk`, {
+        eventId,
+        subject: `Your Certificate for ${event.title}`,
+        transcript: finalMessage,
+      });
+
+      if (response.data.success) {
+        const sent = response.data.summary?.sent ?? 0;
+        const pending = response.data.summary?.pending ?? 0;
+        setEmailProgress({ sent, total: sent + pending });
+      } else {
+        unsentParticipants.forEach((p) => {
+          initialStatus[p.id] = "error";
         });
-
-        // Call the bulk retry API
-        const response = await axios.post(`/api/send-email/bulk-retry`, {
-          eventId,
-          subject: `Your Certificate for ${event.title}`,
-          transcript: finalMessage,
-        });
-
-        if (response.data.success && response.data.results) {
-          const { successful, failed, totalProcessed } = response.data.results;
-          
-          // Update progress
-          totalSent += successful;
-          setEmailProgress((prev) => ({ ...prev, sent: totalSent }));
-
-          // Fetch updated event data to get the latest email statuses
-          const updatedEventResponse = await axios.get(`/api/events/${eventId}`);
-          if (updatedEventResponse.data.success) {
-            const updatedEvent = updatedEventResponse.data.data;
-            setEvent(updatedEvent);
-
-            // Update individual statuses based on the actual database state
-            setSendingStatus((prev) => {
-              const updated = { ...prev };
-              updatedEvent.participants.forEach((p: any) => {
-                if (p.emailed) {
-                  updated[p.id] = "success";
-                } else if (prev[p.id] === "sending") {
-                  updated[p.id] = "error";
-                }
-              });
-              return updated;
-            });
-          }
-
-          processedParticipants += totalProcessed;
-          console.log(`Batch completed: ${successful} successful, ${failed} failed`);
-        } else {
-          // Handle API error
-          currentBatch.forEach((p) => {
-            setSendingStatus((prev) => ({ ...prev, [p.id]: "error" }));
-          });
-          processedParticipants += currentBatch.length;
-        }
-
-        // Delay between batches
-        if (processedParticipants < unsentParticipants.length) {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        }
+        setSendingStatus({ ...initialStatus });
       }
-
-      console.log(`Email sending completed. Total sent: ${totalSent}`);
-
     } catch (error) {
       console.error("Error in certificate sending process:", error);
       
@@ -367,7 +316,16 @@ export default function EventDashboard() {
       try {
         const finalEventResponse = await axios.get(`/api/events/${eventId}`);
         if (finalEventResponse.data.success) {
-          setEvent(finalEventResponse.data.data);
+          const refreshed = finalEventResponse.data.data;
+          setEvent(refreshed);
+          setSendingStatus((prev) => {
+            const updated = { ...prev };
+            refreshed.participants.forEach((p: any) => {
+              if (p.emailed) updated[p.id] = "success";
+              else if (updated[p.id] === "sending") updated[p.id] = "pending";
+            });
+            return updated;
+          });
         }
       } catch (error) {
         console.error("Error refreshing event data:", error);
@@ -606,10 +564,8 @@ export default function EventDashboard() {
         {/* Certificate Preview Modal */}
         {showPreview && previewParticipant && event && (
           <PreviewModal
+            eventId={eventId}
             participant={previewParticipant}
-            templateUrl={event.templateUrl}
-            textPosition={textPosition}
-            fontSettings={fontSettings}
             onClose={() => setShowPreview(false)}
           />
         )}

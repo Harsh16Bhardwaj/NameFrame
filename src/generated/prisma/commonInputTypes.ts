@@ -362,6 +362,74 @@ export type EnumDeliveryAttemptStatusWithAggregatesFilter<$PrismaModel = never> 
   _max?: Prisma.NestedEnumDeliveryAttemptStatusFilter<$PrismaModel>
 }
 
+export type EnumDeliveryQueueTierFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueTier | Prisma.EnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueTier[] | Prisma.ListEnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueTier[] | Prisma.ListEnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueTierFilter<$PrismaModel> | $Enums.DeliveryQueueTier
+}
+
+export type EnumDeliveryQueueEventStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueEventStatus | Prisma.EnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueEventStatus[] | Prisma.ListEnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueEventStatus[] | Prisma.ListEnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueEventStatusFilter<$PrismaModel> | $Enums.DeliveryQueueEventStatus
+}
+
+export type EnumDeliveryQueueTierWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueTier | Prisma.EnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueTier[] | Prisma.ListEnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueTier[] | Prisma.ListEnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueTierWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryQueueTier
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeliveryQueueTierFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeliveryQueueTierFilter<$PrismaModel>
+}
+
+export type EnumDeliveryQueueEventStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueEventStatus | Prisma.EnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueEventStatus[] | Prisma.ListEnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueEventStatus[] | Prisma.ListEnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueEventStatusWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryQueueEventStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeliveryQueueEventStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeliveryQueueEventStatusFilter<$PrismaModel>
+}
+
+export type EnumDeliveryQueueItemStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueItemStatus | Prisma.EnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueItemStatus[] | Prisma.ListEnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueItemStatus[] | Prisma.ListEnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueItemStatusFilter<$PrismaModel> | $Enums.DeliveryQueueItemStatus
+}
+
+export type EnumEmailProviderNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmailProvider | Prisma.EnumEmailProviderFieldRefInput<$PrismaModel> | null
+  in?: $Enums.EmailProvider[] | Prisma.ListEnumEmailProviderFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.EmailProvider[] | Prisma.ListEnumEmailProviderFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumEmailProviderNullableFilter<$PrismaModel> | $Enums.EmailProvider | null
+}
+
+export type EnumDeliveryQueueItemStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueItemStatus | Prisma.EnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueItemStatus[] | Prisma.ListEnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueItemStatus[] | Prisma.ListEnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueItemStatusWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryQueueItemStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeliveryQueueItemStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeliveryQueueItemStatusFilter<$PrismaModel>
+}
+
+export type EnumEmailProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmailProvider | Prisma.EnumEmailProviderFieldRefInput<$PrismaModel> | null
+  in?: $Enums.EmailProvider[] | Prisma.ListEnumEmailProviderFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.EmailProvider[] | Prisma.ListEnumEmailProviderFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumEmailProviderNullableWithAggregatesFilter<$PrismaModel> | $Enums.EmailProvider | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEmailProviderNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEmailProviderNullableFilter<$PrismaModel>
+}
+
 export type EnumPaymentProviderFilter<$PrismaModel = never> = {
   equals?: $Enums.PaymentProvider | Prisma.EnumPaymentProviderFieldRefInput<$PrismaModel>
   in?: $Enums.PaymentProvider[] | Prisma.ListEnumPaymentProviderFieldRefInput<$PrismaModel>
@@ -772,6 +840,74 @@ export type NestedEnumDeliveryAttemptStatusWithAggregatesFilter<$PrismaModel = n
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumDeliveryAttemptStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumDeliveryAttemptStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumDeliveryQueueTierFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueTier | Prisma.EnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueTier[] | Prisma.ListEnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueTier[] | Prisma.ListEnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueTierFilter<$PrismaModel> | $Enums.DeliveryQueueTier
+}
+
+export type NestedEnumDeliveryQueueEventStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueEventStatus | Prisma.EnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueEventStatus[] | Prisma.ListEnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueEventStatus[] | Prisma.ListEnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueEventStatusFilter<$PrismaModel> | $Enums.DeliveryQueueEventStatus
+}
+
+export type NestedEnumDeliveryQueueTierWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueTier | Prisma.EnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueTier[] | Prisma.ListEnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueTier[] | Prisma.ListEnumDeliveryQueueTierFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueTierWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryQueueTier
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeliveryQueueTierFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeliveryQueueTierFilter<$PrismaModel>
+}
+
+export type NestedEnumDeliveryQueueEventStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueEventStatus | Prisma.EnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueEventStatus[] | Prisma.ListEnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueEventStatus[] | Prisma.ListEnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueEventStatusWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryQueueEventStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeliveryQueueEventStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeliveryQueueEventStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumDeliveryQueueItemStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueItemStatus | Prisma.EnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueItemStatus[] | Prisma.ListEnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueItemStatus[] | Prisma.ListEnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueItemStatusFilter<$PrismaModel> | $Enums.DeliveryQueueItemStatus
+}
+
+export type NestedEnumEmailProviderNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmailProvider | Prisma.EnumEmailProviderFieldRefInput<$PrismaModel> | null
+  in?: $Enums.EmailProvider[] | Prisma.ListEnumEmailProviderFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.EmailProvider[] | Prisma.ListEnumEmailProviderFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumEmailProviderNullableFilter<$PrismaModel> | $Enums.EmailProvider | null
+}
+
+export type NestedEnumDeliveryQueueItemStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryQueueItemStatus | Prisma.EnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryQueueItemStatus[] | Prisma.ListEnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryQueueItemStatus[] | Prisma.ListEnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryQueueItemStatusWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryQueueItemStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeliveryQueueItemStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeliveryQueueItemStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumEmailProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EmailProvider | Prisma.EnumEmailProviderFieldRefInput<$PrismaModel> | null
+  in?: $Enums.EmailProvider[] | Prisma.ListEnumEmailProviderFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.EmailProvider[] | Prisma.ListEnumEmailProviderFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumEmailProviderNullableWithAggregatesFilter<$PrismaModel> | $Enums.EmailProvider | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEmailProviderNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEmailProviderNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumPaymentProviderFilter<$PrismaModel = never> = {

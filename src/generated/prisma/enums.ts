@@ -78,6 +78,33 @@ export const DeliveryAttemptStatus = {
 export type DeliveryAttemptStatus = (typeof DeliveryAttemptStatus)[keyof typeof DeliveryAttemptStatus]
 
 
+export const DeliveryQueueTier = {
+  PREMIUM: 'PREMIUM',
+  REGULAR: 'REGULAR'
+} as const
+
+export type DeliveryQueueTier = (typeof DeliveryQueueTier)[keyof typeof DeliveryQueueTier]
+
+
+export const DeliveryQueueEventStatus = {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+} as const
+
+export type DeliveryQueueEventStatus = (typeof DeliveryQueueEventStatus)[keyof typeof DeliveryQueueEventStatus]
+
+
+export const DeliveryQueueItemStatus = {
+  PENDING: 'PENDING',
+  SENT: 'SENT',
+  FAILED: 'FAILED'
+} as const
+
+export type DeliveryQueueItemStatus = (typeof DeliveryQueueItemStatus)[keyof typeof DeliveryQueueItemStatus]
+
+
 export const PaymentProvider = {
   RAZORPAY: 'RAZORPAY'
 } as const

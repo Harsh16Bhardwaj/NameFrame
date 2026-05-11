@@ -68,6 +68,21 @@ export type DeliveryJob = Prisma.DeliveryJobModel
  */
 export type DeliveryAttempt = Prisma.DeliveryAttemptModel
 /**
+ * Model DeliveryQueueEvent
+ * 
+ */
+export type DeliveryQueueEvent = Prisma.DeliveryQueueEventModel
+/**
+ * Model DeliveryQueueItem
+ * 
+ */
+export type DeliveryQueueItem = Prisma.DeliveryQueueItemModel
+/**
+ * Model SmtpCredentialPool
+ * 
+ */
+export type SmtpCredentialPool = Prisma.SmtpCredentialPoolModel
+/**
  * Model PaymentRecord
  * 
  */

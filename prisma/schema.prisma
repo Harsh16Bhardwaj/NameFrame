@@ -55,6 +55,24 @@ enum DeliveryAttemptStatus {
   DEFERRED
 }
 
+enum DeliveryQueueTier {
+  PREMIUM
+  REGULAR
+}
+
+enum DeliveryQueueEventStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum DeliveryQueueItemStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
 enum PaymentProvider {
   RAZORPAY
 }
@@ -91,6 +109,8 @@ model User {
   templates       CertificateTemplate[]
   emailTemplates  EmailTemplate[]
   paymentRecords  PaymentRecord[]
+  queueEvents     DeliveryQueueEvent[]      @relation("RequestedByUserQueueEvents")
+  smtpCredentials SmtpCredentialPool[]      @relation("CreatedByUserSmtpCredentials")
 }
 
 model Event {
@@ -118,6 +138,7 @@ model Event {
   templateBindings  EventCertificateTemplate[]
   awardAssignments  EventAwardAssignment[]
   deliveryJobs      DeliveryJob[]
+  queueEvents       DeliveryQueueEvent[]
   certificateIssues CertificateIssue[]
   insightSnapshot   InsightSnapshot?
 
@@ -201,6 +222,7 @@ model Participant {
   event            Event                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
   awardAssignments EventAwardAssignment[]
   deliveryAttempts DeliveryAttempt[]
+  queueItems        DeliveryQueueItem[]
   certificateIssues CertificateIssue[]
 
   @@unique([eventId, email])
@@ -267,6 +289,73 @@ model DeliveryAttempt {
 
   @@index([participantId, attemptNo])
   @@index([jobId, status])
+}
+
+model DeliveryQueueEvent {
+  id            String                   @id @default(uuid())
+  eventId       String
+  requestedById String
+  tier          DeliveryQueueTier
+  status        DeliveryQueueEventStatus @default(PENDING)
+  scheduledFor  DateTime?
+  subject       String
+  transcript    String
+  enqueuedAt    DateTime                 @default(now())
+  startedAt     DateTime?
+  completedAt   DateTime?
+  lastError     String?
+  attemptCount  Int                      @default(0)
+  nextRetryAt   DateTime?
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+
+  event         Event                    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  requestedBy   User                     @relation("RequestedByUserQueueEvents", fields: [requestedById], references: [id], onDelete: Cascade)
+  items         DeliveryQueueItem[]
+
+  @@index([status, tier, scheduledFor, enqueuedAt])
+  @@index([eventId, createdAt])
+}
+
+model DeliveryQueueItem {
+  id                String                  @id @default(uuid())
+  queueEventId      String
+  participantId     String
+  status            DeliveryQueueItemStatus @default(PENDING)
+  attemptCount      Int                     @default(0)
+  lastError         String?
+  lastTriedAt       DateTime?
+  sentAt            DateTime?
+  provider          EmailProvider?
+  providerMessageId String?
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+
+  queueEvent        DeliveryQueueEvent      @relation(fields: [queueEventId], references: [id], onDelete: Cascade)
+  participant       Participant             @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([queueEventId, participantId])
+  @@index([status, updatedAt])
+}
+
+model SmtpCredentialPool {
+  id               String   @id @default(cuid())
+  label            String
+  host             String
+  port             Int
+  username         String
+  passwordEncrypted String
+  secure           Boolean  @default(true)
+  active           Boolean  @default(true)
+  sendCount        Int      @default(0)
+  sendLimit        Int      @default(400)
+  createdById      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  createdBy        User?    @relation("CreatedByUserSmtpCredentials", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([active, sendCount, sendLimit])
 }
 
 model PaymentRecord {

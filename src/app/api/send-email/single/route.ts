@@ -1,30 +1,10 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
-import { prisma } from "@/lib/db";
-import { Resend } from "resend";
-import { v2 as cloudinary } from "cloudinary";
-import { generateCertificateEmail } from "../emailTemplate";
-import { extractPublicId } from 'cloudinary-build-url';
-import { generateVerificationCode, generateCertificateHash } from "@/lib/verification";
-import { toLegacyTemplateConfig } from "@/lib/certificate/editor-config";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+import { requireCurrentUser } from "@/lib/auth/user";
+import { sendSingleParticipant } from "@/lib/delivery/service";
 
 export async function POST(req: Request) {
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
+    const user = await requireCurrentUser();
     const { participantId, eventId, subject, transcript } = await req.json();
 
     if (!participantId || !eventId || !subject || !transcript) {
@@ -34,171 +14,35 @@ export async function POST(req: Request) {
       );
     }
 
-    // Fetch the participant
-    const participant = await prisma.participant.findUnique({
-      where: { id: participantId },
+    const result = await sendSingleParticipant({
+      eventId,
+      participantId,
+      requestedById: user.id,
+      subject,
+      transcript,
     });
 
-    if (!participant) {
-      return NextResponse.json(
-        { success: false, error: "Participant not found" },
-        { status: 404 }
-      );
-    }
-
-    // Fetch the event and check ownership
-    const event = await prisma.event.findUnique({
-      where: { id: eventId },
-      include: {
-        template: true,
-      },
-    });
-
-    if (!event || event.userId !== userId) {
-      return NextResponse.json(
-        { success: false, error: "Event not found or unauthorized" },
-        { status: 404 }
-      );
-    }
-
-    // Check if template exists and has a backgroundUrl
-    if (!event.template || !event.template.backgroundUrl) {
+    if (!result.success) {
       return NextResponse.json(
         {
           success: false,
-          error: "Template not found or missing background image",
-        },
-        { status: 404 }
-      );
-    }
-
-    // Extract public ID from the template URL
-    const templateUrl = event.template.backgroundUrl;
-    const publicId = extractPublicId(templateUrl);
-    if (!publicId) {
-      return NextResponse.json(
-        { success: false, error: "Invalid template URL" },
-        { status: 400 }
-      );
-    }    // Generate verification code if not already present
-    let verificationCode = participant.verificationCode;
-    if (!verificationCode) {
-      verificationCode = generateVerificationCode();
-    }
-
-    // Use template settings from DB for Cloudinary transformations
-    const templateConfig = toLegacyTemplateConfig(event.template.editorConfigJson);
-    const certificateUrl = cloudinary.url(publicId, {
-      transformation: [
-        {
-          overlay: {
-            font_family: templateConfig.fontFamily,
-            font_size: templateConfig.fontSize,
-            font_weight: "bold",
-            text: participant.name,
-          },
-          color: templateConfig.fontColor,
-          width: templateConfig.textWidth * 11,
-          height: templateConfig.textHeight * 9,
-          gravity: "center",
-          y: Math.round((templateConfig.textPositionY - 50) * 10),
-          x: Math.round((templateConfig.textPositionX - 50) * 10),
-        },
-        // Add verification code as a small watermark
-        ...(verificationCode ? [{
-          overlay: {
-            font_family: "Arial",
-            font_size: 16,
-            font_weight: "normal",
-            text: `Verification: ${verificationCode}`,
-          },
-          color: "#666666",
-          gravity: "south_east",
-          x: 20,
-          y: 20,
-        }] : []),
-      ],      format: "png",
-      quality: "auto:best",
-    });
-
-    // Generate certificate hash for integrity
-    const certificateHash = generateCertificateHash({
-      recipientName: participant.name,
-      eventTitle: event.title,
-      issueDate: new Date().toISOString(),
-      verificationCode,
-    });
-
-    // Update participant with certificate URL and verification data
-    await prisma.participant.update({
-      where: { id: participant.id },
-      data: { 
-        certificateUrl,
-        verificationCode,
-        certificateHash,
-      },
-    });    const emailHtml = generateCertificateEmail({
-      subject,
-      eventTitle: event.title,
-      participantName: participant.name,
-      transcript,
-      certificateUrl,
-      verificationCode, // Add verification code to email
-    });
-
-    try {
-      const emailResult = await resend.emails.send({
-        from: `${event.title || 'Certificates'} <noreply@${process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL}>`, 
-        to: [participant.email], 
-        subject: subject,
-        html: emailHtml,
-        tags: [
-          {
-            name: "event_id",
-            value: eventId,
-          },
-        ],
-      });
-
-      if (emailResult.error) {
-        console.error("Resend API error:", emailResult.error);
-        return NextResponse.json(
-          { 
-            success: false, 
-            error: `Email API error: ${emailResult.error.message || "Unknown error"}`,
-            details: emailResult.error
-          },
-          { status: 500 }
-        );
-      }
-
-      // Mark the participant as emailed only if email was sent successfully
-      await prisma.participant.update({
-        where: { id: participant.id },
-        data: { emailed: true },
-      });
-
-      return NextResponse.json({
-        success: true,
-        message: `Email sent successfully to ${participant.email}`,
-        emailId: emailResult,
-      });
-    } catch (emailError) {
-      console.error("Error sending email:", emailError);
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: `Email exception: ${emailError instanceof Error ? emailError.message : "Unknown error"}` 
+          error: result.error || "Send failed",
+          failedAttempts: result.failedAttempts ?? 3,
+          toastCode: "EMAIL_FAILED_3_ATTEMPTS",
         },
         { status: 500 }
       );
     }
+
+    return NextResponse.json({
+      success: true,
+      message: "Email sent successfully",
+    });
   } catch (error) {
-    console.error("General error:", error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: `Failed to process: ${error instanceof Error ? error.message : "Unknown error"}` 
+      {
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to send certificate",
       },
       { status: 500 }
     );

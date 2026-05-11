@@ -61,6 +61,9 @@ export const ModelName = {
   CertificateIssue: 'CertificateIssue',
   DeliveryJob: 'DeliveryJob',
   DeliveryAttempt: 'DeliveryAttempt',
+  DeliveryQueueEvent: 'DeliveryQueueEvent',
+  DeliveryQueueItem: 'DeliveryQueueItem',
+  SmtpCredentialPool: 'SmtpCredentialPool',
   PaymentRecord: 'PaymentRecord',
   InsightSnapshot: 'InsightSnapshot'
 } as const
@@ -237,6 +240,65 @@ export const DeliveryAttemptScalarFieldEnum = {
 } as const
 
 export type DeliveryAttemptScalarFieldEnum = (typeof DeliveryAttemptScalarFieldEnum)[keyof typeof DeliveryAttemptScalarFieldEnum]
+
+
+export const DeliveryQueueEventScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  requestedById: 'requestedById',
+  tier: 'tier',
+  status: 'status',
+  scheduledFor: 'scheduledFor',
+  subject: 'subject',
+  transcript: 'transcript',
+  enqueuedAt: 'enqueuedAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  lastError: 'lastError',
+  attemptCount: 'attemptCount',
+  nextRetryAt: 'nextRetryAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DeliveryQueueEventScalarFieldEnum = (typeof DeliveryQueueEventScalarFieldEnum)[keyof typeof DeliveryQueueEventScalarFieldEnum]
+
+
+export const DeliveryQueueItemScalarFieldEnum = {
+  id: 'id',
+  queueEventId: 'queueEventId',
+  participantId: 'participantId',
+  status: 'status',
+  attemptCount: 'attemptCount',
+  lastError: 'lastError',
+  lastTriedAt: 'lastTriedAt',
+  sentAt: 'sentAt',
+  provider: 'provider',
+  providerMessageId: 'providerMessageId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DeliveryQueueItemScalarFieldEnum = (typeof DeliveryQueueItemScalarFieldEnum)[keyof typeof DeliveryQueueItemScalarFieldEnum]
+
+
+export const SmtpCredentialPoolScalarFieldEnum = {
+  id: 'id',
+  label: 'label',
+  host: 'host',
+  port: 'port',
+  username: 'username',
+  passwordEncrypted: 'passwordEncrypted',
+  secure: 'secure',
+  active: 'active',
+  sendCount: 'sendCount',
+  sendLimit: 'sendLimit',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SmtpCredentialPoolScalarFieldEnum = (typeof SmtpCredentialPoolScalarFieldEnum)[keyof typeof SmtpCredentialPoolScalarFieldEnum]
 
 
 export const PaymentRecordScalarFieldEnum = {

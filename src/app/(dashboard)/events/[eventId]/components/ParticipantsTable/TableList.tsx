@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Eye,
   Download,
-  Mail,
   ArrowUpDown,
   CheckCircle,
   XCircle,
@@ -15,7 +14,6 @@ import {
   Send,
 } from "lucide-react";
 import axios from "axios";
-import { useParams } from "next/navigation";
 
 interface Participant {
   id: string;
@@ -64,25 +62,10 @@ export default function TableList({
   const goToNextPage = () =>
     setCurrentPage((page) => Math.min(page + 1, totalPages));
   const goToPrevPage = () => setCurrentPage((page) => Math.max(page - 1, 1));
-  const params = useParams();
   const handleDownloadCertificate = async (participant: Participant) => {
     try {
-      if (participant.certificateUrl) {
-        const link = document.createElement("a");
-        link.href = participant.certificateUrl;
-        link.setAttribute("download", `${participant.name}_certificate.png`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        return;
-      }
-      const { eventId } = await params;
-      if (!eventId) {
-        console.error("Event ID is not available");
-        return;
-      }
       const response = await axios.get(
-        `/api/events/${eventId}/certificate/${participant.id}`,
+        `/api/events/${eventId}/certificate/${participant.id}?download=1`,
         {
           responseType: "blob",
         }

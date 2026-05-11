@@ -1,77 +1,31 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { X, Download } from 'lucide-react';
 
 interface PreviewModalProps {
+  eventId: string;
   participant: {
+    id: string;
     name: string;
     email: string;
     emailed: boolean;
-  };
-  templateUrl: string;
-  textPosition: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
-  fontSettings: {
-    family: string;
-    size: number;
-    color: string;
   };
   onClose: () => void;
 }
 
 export default function PreviewModal({ 
+  eventId,
   participant, 
-  templateUrl, 
-  textPosition,
-  fontSettings, 
   onClose 
 }: PreviewModalProps) {
-  const imageRef = useRef<HTMLImageElement>(null);
+  const certificateUrl = `/api/events/${eventId}/certificate/${participant.id}`;
 
   const handleDownload = () => {
-    const image = imageRef.current;
-    if (!image) return;
-
-    // Wait until image is fully loaded
-    if (!image.complete) {
-      image.onload = () => handleDownload();
-      return;
-    }
-
-    const canvas = document.createElement('canvas');
-    canvas.width = image.naturalWidth;
-    canvas.height = image.naturalHeight;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Draw the certificate background
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-    // Apply font
-    ctx.font = `${fontSettings.size}px ${fontSettings.family}, Arial, sans-serif`;
-    ctx.fillStyle = fontSettings.color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    // Calculate absolute position
-    const x = (textPosition.x / 100) * canvas.width;
-    const y = (textPosition.y / 100) * canvas.height;
-    const maxWidth = (textPosition.width / 100) * canvas.width;
-
-    // Draw participant name
-    ctx.fillText(participant.name, x, y, maxWidth);
-
-    // Create download link
     const link = document.createElement('a');
-    link.download = `${participant.name}-certificate.png`;
-    link.href = canvas.toDataURL('image/png');
+    link.download = `${participant.name.replace(/\s+/g, "_")}_certificate.png`;
+    link.href = `${certificateUrl}?download=1`;
     link.click();
   };
 
@@ -104,39 +58,12 @@ export default function PreviewModal({
           
           <div className="relative rounded-lg overflow-hidden border border-[#4b3a70]/30 bg-white">
             <div className="aspect-[1.414/1] w-full relative">
-              {/* Image for canvas rendering */}
-              {templateUrl && (
-                <img
-                  ref={imageRef}
-                  src={templateUrl}
-                  crossOrigin="anonymous"
-                  alt="Certificate preview"
-                  style={{ width: '100%', height: 'auto', display: 'block' }}
-                  className="object-contain"
-                />
-              )}
-
-              {/* Name overlay for preview */}
-              <div 
-                className="absolute flex items-center justify-center pointer-events-none"
-                style={{
-                  left: `${textPosition.x}%`,
-                  top: `${textPosition.y}%`,
-                  width: `${textPosition.width}%`,
-                  height: `${textPosition.height}%`,
-                  transform: 'translate(-50%, -50%)'
-                }}
-              >
-                <span style={{
-                  fontFamily: fontSettings.family,
-                  fontSize: `${fontSettings.size}px`,
-                  color: fontSettings.color,
-                  textAlign: 'center',
-                  whiteSpace: 'nowrap'
-                }}>
-                  {participant.name}
-                </span>
-              </div>
+              <img
+                src={certificateUrl}
+                alt="Certificate preview"
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+                className="object-contain"
+              />
             </div>
           </div>
           

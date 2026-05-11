@@ -394,6 +394,9 @@ export const ModelName = {
   CertificateIssue: 'CertificateIssue',
   DeliveryJob: 'DeliveryJob',
   DeliveryAttempt: 'DeliveryAttempt',
+  DeliveryQueueEvent: 'DeliveryQueueEvent',
+  DeliveryQueueItem: 'DeliveryQueueItem',
+  SmtpCredentialPool: 'SmtpCredentialPool',
   PaymentRecord: 'PaymentRecord',
   InsightSnapshot: 'InsightSnapshot'
 } as const
@@ -411,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "event" | "certificateTemplate" | "eventCertificateTemplate" | "eventAwardAssignment" | "emailTemplate" | "participant" | "certificateIssue" | "deliveryJob" | "deliveryAttempt" | "paymentRecord" | "insightSnapshot"
+    modelProps: "user" | "event" | "certificateTemplate" | "eventCertificateTemplate" | "eventAwardAssignment" | "emailTemplate" | "participant" | "certificateIssue" | "deliveryJob" | "deliveryAttempt" | "deliveryQueueEvent" | "deliveryQueueItem" | "smtpCredentialPool" | "paymentRecord" | "insightSnapshot"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1155,6 +1158,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DeliveryQueueEvent: {
+      payload: Prisma.$DeliveryQueueEventPayload<ExtArgs>
+      fields: Prisma.DeliveryQueueEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DeliveryQueueEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DeliveryQueueEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueEventPayload>
+        }
+        findFirst: {
+          args: Prisma.DeliveryQueueEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DeliveryQueueEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueEventPayload>
+        }
+        findMany: {
+          args: Prisma.DeliveryQueueEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueEventPayload>[]
+        }
+        create: {
+          args: Prisma.DeliveryQueueEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueEventPayload>
+        }
+        createMany: {
+          args: Prisma.DeliveryQueueEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DeliveryQueueEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueEventPayload>[]
+        }
+        delete: {
+          args: Prisma.DeliveryQueueEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueEventPayload>
+        }
+        update: {
+          args: Prisma.DeliveryQueueEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.DeliveryQueueEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DeliveryQueueEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DeliveryQueueEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.DeliveryQueueEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueEventPayload>
+        }
+        aggregate: {
+          args: Prisma.DeliveryQueueEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDeliveryQueueEvent>
+        }
+        groupBy: {
+          args: Prisma.DeliveryQueueEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeliveryQueueEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DeliveryQueueEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeliveryQueueEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    DeliveryQueueItem: {
+      payload: Prisma.$DeliveryQueueItemPayload<ExtArgs>
+      fields: Prisma.DeliveryQueueItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DeliveryQueueItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DeliveryQueueItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueItemPayload>
+        }
+        findFirst: {
+          args: Prisma.DeliveryQueueItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DeliveryQueueItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueItemPayload>
+        }
+        findMany: {
+          args: Prisma.DeliveryQueueItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueItemPayload>[]
+        }
+        create: {
+          args: Prisma.DeliveryQueueItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueItemPayload>
+        }
+        createMany: {
+          args: Prisma.DeliveryQueueItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DeliveryQueueItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueItemPayload>[]
+        }
+        delete: {
+          args: Prisma.DeliveryQueueItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueItemPayload>
+        }
+        update: {
+          args: Prisma.DeliveryQueueItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.DeliveryQueueItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DeliveryQueueItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DeliveryQueueItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.DeliveryQueueItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryQueueItemPayload>
+        }
+        aggregate: {
+          args: Prisma.DeliveryQueueItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDeliveryQueueItem>
+        }
+        groupBy: {
+          args: Prisma.DeliveryQueueItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeliveryQueueItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DeliveryQueueItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeliveryQueueItemCountAggregateOutputType> | number
+        }
+      }
+    }
+    SmtpCredentialPool: {
+      payload: Prisma.$SmtpCredentialPoolPayload<ExtArgs>
+      fields: Prisma.SmtpCredentialPoolFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SmtpCredentialPoolFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmtpCredentialPoolPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SmtpCredentialPoolFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmtpCredentialPoolPayload>
+        }
+        findFirst: {
+          args: Prisma.SmtpCredentialPoolFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmtpCredentialPoolPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SmtpCredentialPoolFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmtpCredentialPoolPayload>
+        }
+        findMany: {
+          args: Prisma.SmtpCredentialPoolFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmtpCredentialPoolPayload>[]
+        }
+        create: {
+          args: Prisma.SmtpCredentialPoolCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmtpCredentialPoolPayload>
+        }
+        createMany: {
+          args: Prisma.SmtpCredentialPoolCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SmtpCredentialPoolCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmtpCredentialPoolPayload>[]
+        }
+        delete: {
+          args: Prisma.SmtpCredentialPoolDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmtpCredentialPoolPayload>
+        }
+        update: {
+          args: Prisma.SmtpCredentialPoolUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmtpCredentialPoolPayload>
+        }
+        deleteMany: {
+          args: Prisma.SmtpCredentialPoolDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SmtpCredentialPoolUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SmtpCredentialPoolUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmtpCredentialPoolPayload>[]
+        }
+        upsert: {
+          args: Prisma.SmtpCredentialPoolUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SmtpCredentialPoolPayload>
+        }
+        aggregate: {
+          args: Prisma.SmtpCredentialPoolAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSmtpCredentialPool>
+        }
+        groupBy: {
+          args: Prisma.SmtpCredentialPoolGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SmtpCredentialPoolGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SmtpCredentialPoolCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SmtpCredentialPoolCountAggregateOutputType> | number
+        }
+      }
+    }
     PaymentRecord: {
       payload: Prisma.$PaymentRecordPayload<ExtArgs>
       fields: Prisma.PaymentRecordFieldRefs
@@ -1500,6 +1725,65 @@ export const DeliveryAttemptScalarFieldEnum = {
 export type DeliveryAttemptScalarFieldEnum = (typeof DeliveryAttemptScalarFieldEnum)[keyof typeof DeliveryAttemptScalarFieldEnum]
 
 
+export const DeliveryQueueEventScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  requestedById: 'requestedById',
+  tier: 'tier',
+  status: 'status',
+  scheduledFor: 'scheduledFor',
+  subject: 'subject',
+  transcript: 'transcript',
+  enqueuedAt: 'enqueuedAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  lastError: 'lastError',
+  attemptCount: 'attemptCount',
+  nextRetryAt: 'nextRetryAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DeliveryQueueEventScalarFieldEnum = (typeof DeliveryQueueEventScalarFieldEnum)[keyof typeof DeliveryQueueEventScalarFieldEnum]
+
+
+export const DeliveryQueueItemScalarFieldEnum = {
+  id: 'id',
+  queueEventId: 'queueEventId',
+  participantId: 'participantId',
+  status: 'status',
+  attemptCount: 'attemptCount',
+  lastError: 'lastError',
+  lastTriedAt: 'lastTriedAt',
+  sentAt: 'sentAt',
+  provider: 'provider',
+  providerMessageId: 'providerMessageId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DeliveryQueueItemScalarFieldEnum = (typeof DeliveryQueueItemScalarFieldEnum)[keyof typeof DeliveryQueueItemScalarFieldEnum]
+
+
+export const SmtpCredentialPoolScalarFieldEnum = {
+  id: 'id',
+  label: 'label',
+  host: 'host',
+  port: 'port',
+  username: 'username',
+  passwordEncrypted: 'passwordEncrypted',
+  secure: 'secure',
+  active: 'active',
+  sendCount: 'sendCount',
+  sendLimit: 'sendLimit',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SmtpCredentialPoolScalarFieldEnum = (typeof SmtpCredentialPoolScalarFieldEnum)[keyof typeof SmtpCredentialPoolScalarFieldEnum]
+
+
 export const PaymentRecordScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1754,6 +2038,48 @@ export type ListEnumDeliveryAttemptStatusFieldRefInput<$PrismaModel> = FieldRefI
 
 
 /**
+ * Reference to a field of type 'DeliveryQueueTier'
+ */
+export type EnumDeliveryQueueTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryQueueTier'>
+    
+
+
+/**
+ * Reference to a field of type 'DeliveryQueueTier[]'
+ */
+export type ListEnumDeliveryQueueTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryQueueTier[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DeliveryQueueEventStatus'
+ */
+export type EnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryQueueEventStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DeliveryQueueEventStatus[]'
+ */
+export type ListEnumDeliveryQueueEventStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryQueueEventStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DeliveryQueueItemStatus'
+ */
+export type EnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryQueueItemStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DeliveryQueueItemStatus[]'
+ */
+export type ListEnumDeliveryQueueItemStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryQueueItemStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'PaymentProvider'
  */
 export type EnumPaymentProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentProvider'>
@@ -1928,6 +2254,9 @@ export type GlobalOmitConfig = {
   certificateIssue?: Prisma.CertificateIssueOmit
   deliveryJob?: Prisma.DeliveryJobOmit
   deliveryAttempt?: Prisma.DeliveryAttemptOmit
+  deliveryQueueEvent?: Prisma.DeliveryQueueEventOmit
+  deliveryQueueItem?: Prisma.DeliveryQueueItemOmit
+  smtpCredentialPool?: Prisma.SmtpCredentialPoolOmit
   paymentRecord?: Prisma.PaymentRecordOmit
   insightSnapshot?: Prisma.InsightSnapshotOmit
 }

@@ -277,6 +277,7 @@ export type EventWhereInput = {
   templateBindings?: Prisma.EventCertificateTemplateListRelationFilter
   awardAssignments?: Prisma.EventAwardAssignmentListRelationFilter
   deliveryJobs?: Prisma.DeliveryJobListRelationFilter
+  queueEvents?: Prisma.DeliveryQueueEventListRelationFilter
   certificateIssues?: Prisma.CertificateIssueListRelationFilter
   insightSnapshot?: Prisma.XOR<Prisma.InsightSnapshotNullableScalarRelationFilter, Prisma.InsightSnapshotWhereInput> | null
 }
@@ -305,6 +306,7 @@ export type EventOrderByWithRelationInput = {
   templateBindings?: Prisma.EventCertificateTemplateOrderByRelationAggregateInput
   awardAssignments?: Prisma.EventAwardAssignmentOrderByRelationAggregateInput
   deliveryJobs?: Prisma.DeliveryJobOrderByRelationAggregateInput
+  queueEvents?: Prisma.DeliveryQueueEventOrderByRelationAggregateInput
   certificateIssues?: Prisma.CertificateIssueOrderByRelationAggregateInput
   insightSnapshot?: Prisma.InsightSnapshotOrderByWithRelationInput
 }
@@ -336,6 +338,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   templateBindings?: Prisma.EventCertificateTemplateListRelationFilter
   awardAssignments?: Prisma.EventAwardAssignmentListRelationFilter
   deliveryJobs?: Prisma.DeliveryJobListRelationFilter
+  queueEvents?: Prisma.DeliveryQueueEventListRelationFilter
   certificateIssues?: Prisma.CertificateIssueListRelationFilter
   insightSnapshot?: Prisma.XOR<Prisma.InsightSnapshotNullableScalarRelationFilter, Prisma.InsightSnapshotWhereInput> | null
 }, "id">
@@ -405,6 +408,7 @@ export type EventCreateInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
@@ -430,6 +434,7 @@ export type EventUncheckedCreateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
@@ -455,6 +460,7 @@ export type EventUpdateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
@@ -480,6 +486,7 @@ export type EventUncheckedUpdateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
@@ -814,6 +821,20 @@ export type EventUpdateOneRequiredWithoutDeliveryJobsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutDeliveryJobsInput, Prisma.EventUpdateWithoutDeliveryJobsInput>, Prisma.EventUncheckedUpdateWithoutDeliveryJobsInput>
 }
 
+export type EventCreateNestedOneWithoutQueueEventsInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutQueueEventsInput, Prisma.EventUncheckedCreateWithoutQueueEventsInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutQueueEventsInput
+  connect?: Prisma.EventWhereUniqueInput
+}
+
+export type EventUpdateOneRequiredWithoutQueueEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutQueueEventsInput, Prisma.EventUncheckedCreateWithoutQueueEventsInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutQueueEventsInput
+  upsert?: Prisma.EventUpsertWithoutQueueEventsInput
+  connect?: Prisma.EventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutQueueEventsInput, Prisma.EventUpdateWithoutQueueEventsInput>, Prisma.EventUncheckedUpdateWithoutQueueEventsInput>
+}
+
 export type EventCreateNestedOneWithoutInsightSnapshotInput = {
   create?: Prisma.XOR<Prisma.EventCreateWithoutInsightSnapshotInput, Prisma.EventUncheckedCreateWithoutInsightSnapshotInput>
   connectOrCreate?: Prisma.EventCreateOrConnectWithoutInsightSnapshotInput
@@ -848,6 +869,7 @@ export type EventCreateWithoutUserInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
@@ -872,6 +894,7 @@ export type EventUncheckedCreateWithoutUserInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
@@ -944,6 +967,7 @@ export type EventCreateWithoutTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
@@ -968,6 +992,7 @@ export type EventUncheckedCreateWithoutTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
@@ -1018,6 +1043,7 @@ export type EventCreateWithoutTemplateBindingsInput = {
   participants?: Prisma.ParticipantCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
@@ -1042,6 +1068,7 @@ export type EventUncheckedCreateWithoutTemplateBindingsInput = {
   participants?: Prisma.ParticipantUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
@@ -1082,6 +1109,7 @@ export type EventUpdateWithoutTemplateBindingsInput = {
   participants?: Prisma.ParticipantUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
@@ -1106,6 +1134,7 @@ export type EventUncheckedUpdateWithoutTemplateBindingsInput = {
   participants?: Prisma.ParticipantUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
@@ -1130,6 +1159,7 @@ export type EventCreateWithoutAwardAssignmentsInput = {
   participants?: Prisma.ParticipantCreateNestedManyWithoutEventInput
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
@@ -1154,6 +1184,7 @@ export type EventUncheckedCreateWithoutAwardAssignmentsInput = {
   participants?: Prisma.ParticipantUncheckedCreateNestedManyWithoutEventInput
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
@@ -1194,6 +1225,7 @@ export type EventUpdateWithoutAwardAssignmentsInput = {
   participants?: Prisma.ParticipantUpdateManyWithoutEventNestedInput
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
@@ -1218,6 +1250,7 @@ export type EventUncheckedUpdateWithoutAwardAssignmentsInput = {
   participants?: Prisma.ParticipantUncheckedUpdateManyWithoutEventNestedInput
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
@@ -1242,6 +1275,7 @@ export type EventCreateWithoutEmailTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
@@ -1266,6 +1300,7 @@ export type EventUncheckedCreateWithoutEmailTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
@@ -1316,6 +1351,7 @@ export type EventCreateWithoutParticipantsInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
@@ -1340,6 +1376,7 @@ export type EventUncheckedCreateWithoutParticipantsInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
@@ -1380,6 +1417,7 @@ export type EventUpdateWithoutParticipantsInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
@@ -1404,6 +1442,7 @@ export type EventUncheckedUpdateWithoutParticipantsInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
@@ -1429,6 +1468,7 @@ export type EventCreateWithoutCertificateIssuesInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
 
@@ -1453,6 +1493,7 @@ export type EventUncheckedCreateWithoutCertificateIssuesInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
 
@@ -1493,6 +1534,7 @@ export type EventUpdateWithoutCertificateIssuesInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
 
@@ -1517,6 +1559,7 @@ export type EventUncheckedUpdateWithoutCertificateIssuesInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
 
@@ -1540,6 +1583,7 @@ export type EventCreateWithoutDeliveryJobsInput = {
   participants?: Prisma.ParticipantCreateNestedManyWithoutEventInput
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
 }
@@ -1564,6 +1608,7 @@ export type EventUncheckedCreateWithoutDeliveryJobsInput = {
   participants?: Prisma.ParticipantUncheckedCreateNestedManyWithoutEventInput
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
 }
@@ -1604,6 +1649,7 @@ export type EventUpdateWithoutDeliveryJobsInput = {
   participants?: Prisma.ParticipantUpdateManyWithoutEventNestedInput
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
@@ -1628,6 +1674,123 @@ export type EventUncheckedUpdateWithoutDeliveryJobsInput = {
   participants?: Prisma.ParticipantUncheckedUpdateManyWithoutEventNestedInput
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
+  insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
+}
+
+export type EventCreateWithoutQueueEventsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  imageUrl?: string | null
+  organizationName?: string | null
+  organizationLogoUrl?: string | null
+  certificateTitle?: string | null
+  location?: string | null
+  emailContentText?: string | null
+  status?: $Enums.EventStatus
+  scheduledSendAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEventsInput
+  template?: Prisma.CertificateTemplateCreateNestedOneWithoutEventsInput
+  emailTemplate?: Prisma.EmailTemplateCreateNestedOneWithoutEventsInput
+  participants?: Prisma.ParticipantCreateNestedManyWithoutEventInput
+  templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
+  awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
+  deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
+  insightSnapshot?: Prisma.InsightSnapshotCreateNestedOneWithoutEventInput
+}
+
+export type EventUncheckedCreateWithoutQueueEventsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  imageUrl?: string | null
+  organizationName?: string | null
+  organizationLogoUrl?: string | null
+  certificateTitle?: string | null
+  location?: string | null
+  emailContentText?: string | null
+  status?: $Enums.EventStatus
+  scheduledSendAt?: Date | string | null
+  emailTemplateId?: string | null
+  userId: string
+  templateId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  participants?: Prisma.ParticipantUncheckedCreateNestedManyWithoutEventInput
+  templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
+  awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
+  deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
+  insightSnapshot?: Prisma.InsightSnapshotUncheckedCreateNestedOneWithoutEventInput
+}
+
+export type EventCreateOrConnectWithoutQueueEventsInput = {
+  where: Prisma.EventWhereUniqueInput
+  create: Prisma.XOR<Prisma.EventCreateWithoutQueueEventsInput, Prisma.EventUncheckedCreateWithoutQueueEventsInput>
+}
+
+export type EventUpsertWithoutQueueEventsInput = {
+  update: Prisma.XOR<Prisma.EventUpdateWithoutQueueEventsInput, Prisma.EventUncheckedUpdateWithoutQueueEventsInput>
+  create: Prisma.XOR<Prisma.EventCreateWithoutQueueEventsInput, Prisma.EventUncheckedCreateWithoutQueueEventsInput>
+  where?: Prisma.EventWhereInput
+}
+
+export type EventUpdateToOneWithWhereWithoutQueueEventsInput = {
+  where?: Prisma.EventWhereInput
+  data: Prisma.XOR<Prisma.EventUpdateWithoutQueueEventsInput, Prisma.EventUncheckedUpdateWithoutQueueEventsInput>
+}
+
+export type EventUpdateWithoutQueueEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEventsNestedInput
+  template?: Prisma.CertificateTemplateUpdateOneWithoutEventsNestedInput
+  emailTemplate?: Prisma.EmailTemplateUpdateOneWithoutEventsNestedInput
+  participants?: Prisma.ParticipantUpdateManyWithoutEventNestedInput
+  templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
+  awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
+  deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
+  insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
+}
+
+export type EventUncheckedUpdateWithoutQueueEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certificateTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailContentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  scheduledSendAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participants?: Prisma.ParticipantUncheckedUpdateManyWithoutEventNestedInput
+  templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
+  awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
+  deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
@@ -1653,6 +1816,7 @@ export type EventCreateWithoutInsightSnapshotInput = {
   templateBindings?: Prisma.EventCertificateTemplateCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueCreateNestedManyWithoutEventInput
 }
 
@@ -1677,6 +1841,7 @@ export type EventUncheckedCreateWithoutInsightSnapshotInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedCreateNestedManyWithoutEventInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedCreateNestedManyWithoutEventInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedCreateNestedManyWithoutEventInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutEventInput
   certificateIssues?: Prisma.CertificateIssueUncheckedCreateNestedManyWithoutEventInput
 }
 
@@ -1717,6 +1882,7 @@ export type EventUpdateWithoutInsightSnapshotInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
 }
 
@@ -1741,6 +1907,7 @@ export type EventUncheckedUpdateWithoutInsightSnapshotInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
 }
 
@@ -1782,6 +1949,7 @@ export type EventUpdateWithoutUserInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
@@ -1806,6 +1974,7 @@ export type EventUncheckedUpdateWithoutUserInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
@@ -1866,6 +2035,7 @@ export type EventUpdateWithoutTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
@@ -1890,6 +2060,7 @@ export type EventUncheckedUpdateWithoutTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
@@ -1950,6 +2121,7 @@ export type EventUpdateWithoutEmailTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUpdateOneWithoutEventNestedInput
 }
@@ -1974,6 +2146,7 @@ export type EventUncheckedUpdateWithoutEmailTemplateInput = {
   templateBindings?: Prisma.EventCertificateTemplateUncheckedUpdateManyWithoutEventNestedInput
   awardAssignments?: Prisma.EventAwardAssignmentUncheckedUpdateManyWithoutEventNestedInput
   deliveryJobs?: Prisma.DeliveryJobUncheckedUpdateManyWithoutEventNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutEventNestedInput
   certificateIssues?: Prisma.CertificateIssueUncheckedUpdateManyWithoutEventNestedInput
   insightSnapshot?: Prisma.InsightSnapshotUncheckedUpdateOneWithoutEventNestedInput
 }
@@ -2006,6 +2179,7 @@ export type EventCountOutputType = {
   templateBindings: number
   awardAssignments: number
   deliveryJobs: number
+  queueEvents: number
   certificateIssues: number
 }
 
@@ -2014,6 +2188,7 @@ export type EventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   templateBindings?: boolean | EventCountOutputTypeCountTemplateBindingsArgs
   awardAssignments?: boolean | EventCountOutputTypeCountAwardAssignmentsArgs
   deliveryJobs?: boolean | EventCountOutputTypeCountDeliveryJobsArgs
+  queueEvents?: boolean | EventCountOutputTypeCountQueueEventsArgs
   certificateIssues?: boolean | EventCountOutputTypeCountCertificateIssuesArgs
 }
 
@@ -2058,6 +2233,13 @@ export type EventCountOutputTypeCountDeliveryJobsArgs<ExtArgs extends runtime.Ty
 /**
  * EventCountOutputType without action
  */
+export type EventCountOutputTypeCountQueueEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeliveryQueueEventWhereInput
+}
+
+/**
+ * EventCountOutputType without action
+ */
 export type EventCountOutputTypeCountCertificateIssuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CertificateIssueWhereInput
 }
@@ -2087,6 +2269,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   templateBindings?: boolean | Prisma.Event$templateBindingsArgs<ExtArgs>
   awardAssignments?: boolean | Prisma.Event$awardAssignmentsArgs<ExtArgs>
   deliveryJobs?: boolean | Prisma.Event$deliveryJobsArgs<ExtArgs>
+  queueEvents?: boolean | Prisma.Event$queueEventsArgs<ExtArgs>
   certificateIssues?: boolean | Prisma.Event$certificateIssuesArgs<ExtArgs>
   insightSnapshot?: boolean | Prisma.Event$insightSnapshotArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
@@ -2164,6 +2347,7 @@ export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   templateBindings?: boolean | Prisma.Event$templateBindingsArgs<ExtArgs>
   awardAssignments?: boolean | Prisma.Event$awardAssignmentsArgs<ExtArgs>
   deliveryJobs?: boolean | Prisma.Event$deliveryJobsArgs<ExtArgs>
+  queueEvents?: boolean | Prisma.Event$queueEventsArgs<ExtArgs>
   certificateIssues?: boolean | Prisma.Event$certificateIssuesArgs<ExtArgs>
   insightSnapshot?: boolean | Prisma.Event$insightSnapshotArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
@@ -2189,6 +2373,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     templateBindings: Prisma.$EventCertificateTemplatePayload<ExtArgs>[]
     awardAssignments: Prisma.$EventAwardAssignmentPayload<ExtArgs>[]
     deliveryJobs: Prisma.$DeliveryJobPayload<ExtArgs>[]
+    queueEvents: Prisma.$DeliveryQueueEventPayload<ExtArgs>[]
     certificateIssues: Prisma.$CertificateIssuePayload<ExtArgs>[]
     insightSnapshot: Prisma.$InsightSnapshotPayload<ExtArgs> | null
   }
@@ -2610,6 +2795,7 @@ export interface Prisma__EventClient<T, Null = never, ExtArgs extends runtime.Ty
   templateBindings<T extends Prisma.Event$templateBindingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$templateBindingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventCertificateTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   awardAssignments<T extends Prisma.Event$awardAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$awardAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventAwardAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deliveryJobs<T extends Prisma.Event$deliveryJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$deliveryJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeliveryJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  queueEvents<T extends Prisma.Event$queueEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$queueEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeliveryQueueEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   certificateIssues<T extends Prisma.Event$certificateIssuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$certificateIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificateIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   insightSnapshot<T extends Prisma.Event$insightSnapshotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$insightSnapshotArgs<ExtArgs>>): Prisma.Prisma__InsightSnapshotClient<runtime.Types.Result.GetResult<Prisma.$InsightSnapshotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -3189,6 +3375,30 @@ export type Event$deliveryJobsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.DeliveryJobScalarFieldEnum | Prisma.DeliveryJobScalarFieldEnum[]
+}
+
+/**
+ * Event.queueEvents
+ */
+export type Event$queueEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeliveryQueueEvent
+   */
+  select?: Prisma.DeliveryQueueEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeliveryQueueEvent
+   */
+  omit?: Prisma.DeliveryQueueEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeliveryQueueEventInclude<ExtArgs> | null
+  where?: Prisma.DeliveryQueueEventWhereInput
+  orderBy?: Prisma.DeliveryQueueEventOrderByWithRelationInput | Prisma.DeliveryQueueEventOrderByWithRelationInput[]
+  cursor?: Prisma.DeliveryQueueEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeliveryQueueEventScalarFieldEnum | Prisma.DeliveryQueueEventScalarFieldEnum[]
 }
 
 /**

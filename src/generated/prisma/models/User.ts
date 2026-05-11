@@ -218,6 +218,8 @@ export type UserWhereInput = {
   templates?: Prisma.CertificateTemplateListRelationFilter
   emailTemplates?: Prisma.EmailTemplateListRelationFilter
   paymentRecords?: Prisma.PaymentRecordListRelationFilter
+  queueEvents?: Prisma.DeliveryQueueEventListRelationFilter
+  smtpCredentials?: Prisma.SmtpCredentialPoolListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -234,6 +236,8 @@ export type UserOrderByWithRelationInput = {
   templates?: Prisma.CertificateTemplateOrderByRelationAggregateInput
   emailTemplates?: Prisma.EmailTemplateOrderByRelationAggregateInput
   paymentRecords?: Prisma.PaymentRecordOrderByRelationAggregateInput
+  queueEvents?: Prisma.DeliveryQueueEventOrderByRelationAggregateInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -253,6 +257,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   templates?: Prisma.CertificateTemplateListRelationFilter
   emailTemplates?: Prisma.EmailTemplateListRelationFilter
   paymentRecords?: Prisma.PaymentRecordListRelationFilter
+  queueEvents?: Prisma.DeliveryQueueEventListRelationFilter
+  smtpCredentials?: Prisma.SmtpCredentialPoolListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -299,6 +305,8 @@ export type UserCreateInput = {
   templates?: Prisma.CertificateTemplateCreateNestedManyWithoutUserInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutUserInput
   paymentRecords?: Prisma.PaymentRecordCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutRequestedByInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -315,6 +323,8 @@ export type UserUncheckedCreateInput = {
   templates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutUserInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutUserInput
   paymentRecords?: Prisma.PaymentRecordUncheckedCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutRequestedByInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUpdateInput = {
@@ -331,6 +341,8 @@ export type UserUpdateInput = {
   templates?: Prisma.CertificateTemplateUpdateManyWithoutUserNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutUserNestedInput
   paymentRecords?: Prisma.PaymentRecordUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutRequestedByNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -347,6 +359,8 @@ export type UserUncheckedUpdateInput = {
   templates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutUserNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutUserNestedInput
   paymentRecords?: Prisma.PaymentRecordUncheckedUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutRequestedByNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -426,6 +440,11 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -488,6 +507,36 @@ export type UserUpdateOneRequiredWithoutEmailTemplatesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEmailTemplatesInput, Prisma.UserUpdateWithoutEmailTemplatesInput>, Prisma.UserUncheckedUpdateWithoutEmailTemplatesInput>
 }
 
+export type UserCreateNestedOneWithoutQueueEventsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQueueEventsInput, Prisma.UserUncheckedCreateWithoutQueueEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQueueEventsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutQueueEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQueueEventsInput, Prisma.UserUncheckedCreateWithoutQueueEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQueueEventsInput
+  upsert?: Prisma.UserUpsertWithoutQueueEventsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQueueEventsInput, Prisma.UserUpdateWithoutQueueEventsInput>, Prisma.UserUncheckedUpdateWithoutQueueEventsInput>
+}
+
+export type UserCreateNestedOneWithoutSmtpCredentialsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSmtpCredentialsInput, Prisma.UserUncheckedCreateWithoutSmtpCredentialsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSmtpCredentialsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSmtpCredentialsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSmtpCredentialsInput, Prisma.UserUncheckedCreateWithoutSmtpCredentialsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSmtpCredentialsInput
+  upsert?: Prisma.UserUpsertWithoutSmtpCredentialsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSmtpCredentialsInput, Prisma.UserUpdateWithoutSmtpCredentialsInput>, Prisma.UserUncheckedUpdateWithoutSmtpCredentialsInput>
+}
+
 export type UserCreateNestedOneWithoutPaymentRecordsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutPaymentRecordsInput, Prisma.UserUncheckedCreateWithoutPaymentRecordsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaymentRecordsInput
@@ -515,6 +564,8 @@ export type UserCreateWithoutEventsInput = {
   templates?: Prisma.CertificateTemplateCreateNestedManyWithoutUserInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutUserInput
   paymentRecords?: Prisma.PaymentRecordCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutRequestedByInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutEventsInput = {
@@ -530,6 +581,8 @@ export type UserUncheckedCreateWithoutEventsInput = {
   templates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutUserInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutUserInput
   paymentRecords?: Prisma.PaymentRecordUncheckedCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutRequestedByInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutEventsInput = {
@@ -561,6 +614,8 @@ export type UserUpdateWithoutEventsInput = {
   templates?: Prisma.CertificateTemplateUpdateManyWithoutUserNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutUserNestedInput
   paymentRecords?: Prisma.PaymentRecordUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutRequestedByNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventsInput = {
@@ -576,6 +631,8 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   templates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutUserNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutUserNestedInput
   paymentRecords?: Prisma.PaymentRecordUncheckedUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutRequestedByNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutTemplatesInput = {
@@ -591,6 +648,8 @@ export type UserCreateWithoutTemplatesInput = {
   events?: Prisma.EventCreateNestedManyWithoutUserInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutUserInput
   paymentRecords?: Prisma.PaymentRecordCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutRequestedByInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutTemplatesInput = {
@@ -606,6 +665,8 @@ export type UserUncheckedCreateWithoutTemplatesInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutUserInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutUserInput
   paymentRecords?: Prisma.PaymentRecordUncheckedCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutRequestedByInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutTemplatesInput = {
@@ -637,6 +698,8 @@ export type UserUpdateWithoutTemplatesInput = {
   events?: Prisma.EventUpdateManyWithoutUserNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutUserNestedInput
   paymentRecords?: Prisma.PaymentRecordUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutRequestedByNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTemplatesInput = {
@@ -652,6 +715,8 @@ export type UserUncheckedUpdateWithoutTemplatesInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutUserNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutUserNestedInput
   paymentRecords?: Prisma.PaymentRecordUncheckedUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutRequestedByNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutEmailTemplatesInput = {
@@ -667,6 +732,8 @@ export type UserCreateWithoutEmailTemplatesInput = {
   events?: Prisma.EventCreateNestedManyWithoutUserInput
   templates?: Prisma.CertificateTemplateCreateNestedManyWithoutUserInput
   paymentRecords?: Prisma.PaymentRecordCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutRequestedByInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutEmailTemplatesInput = {
@@ -682,6 +749,8 @@ export type UserUncheckedCreateWithoutEmailTemplatesInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutUserInput
   templates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutUserInput
   paymentRecords?: Prisma.PaymentRecordUncheckedCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutRequestedByInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutEmailTemplatesInput = {
@@ -713,6 +782,8 @@ export type UserUpdateWithoutEmailTemplatesInput = {
   events?: Prisma.EventUpdateManyWithoutUserNestedInput
   templates?: Prisma.CertificateTemplateUpdateManyWithoutUserNestedInput
   paymentRecords?: Prisma.PaymentRecordUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutRequestedByNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmailTemplatesInput = {
@@ -728,6 +799,176 @@ export type UserUncheckedUpdateWithoutEmailTemplatesInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutUserNestedInput
   templates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutUserNestedInput
   paymentRecords?: Prisma.PaymentRecordUncheckedUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutRequestedByNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutQueueEventsInput = {
+  id: string
+  email: string
+  name: string
+  role?: $Enums.UserRole
+  isPro?: boolean
+  razorpayCustomerId?: string | null
+  groqApiKeyEncrypted?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.EventCreateNestedManyWithoutUserInput
+  templates?: Prisma.CertificateTemplateCreateNestedManyWithoutUserInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutUserInput
+  paymentRecords?: Prisma.PaymentRecordCreateNestedManyWithoutUserInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutQueueEventsInput = {
+  id: string
+  email: string
+  name: string
+  role?: $Enums.UserRole
+  isPro?: boolean
+  razorpayCustomerId?: string | null
+  groqApiKeyEncrypted?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutUserInput
+  templates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutUserInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutUserInput
+  paymentRecords?: Prisma.PaymentRecordUncheckedCreateNestedManyWithoutUserInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutQueueEventsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutQueueEventsInput, Prisma.UserUncheckedCreateWithoutQueueEventsInput>
+}
+
+export type UserUpsertWithoutQueueEventsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutQueueEventsInput, Prisma.UserUncheckedUpdateWithoutQueueEventsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutQueueEventsInput, Prisma.UserUncheckedCreateWithoutQueueEventsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutQueueEventsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutQueueEventsInput, Prisma.UserUncheckedUpdateWithoutQueueEventsInput>
+}
+
+export type UserUpdateWithoutQueueEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.EventUpdateManyWithoutUserNestedInput
+  templates?: Prisma.CertificateTemplateUpdateManyWithoutUserNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutUserNestedInput
+  paymentRecords?: Prisma.PaymentRecordUpdateManyWithoutUserNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutQueueEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.EventUncheckedUpdateManyWithoutUserNestedInput
+  templates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutUserNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutUserNestedInput
+  paymentRecords?: Prisma.PaymentRecordUncheckedUpdateManyWithoutUserNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutSmtpCredentialsInput = {
+  id: string
+  email: string
+  name: string
+  role?: $Enums.UserRole
+  isPro?: boolean
+  razorpayCustomerId?: string | null
+  groqApiKeyEncrypted?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.EventCreateNestedManyWithoutUserInput
+  templates?: Prisma.CertificateTemplateCreateNestedManyWithoutUserInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutUserInput
+  paymentRecords?: Prisma.PaymentRecordCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutRequestedByInput
+}
+
+export type UserUncheckedCreateWithoutSmtpCredentialsInput = {
+  id: string
+  email: string
+  name: string
+  role?: $Enums.UserRole
+  isPro?: boolean
+  razorpayCustomerId?: string | null
+  groqApiKeyEncrypted?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutUserInput
+  templates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutUserInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutUserInput
+  paymentRecords?: Prisma.PaymentRecordUncheckedCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutRequestedByInput
+}
+
+export type UserCreateOrConnectWithoutSmtpCredentialsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSmtpCredentialsInput, Prisma.UserUncheckedCreateWithoutSmtpCredentialsInput>
+}
+
+export type UserUpsertWithoutSmtpCredentialsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSmtpCredentialsInput, Prisma.UserUncheckedUpdateWithoutSmtpCredentialsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSmtpCredentialsInput, Prisma.UserUncheckedCreateWithoutSmtpCredentialsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSmtpCredentialsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSmtpCredentialsInput, Prisma.UserUncheckedUpdateWithoutSmtpCredentialsInput>
+}
+
+export type UserUpdateWithoutSmtpCredentialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.EventUpdateManyWithoutUserNestedInput
+  templates?: Prisma.CertificateTemplateUpdateManyWithoutUserNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutUserNestedInput
+  paymentRecords?: Prisma.PaymentRecordUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutRequestedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSmtpCredentialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groqApiKeyEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.EventUncheckedUpdateManyWithoutUserNestedInput
+  templates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutUserNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutUserNestedInput
+  paymentRecords?: Prisma.PaymentRecordUncheckedUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutRequestedByNestedInput
 }
 
 export type UserCreateWithoutPaymentRecordsInput = {
@@ -743,6 +984,8 @@ export type UserCreateWithoutPaymentRecordsInput = {
   events?: Prisma.EventCreateNestedManyWithoutUserInput
   templates?: Prisma.CertificateTemplateCreateNestedManyWithoutUserInput
   emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventCreateNestedManyWithoutRequestedByInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutPaymentRecordsInput = {
@@ -758,6 +1001,8 @@ export type UserUncheckedCreateWithoutPaymentRecordsInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutUserInput
   templates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutUserInput
   emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutUserInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedCreateNestedManyWithoutRequestedByInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutPaymentRecordsInput = {
@@ -789,6 +1034,8 @@ export type UserUpdateWithoutPaymentRecordsInput = {
   events?: Prisma.EventUpdateManyWithoutUserNestedInput
   templates?: Prisma.CertificateTemplateUpdateManyWithoutUserNestedInput
   emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUpdateManyWithoutRequestedByNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentRecordsInput = {
@@ -804,6 +1051,8 @@ export type UserUncheckedUpdateWithoutPaymentRecordsInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutUserNestedInput
   templates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutUserNestedInput
   emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutUserNestedInput
+  queueEvents?: Prisma.DeliveryQueueEventUncheckedUpdateManyWithoutRequestedByNestedInput
+  smtpCredentials?: Prisma.SmtpCredentialPoolUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 
@@ -816,6 +1065,8 @@ export type UserCountOutputType = {
   templates: number
   emailTemplates: number
   paymentRecords: number
+  queueEvents: number
+  smtpCredentials: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -823,6 +1074,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   templates?: boolean | UserCountOutputTypeCountTemplatesArgs
   emailTemplates?: boolean | UserCountOutputTypeCountEmailTemplatesArgs
   paymentRecords?: boolean | UserCountOutputTypeCountPaymentRecordsArgs
+  queueEvents?: boolean | UserCountOutputTypeCountQueueEventsArgs
+  smtpCredentials?: boolean | UserCountOutputTypeCountSmtpCredentialsArgs
 }
 
 /**
@@ -863,6 +1116,20 @@ export type UserCountOutputTypeCountPaymentRecordsArgs<ExtArgs extends runtime.T
   where?: Prisma.PaymentRecordWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountQueueEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeliveryQueueEventWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSmtpCredentialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SmtpCredentialPoolWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -878,6 +1145,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   templates?: boolean | Prisma.User$templatesArgs<ExtArgs>
   emailTemplates?: boolean | Prisma.User$emailTemplatesArgs<ExtArgs>
   paymentRecords?: boolean | Prisma.User$paymentRecordsArgs<ExtArgs>
+  queueEvents?: boolean | Prisma.User$queueEventsArgs<ExtArgs>
+  smtpCredentials?: boolean | Prisma.User$smtpCredentialsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -923,6 +1192,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   templates?: boolean | Prisma.User$templatesArgs<ExtArgs>
   emailTemplates?: boolean | Prisma.User$emailTemplatesArgs<ExtArgs>
   paymentRecords?: boolean | Prisma.User$paymentRecordsArgs<ExtArgs>
+  queueEvents?: boolean | Prisma.User$queueEventsArgs<ExtArgs>
+  smtpCredentials?: boolean | Prisma.User$smtpCredentialsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -935,6 +1206,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     templates: Prisma.$CertificateTemplatePayload<ExtArgs>[]
     emailTemplates: Prisma.$EmailTemplatePayload<ExtArgs>[]
     paymentRecords: Prisma.$PaymentRecordPayload<ExtArgs>[]
+    queueEvents: Prisma.$DeliveryQueueEventPayload<ExtArgs>[]
+    smtpCredentials: Prisma.$SmtpCredentialPoolPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1344,6 +1617,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   templates<T extends Prisma.User$templatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$templatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificateTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   emailTemplates<T extends Prisma.User$emailTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$emailTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   paymentRecords<T extends Prisma.User$paymentRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  queueEvents<T extends Prisma.User$queueEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$queueEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeliveryQueueEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  smtpCredentials<T extends Prisma.User$smtpCredentialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$smtpCredentialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SmtpCredentialPoolPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1868,6 +2143,54 @@ export type User$paymentRecordsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.PaymentRecordScalarFieldEnum | Prisma.PaymentRecordScalarFieldEnum[]
+}
+
+/**
+ * User.queueEvents
+ */
+export type User$queueEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeliveryQueueEvent
+   */
+  select?: Prisma.DeliveryQueueEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeliveryQueueEvent
+   */
+  omit?: Prisma.DeliveryQueueEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeliveryQueueEventInclude<ExtArgs> | null
+  where?: Prisma.DeliveryQueueEventWhereInput
+  orderBy?: Prisma.DeliveryQueueEventOrderByWithRelationInput | Prisma.DeliveryQueueEventOrderByWithRelationInput[]
+  cursor?: Prisma.DeliveryQueueEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeliveryQueueEventScalarFieldEnum | Prisma.DeliveryQueueEventScalarFieldEnum[]
+}
+
+/**
+ * User.smtpCredentials
+ */
+export type User$smtpCredentialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SmtpCredentialPool
+   */
+  select?: Prisma.SmtpCredentialPoolSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SmtpCredentialPool
+   */
+  omit?: Prisma.SmtpCredentialPoolOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SmtpCredentialPoolInclude<ExtArgs> | null
+  where?: Prisma.SmtpCredentialPoolWhereInput
+  orderBy?: Prisma.SmtpCredentialPoolOrderByWithRelationInput | Prisma.SmtpCredentialPoolOrderByWithRelationInput[]
+  cursor?: Prisma.SmtpCredentialPoolWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SmtpCredentialPoolScalarFieldEnum | Prisma.SmtpCredentialPoolScalarFieldEnum[]
 }
 
 /**
