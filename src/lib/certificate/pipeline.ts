@@ -3,6 +3,11 @@ import { prisma } from "@/lib/db";
 import { toLegacyTemplateConfig } from "@/lib/certificate/editor-config";
 import { resolveTemplateUrlByRole } from "@/lib/certificate/render-input";
 import { generateCertificateHash, generateVerificationCode } from "@/lib/verification";
+import {
+  buildQrImageUrl,
+  buildVerifyUrl,
+  encodeForCloudinaryFetch,
+} from "@/lib/verification/qr";
 import { v2 as cloudinary } from "cloudinary";
 import { extractPublicId } from "cloudinary-build-url";
 
@@ -22,6 +27,8 @@ type BuildCertificateInput = {
 
 type BuiltCertificate = {
   certificateUrl: string;
+  verifyUrl: string;
+  qrCodeUrl: string;
   verificationCode: string;
   certificateHash: string;
   participant: {
@@ -122,6 +129,9 @@ export async function buildParticipantCertificate(
     issueDate: new Date().toISOString(),
     verificationCode,
   });
+  const verifyUrl = buildVerifyUrl(verificationCode);
+  const qrCodeUrl = buildQrImageUrl(verificationCode);
+  const encodedQrFetch = encodeForCloudinaryFetch(qrCodeUrl);
 
   const certificateUrl = cloudinary.url(publicId, {
     transformation: [
@@ -148,6 +158,15 @@ export async function buildParticipantCertificate(
         },
         color: "#666666",
         gravity: "south_east",
+        x: 150,
+        y: 20,
+      },
+      {
+        overlay: `fetch:${encodedQrFetch}`,
+        width: 120,
+        height: 120,
+        crop: "fit",
+        gravity: "south_east",
         x: 20,
         y: 20,
       },
@@ -156,8 +175,19 @@ export async function buildParticipantCertificate(
     quality: "auto:best",
   });
 
+  await prisma.participant.update({
+    where: { id: participant.id },
+    data: {
+      verificationCode,
+      certificateHash,
+      qrCodeUrl,
+    },
+  });
+
   return {
     certificateUrl,
+    verifyUrl,
+    qrCodeUrl,
     verificationCode,
     certificateHash,
     participant: {

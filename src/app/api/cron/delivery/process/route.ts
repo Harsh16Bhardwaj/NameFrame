@@ -17,15 +17,20 @@ export async function POST(req: Request) {
     const body = await req.json().catch(() => ({}));
     const limitEvents =
       typeof body?.limitEvents === "number" && body.limitEvents > 0 ? body.limitEvents : 1;
+    const participantsPerChunk =
+      typeof body?.participantsPerChunk === "number" && body.participantsPerChunk > 0
+        ? Math.min(body.participantsPerChunk, 20)
+        : 5;
 
     const result = await processQueueTick({
       maxEventsPerTick: Math.min(limitEvents, 5),
-      participantsPerChunk: 5,
+      participantsPerChunk,
     });
 
     return NextResponse.json({
       success: true,
       processedEvents: result.processedEvents,
+      participantsPerChunk,
       processedAt: new Date().toISOString(),
     });
   } catch (error) {

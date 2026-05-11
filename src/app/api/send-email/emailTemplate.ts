@@ -14,6 +14,10 @@ export function generateCertificateEmail({
   verificationCode?: string;
 }) {
   const preheader = `Congratulations ${participantName}! Your certificate for "${eventTitle}" is here.`;
+  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://nameframe.site").replace(/\/+$/, "");
+  const verifyUrl = verificationCode
+    ? `${baseUrl}/verify/${encodeURIComponent(verificationCode)}`
+    : `${baseUrl}/verify`;
 
   return `
   <!DOCTYPE html>
@@ -110,8 +114,8 @@ export function generateCertificateEmail({
               </div>
               <p style="margin-top: 15px; font-size: 14px; color: #666;">
                 Anyone can verify this certificate at: 
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://nameframe.site'}/verify" style="color: #004080;">
-                  ${process.env.NEXT_PUBLIC_APP_URL || 'https://nameframe.site'}/verify
+                <a href="${verifyUrl}" style="color: #004080;">
+                  ${verifyUrl}
                 </a>
               </p>
             </div>

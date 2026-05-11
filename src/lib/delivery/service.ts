@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { buildParticipantCertificate } from "@/lib/certificate/pipeline";
 import { generateCertificateEmail } from "@/app/api/send-email/emailTemplate";
 import { sendWithProviderFallback } from "@/lib/delivery/providers";
+import { mapFailureCode } from "@/lib/delivery/error-codes";
 import {
   DeliveryJobStatus,
   DeliveryMode,
@@ -202,6 +203,7 @@ export async function sendSingleParticipant(input: {
           status: DeliveryAttemptStatus.FAILED,
           attemptNo: attempt,
           errorMessage: lastError,
+          providerMessageId: mapFailureCode(lastError),
         },
       });
     }
@@ -245,13 +247,18 @@ async function pickNextQueueEvents(limit: number) {
 }
 
 async function processQueueEvent(queueEventId: string, chunkSize: number) {
-  const queueEvent = await prisma.deliveryQueueEvent.update({
-    where: { id: queueEventId },
+  const lock = await prisma.deliveryQueueEvent.updateMany({
+    where: { id: queueEventId, status: DeliveryQueueEventStatus.PENDING },
     data: {
       status: DeliveryQueueEventStatus.RUNNING,
       startedAt: now(),
       attemptCount: { increment: 1 },
     },
+  });
+  if (lock.count === 0) return;
+
+  const queueEvent = await prisma.deliveryQueueEvent.findUnique({
+    where: { id: queueEventId },
     include: {
       event: { select: { id: true, title: true, userId: true } },
       items: {
@@ -264,6 +271,7 @@ async function processQueueEvent(queueEventId: string, chunkSize: number) {
       },
     },
   });
+  if (!queueEvent) return;
 
   const payload = await getQueuedEmailPayload(queueEventId);
   const participantItems = queueEvent.items;
@@ -309,7 +317,9 @@ async function processQueueEvent(queueEventId: string, chunkSize: number) {
           data: {
             status: sendResult.ok ? DeliveryQueueItemStatus.SENT : DeliveryQueueItemStatus.PENDING,
             attemptCount: { increment: 1 },
-            lastError: sendResult.ok ? null : sendResult.errorMessage || "Send failed",
+            lastError: sendResult.ok
+              ? null
+              : `${sendResult.failureCode || "UNKNOWN"}:${sendResult.errorMessage || "Send failed"}`,
             lastTriedAt: now(),
             sentAt: sendResult.ok ? now() : null,
             provider: sendResult.provider,
@@ -332,7 +342,7 @@ async function processQueueEvent(queueEventId: string, chunkSize: number) {
           data: {
             status: DeliveryQueueItemStatus.PENDING,
             attemptCount: { increment: 1 },
-            lastError: message,
+            lastError: `${mapFailureCode(message)}:${message}`,
             lastTriedAt: now(),
           },
         });
@@ -384,7 +394,9 @@ async function processQueueEvent(queueEventId: string, chunkSize: number) {
           data: {
             status: sendResult.ok ? DeliveryQueueItemStatus.SENT : DeliveryQueueItemStatus.PENDING,
             attemptCount: { increment: 1 },
-            lastError: sendResult.ok ? null : sendResult.errorMessage || "Send failed",
+            lastError: sendResult.ok
+              ? null
+              : `${sendResult.failureCode || "UNKNOWN"}:${sendResult.errorMessage || "Send failed"}`,
             lastTriedAt: now(),
             sentAt: sendResult.ok ? now() : null,
             provider: sendResult.provider,
@@ -450,7 +462,9 @@ async function processQueueEvent(queueEventId: string, chunkSize: number) {
         data: {
           status: sendResult.ok ? DeliveryQueueItemStatus.SENT : DeliveryQueueItemStatus.FAILED,
           attemptCount: { increment: 1 },
-          lastError: sendResult.ok ? null : sendResult.errorMessage || "Send failed",
+          lastError: sendResult.ok
+            ? null
+            : `${sendResult.failureCode || "UNKNOWN"}:${sendResult.errorMessage || "Send failed"}`,
           lastTriedAt: now(),
           sentAt: sendResult.ok ? now() : null,
           provider: sendResult.provider,
@@ -469,7 +483,7 @@ async function processQueueEvent(queueEventId: string, chunkSize: number) {
         data: {
           status: DeliveryQueueItemStatus.FAILED,
           attemptCount: { increment: 1 },
-          lastError: error instanceof Error ? error.message : "Final sweep failed",
+          lastError: `${mapFailureCode(error instanceof Error ? error.message : "Final sweep failed")}:${error instanceof Error ? error.message : "Final sweep failed"}`,
           lastTriedAt: now(),
         },
       });

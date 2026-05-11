@@ -1,20 +1,14 @@
-// app/api/verify/[code]/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { buildVerifyUrl } from "@/lib/verification/qr";
 
-
-// GET /api/verify/[code] - Public endpoint to verify certificates
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ code: string }> }
-) {
+export async function POST(req: Request) {
   try {
-    const { code } = await params;
-
+    const body = (await req.json()) as { code?: string };
+    const code = body.code?.trim();
     if (!code) {
       return NextResponse.json(
-        { success: false, error: "Verification code is required" },
+        { success: false, verified: false, error: "Verification code is required" },
         { status: 400 }
       );
     }
@@ -23,17 +17,7 @@ export async function GET(
       where: { verificationCode: code },
       include: {
         participant: true,
-        event: {
-          include: {
-            user: {
-              select: {
-                name: true,
-                email: true,
-              },
-            },
-          },
-        },
-        template: true,
+        event: { include: { user: { select: { name: true, email: true } } } },
       },
     });
 
@@ -47,15 +31,11 @@ export async function GET(
           eventTitle: issue.event.title,
           issueDate: issue.createdAt,
           createdAt: issue.createdAt,
-          role: issue.role,
-          issuer: {
-            name: issue.event.user.name,
-            email: issue.event.user.email,
-          },
+          issuer: issue.event.user,
           verificationCode: issue.verificationCode,
           certificateUrl: issue.certificateUrl,
           qrCodeUrl: issue.qrCodeUrl,
-          verifyUrl: issue.verificationCode ? buildVerifyUrl(issue.verificationCode) : null,
+          verifyUrl: buildVerifyUrl(issue.verificationCode),
         },
       });
     }
@@ -65,12 +45,7 @@ export async function GET(
       include: {
         event: {
           include: {
-            user: {
-              select: {
-                name: true,
-                email: true,
-              },
-            },
+            user: { select: { name: true, email: true } },
           },
         },
       },
@@ -78,16 +53,12 @@ export async function GET(
 
     if (!participant) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: "Certificate not found or invalid verification code",
-          verified: false 
-        },
+        { success: false, verified: false, error: "Certificate not found or invalid verification code" },
         { status: 404 }
       );
     }
 
-    const verificationData = {
+    return NextResponse.json({
       success: true,
       verified: true,
       certificate: {
@@ -96,22 +67,16 @@ export async function GET(
         eventTitle: participant.event.title,
         issueDate: participant.createdAt,
         createdAt: participant.createdAt,
-        issuer: {
-          name: participant.event.user.name,
-          email: participant.event.user.email,
-        },
+        issuer: participant.event.user,
         verificationCode: participant.verificationCode,
         certificateUrl: participant.certificateUrl,
         qrCodeUrl: participant.qrCodeUrl,
         verifyUrl: participant.verificationCode ? buildVerifyUrl(participant.verificationCode) : null,
       },
-    };
-
-    return NextResponse.json(verificationData);
+    });
   } catch (error) {
-    console.error("Error verifying certificate:", error);
     return NextResponse.json(
-      { success: false, error: "Internal Server Error", verified: false },
+      { success: false, verified: false, error: error instanceof Error ? error.message : "Internal Server Error" },
       { status: 500 }
     );
   }

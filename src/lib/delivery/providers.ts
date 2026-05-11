@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 import { prisma } from "@/lib/db";
 import { decryptText } from "@/lib/security/crypto";
 import { EmailProvider } from "@/generated/prisma/enums";
+import { DeliveryFailureCode, mapFailureCode } from "@/lib/delivery/error-codes";
 
 export type SendEmailInput = {
   to: string;
@@ -16,6 +17,7 @@ export type SendEmailResult = {
   provider: EmailProvider;
   providerMessageId?: string;
   errorMessage?: string;
+  failureCode?: DeliveryFailureCode;
 };
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -38,6 +40,7 @@ export async function sendWithResend(input: SendEmailInput): Promise<SendEmailRe
         ok: false,
         provider: EmailProvider.RESEND,
         errorMessage: result.error.message || "Resend send failed",
+        failureCode: mapFailureCode(result.error.message || "Resend send failed"),
       };
     }
 
@@ -51,6 +54,7 @@ export async function sendWithResend(input: SendEmailInput): Promise<SendEmailRe
       ok: false,
       provider: EmailProvider.RESEND,
       errorMessage: error instanceof Error ? error.message : "Resend send exception",
+      failureCode: mapFailureCode(error instanceof Error ? error.message : "Resend send exception"),
     };
   }
 }
@@ -75,6 +79,7 @@ export async function sendWithNodemailerPool(input: SendEmailInput): Promise<Sen
       ok: false,
       provider: EmailProvider.NODEMAILER,
       errorMessage: "No active SMTP credential available",
+      failureCode: "SMTP_POOL_EXHAUSTED",
     };
   }
 
@@ -119,6 +124,7 @@ export async function sendWithNodemailerPool(input: SendEmailInput): Promise<Sen
       ok: false,
       provider: EmailProvider.NODEMAILER,
       errorMessage: error instanceof Error ? error.message : "Nodemailer send failed",
+      failureCode: mapFailureCode(error instanceof Error ? error.message : "Nodemailer send failed"),
     };
   }
 }

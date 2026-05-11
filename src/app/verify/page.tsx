@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, CheckCircle, XCircle, Calendar, User, Mail, Award, ExternalLink } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface VerificationResult {
   verified: boolean;
@@ -27,16 +27,16 @@ export default function VerifyPage() {
   const [result, setResult] = useState<VerificationResult | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleVerify = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!verificationCode.trim()) return;
+  const verifyCode = useCallback(async (code: string) => {
+    if (!code.trim()) return;
 
     setLoading(true);
     setResult(null);
 
     try {
-      const response = await fetch(`/api/verify/${verificationCode.trim()}`);
+      const response = await fetch(`/api/verify/${code.trim()}`);
       const data = await response.json();
       setResult(data);
     } catch (error) {
@@ -48,7 +48,26 @@ export default function VerifyPage() {
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await verifyCode(verificationCode);
   };
+
+  useEffect(() => {
+    const code = searchParams.get("code");
+    if (!code || verificationCode) return;
+    setVerificationCode(code);
+  }, [searchParams, verificationCode]);
+
+  useEffect(() => {
+    const code = searchParams.get("code");
+    if (!code || loading) return;
+    if (verificationCode.trim() && !result) {
+      verifyCode(verificationCode);
+    }
+  }, [verificationCode, loading, result, searchParams, verifyCode]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#080711] to-[#0e1015] text-[#c5c3c4]">
