@@ -169,6 +169,31 @@
   /* --- Call to Action Color (New) --- */
   --cta: #4eb3a3;  /* A bright, energetic aqua */
 
+  /* Landing - Minimal Premium */
+  --landing-bg-0: #0b0d12;
+  --landing-bg-1: #11151d;
+  --landing-bg-2: #171d28;
+  --landing-surface: #121824cc;
+  --landing-surface-border: #263043;
+  --landing-text: #eef3fb;
+  --landing-text-muted: #b4bfd2;
+  --landing-accent: #5fb5a7;
+  --landing-accent-hover: #72c6b8;
+  --landing-radius: 12px;
+
+  /* Dashboard - Operational Contrast */
+  --ops-bg: #141921;
+  --ops-surface: #1b2430;
+  --ops-surface-2: #222d3b;
+  --ops-border: #2f4056;
+  --ops-text: #e7edf7;
+  --ops-text-muted: #9fb0c9;
+
+  /* Motion */
+  --motion-fast: 180ms;
+  --motion-base: 320ms;
+  --motion-slow: 520ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
   
 }
 
@@ -272,6 +297,27 @@
   --text-secondary: #93a7a9; /* --space-text */
   --accent-color: #00ADB5; /* --tealy */
   --border-color: #4A5859; /* --space */
+}
+
+.landing-root {
+  background:
+    radial-gradient(1200px 700px at 80% -10%, rgba(95, 181, 167, 0.18), transparent 45%),
+    linear-gradient(180deg, var(--landing-bg-0), var(--landing-bg-1) 48%, var(--landing-bg-2));
+}
+
+.landing-hero {
+  background:
+    radial-gradient(800px 500px at 12% 10%, rgba(114, 198, 184, 0.12), transparent 45%),
+    linear-gradient(180deg, var(--landing-bg-0), var(--landing-bg-1));
+}
+
+.landing-band {
+  border-top: 1px solid color-mix(in srgb, var(--landing-surface-border) 50%, transparent);
+}
+
+.ops-skin {
+  background: var(--ops-bg);
+  color: var(--ops-text);
 }
 
 @layer base {

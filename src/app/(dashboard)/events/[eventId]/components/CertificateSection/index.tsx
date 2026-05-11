@@ -55,7 +55,6 @@ export default function CertificateSection({
         onPositionChange={onPositionChange}
         onFontChange={onFontChange}
         onSavePositions={onSavePositions}
-        dummyName={dummyName}
       />
     </div>
   );

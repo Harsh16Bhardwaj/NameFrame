@@ -37,7 +37,7 @@ export default function TemplateResourceCarousel() {
         <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-300">Canva starters</h3>
         <span className="text-xs text-slate-500">opens editor resources</span>
       </div>
-      <div className="flex w-max animate-[template-marquee_28s_linear_infinite] gap-4">
+      <div className="flex w-96 animate-[template-marquee_28s_linear_infinite] gap-4">
         {items.map((template, index) => (
           <a
             key={`${template.title}-${index}`}

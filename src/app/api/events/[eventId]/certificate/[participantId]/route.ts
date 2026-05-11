@@ -22,27 +22,28 @@ export async function GET(
     const { eventId, participantId } = await params;
     const asAttachment = new URL(request.url).searchParams.get("download") === "1";
     const built = await buildParticipantCertificate({ userId, eventId, participantId });
-    const imageResponse = await fetch(built.certificateUrl);
-
-    if (!imageResponse.ok) {
-      return NextResponse.json(
-        { success: false, error: "Failed to generate certificate image" },
-        { status: 502 }
-      );
+    const fileName = `${built.participant.name.replace(/\s+/g, "_")}_certificate.png`;
+    if (!asAttachment) {
+      return NextResponse.redirect(built.certificateUrl, { status: 307 });
     }
 
-    const bytes = await imageResponse.arrayBuffer();
-    const fileName = `${built.participant.name.replace(/\s+/g, "_")}_certificate.png`;
+    try {
+      const imageResponse = await fetch(built.certificateUrl);
+      if (!imageResponse.ok) {
+        return NextResponse.redirect(built.certificateUrl, { status: 307 });
+      }
 
-    return new NextResponse(bytes, {
-      headers: {
-        "Content-Type": "image/png",
-        "Cache-Control": "no-store",
-        "Content-Disposition": asAttachment
-          ? `attachment; filename="${fileName}"`
-          : `inline; filename="${fileName}"`,
-      },
-    });
+      const bytes = await imageResponse.arrayBuffer();
+      return new NextResponse(bytes, {
+        headers: {
+          "Content-Type": "image/png",
+          "Cache-Control": "no-store",
+          "Content-Disposition": `attachment; filename="${fileName}"`,
+        },
+      });
+    } catch {
+      return NextResponse.redirect(built.certificateUrl, { status: 307 });
+    }
   } catch (error) {
     return NextResponse.json(
       {

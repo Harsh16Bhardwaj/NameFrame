@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, Award, Mail, Sparkles, TrendingUp } from "lucide-react";

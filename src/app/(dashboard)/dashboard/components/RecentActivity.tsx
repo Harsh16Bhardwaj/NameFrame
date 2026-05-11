@@ -79,34 +79,38 @@ const RecentActivity: React.FC<RecentActivityProps> = ({ events }) => {
   };
 
   return (
-    <div className="space-y-4 max-h-[270px] overflow-y-auto pr-1 scrollbar-thin">
+    <div className="space-y-2 max-h-64 overflow-y-auto">
       {sortedActivities.length === 0 ? (
-        <div className="text-center py-8 text-[var(--bluey-text)]">
-          <p>No recent activity</p>
+        <div className="text-center py-8 text-zinc-500">
+          <p className="text-sm">No recent activity yet</p>
         </div>
       ) : (
         sortedActivities.map((activity, index) => (
           <motion.div
             key={activity.id}
-            className="flex gap-3 py-2 border border-[var(--bluey-text)] rounded-xl"
+            className="flex gap-3 p-3 border border-white/5 rounded-lg bg-black/20 hover:bg-black/30 transition-all"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 * index }}
+            transition={{ delay: 0.05 * index }}
           >
-            <div className={`mt-1 p-2 rounded-full flex-shrink-0 ${activity.color}`}>
+            <div className={`p-2 rounded-lg flex-shrink-0 ${
+              activity.color.includes('green') ? 'bg-teal-500/10 text-teal-400' :
+              activity.color.includes('blue') ? 'bg-cyan-500/10 text-cyan-400' :
+              'bg-amber-500/10 text-amber-400'
+            }`}>
               {activity.icon}
             </div>
             
             <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between">
-                <p className="font-medium text-[var(--text-primary)] truncate">
+              <div className="flex items-start justify-between gap-2">
+                <p className="font-medium text-zinc-100 text-xs truncate">
                   {activity.title}
                 </p>
-                <span className="text-xs text-[var(--text-secondary)] whitespace-nowrap ">
+                <span className="text-xs text-zinc-500 whitespace-nowrap flex-shrink-0">
                   {getRelativeTime(activity.date)}
                 </span>
               </div>
-              <p className="text-sm text-[var(--text-secondary)]">
+              <p className="text-xs text-zinc-400 mt-0.5">
                 {activity.detail}
               </p>
             </div>

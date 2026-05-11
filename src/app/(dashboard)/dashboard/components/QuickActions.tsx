@@ -6,33 +6,33 @@ import { IoCalendarOutline, IoPeopleOutline, IoDocumentOutline, IoMailOutline } 
 const QuickActions: React.FC = () => {
   const actions = [
     {
-      title: "New Event",
-      icon: <IoCalendarOutline className="w-6 h-6" />,
+      title: "Create Event",
+      icon: <IoCalendarOutline className="w-5 h-5" />,
       href: "/create",
-      color: "#b7a2c9",
+      description: "Start a new event",
     },
     {
       title: "Templates",
-      icon: <IoDocumentOutline className="w-6 h-6" />,
+      icon: <IoDocumentOutline className="w-5 h-5" />,
       href: "/templates",
-      color: "#b7a2c9",
+      description: "Manage templates",
     },
     {
-      title: "Add Participants",
-      icon: <IoPeopleOutline className="w-6 h-6" />,
+      title: "Participants",
+      icon: <IoPeopleOutline className="w-5 h-5" />,
       href: "/participants",
-      color: "#b7a2c9",
+      description: "View all participants",
     },
     {
       title: "Send Emails",
-      icon: <IoMailOutline className="w-6 h-6" />,
+      icon: <IoMailOutline className="w-5 h-5" />,
       href: "/events",
-      color: "#b7a2c9",
+      description: "Email participants",
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {actions.map((action, index) => (
         <Link 
           key={action.title} 
@@ -40,19 +40,23 @@ const QuickActions: React.FC = () => {
           className="group"
         >
           <motion.div
-            className="bg-[var(--dark-onyx-text)] hover:bg-[var(--bluey-text)] border border-[var(--bluey-text)] rounded-xl p-4 transition-all duration-300 h-full flex flex-col items-center justify-center text-center gap-2"
+            className="bg-zinc-900/40 hover:bg-zinc-900/60 border border-white/5 hover:border-teal-500/20 rounded-xl p-4 transition-all duration-300 flex flex-col items-start justify-start gap-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 * index }}
+            transition={{ delay: 0.05 * index }}
+            whileHover={{ translateY: -2 }}
           >
-            <div 
-              className="p-3 rounded-full bg-[rgba(183,162,201,0.2)] text-[var(--tealy-heading)] transition-transform group-hover:scale-110"
-            >
+            <div className="p-2 rounded-lg bg-teal-500/10 text-teal-300 group-hover:bg-teal-500/20 transition">
               {action.icon}
             </div>
-            <span className="text-sm font-medium text-[var(--text-primary)]">
-              {action.title}
-            </span>
+            <div>
+              <span className="text-xs font-semibold text-zinc-100 block">
+                {action.title}
+              </span>
+              <span className="text-xs text-zinc-500">
+                {action.description}
+              </span>
+            </div>
           </motion.div>
         </Link>
       ))}

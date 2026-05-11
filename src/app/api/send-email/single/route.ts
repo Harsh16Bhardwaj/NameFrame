@@ -3,6 +3,7 @@ import { requireCurrentUser } from "@/lib/auth/user";
 import { sendSingleParticipant } from "@/lib/delivery/service";
 
 export async function POST(req: Request) {
+  const startedAt = Date.now();
   try {
     const user = await requireCurrentUser();
     const { participantId, eventId, subject, transcript } = await req.json();
@@ -20,6 +21,13 @@ export async function POST(req: Request) {
       requestedById: user.id,
       subject,
       transcript,
+    });
+    console.log("[send-email/single] completed", {
+      eventId,
+      participantId,
+      success: result.success,
+      durationMs: Date.now() - startedAt,
+      error: result.success ? null : result.error,
     });
 
     if (!result.success) {
@@ -39,6 +47,11 @@ export async function POST(req: Request) {
       message: "Email sent successfully",
     });
   } catch (error) {
+    console.error("[send-email/single] failed", {
+      durationMs: Date.now() - startedAt,
+      error: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return NextResponse.json(
       {
         success: false,

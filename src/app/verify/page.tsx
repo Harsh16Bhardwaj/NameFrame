@@ -1,8 +1,8 @@
 "use client";
-import React, { useCallback, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Search, CheckCircle, XCircle, Calendar, User, Mail, Award, ExternalLink } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useCallback, useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Search, CheckCircle2, XCircle, Calendar, User, Mail, Award, ExternalLink, ShieldCheck } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface VerificationResult {
   verified: boolean;
@@ -23,7 +23,7 @@ interface VerificationResult {
 }
 
 export default function VerifyPage() {
-  const [verificationCode, setVerificationCode] = useState('');
+  const [verificationCode, setVerificationCode] = useState("");
   const [result, setResult] = useState<VerificationResult | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -31,19 +31,16 @@ export default function VerifyPage() {
 
   const verifyCode = useCallback(async (code: string) => {
     if (!code.trim()) return;
-
     setLoading(true);
     setResult(null);
-
     try {
       const response = await fetch(`/api/verify/${code.trim()}`);
       const data = await response.json();
       setResult(data);
-    } catch (error) {
-      console.error('Verification error:', error);
+    } catch {
       setResult({
         verified: false,
-        error: 'Failed to verify certificate. Please try again.',
+        error: "Failed to verify certificate. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -64,238 +61,124 @@ export default function VerifyPage() {
   useEffect(() => {
     const code = searchParams.get("code");
     if (!code || loading) return;
-    if (verificationCode.trim() && !result) {
-      verifyCode(verificationCode);
-    }
+    if (verificationCode.trim() && !result) verifyCode(verificationCode);
   }, [verificationCode, loading, result, searchParams, verifyCode]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#080711] to-[#0e1015] text-[#c5c3c4]">
-      <div className="container mx-auto max-w-4xl px-4 py-16">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-5xl font-bold text-white mb-4">
-            Certificate Verification
-          </h1>
-          <p className="text-xl text-[#b7a2c9] mb-2">
-            Verify the authenticity of certificates issued by NameFrame
-          </p>
-          <p className="text-[#c5c3c4]/70">
-            Enter the verification code found on your certificate to confirm its authenticity
+    <div className="min-h-screen bg-zinc-950 text-zinc-200">
+      <div className="container mx-auto max-w-5xl px-4 py-16">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10 text-center">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-teal-300">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            NameFrame Verify
+          </div>
+          <h1 className="mb-3 text-4xl font-bold text-white">Certificate Verification</h1>
+          <p className="mx-auto max-w-2xl text-zinc-400">
+            Enter certificate verification code. We validate against issuer data and event records.
           </p>
         </motion.div>
 
-        {/* Verification Form */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-[#322f42]/30 backdrop-blur-md rounded-2xl p-8 mb-8 border border-[#4b3a70]/30"
+          transition={{ delay: 0.05 }}
+          className="mb-8 rounded-2xl border border-zinc-800 bg-zinc-900 p-6"
         >
-          <form onSubmit={handleVerify} className="space-y-6">
-            <div>
-              <label className="block text-lg font-medium text-[#c5c3c4] mb-3">
-                Verification Code
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={verificationCode}
-                  onChange={(e) => setVerificationCode(e.target.value)}
-                  placeholder="Enter verification code (e.g., VF-ABC123)"
-                  className="w-full px-4 py-3 pl-12 bg-[#272936] border border-[#4b3a70]/50 rounded-lg text-white placeholder-[#c5c3c4]/50 focus:border-[#b7a2c9] focus:outline-none focus:ring-2 focus:ring-[#b7a2c9]/20"
-                  disabled={loading}
-                />
-                <Search size={20} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#c5c3c4]/50" />
-              </div>
+          <form onSubmit={handleVerify} className="space-y-4">
+            <label className="block text-sm font-medium text-zinc-300">Verification Code</label>
+            <div className="relative">
+              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+              <input
+                type="text"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                placeholder="Enter code (e.g. VF-ABC123)"
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 py-3 pl-10 pr-4 text-white placeholder:text-zinc-500 focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/20"
+                disabled={loading}
+              />
             </div>
-
-            <motion.button
+            <button
               type="submit"
               disabled={loading || !verificationCode.trim()}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full py-3 px-6 bg-[#b7a2c9] text-white rounded-lg font-medium transition-all duration-200 hover:bg-[#a690b8] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-teal-400 px-4 py-3 font-semibold text-black transition hover:bg-teal-300 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? (
                 <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
                   Verifying...
                 </>
               ) : (
                 <>
-                  <Search size={20} />
+                  <Search size={16} />
                   Verify Certificate
                 </>
               )}
-            </motion.button>
+            </button>
           </form>
         </motion.div>
 
-        {/* Verification Result */}
         {result && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`rounded-2xl p-8 border ${
-              result.verified
-                ? 'bg-green-900/20 border-green-500/30'
-                : 'bg-red-900/20 border-red-500/30'
-            }`}
-          >
+          <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
             {result.verified && result.certificate ? (
-              <div>
-                {/* Success Header */}
-                <div className="flex items-center gap-3 mb-6">
-                  <CheckCircle size={32} className="text-green-400" />
+              <div className="rounded-2xl border border-teal-500/30 bg-zinc-900 p-6">
+                <div className="mb-6 flex items-center gap-3">
+                  <CheckCircle2 size={30} className="text-teal-300" />
                   <div>
-                    <h2 className="text-2xl font-bold text-green-400">Certificate Verified ✓</h2>
-                    <p className="text-green-300">This certificate is authentic and valid</p>
+                    <h2 className="text-2xl font-bold text-teal-300">Certificate Verified</h2>
+                    <p className="text-sm text-zinc-400">This certificate is valid and recorded.</p>
                   </div>
                 </div>
 
-                {/* Certificate Details */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white mb-2">Certificate Details</h3>
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-3">
-                          <User size={18} className="text-[#b7a2c9]" />
-                          <div>
-                            <p className="text-sm text-[#c5c3c4]/70">Recipient</p>
-                            <p className="text-white font-medium">{result.certificate.recipientName}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-3">
-                          <Award size={18} className="text-[#b7a2c9]" />
-                          <div>
-                            <p className="text-sm text-[#c5c3c4]/70">Event</p>
-                            <p className="text-white font-medium">{result.certificate.eventTitle}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          <Calendar size={18} className="text-[#b7a2c9]" />
-                          <div>
-                            <p className="text-sm text-[#c5c3c4]/70">Issue Date</p>
-                            <p className="text-white font-medium">
-                              {new Date(result.certificate.issueDate).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                              })}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-3 rounded-xl border border-zinc-800 bg-zinc-950 p-4">
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-400">Certificate</h3>
+                    <div className="flex items-center gap-3"><User size={16} className="text-teal-300" /><span>{result.certificate.recipientName}</span></div>
+                    <div className="flex items-center gap-3"><Award size={16} className="text-teal-300" /><span>{result.certificate.eventTitle}</span></div>
+                    <div className="flex items-center gap-3"><Calendar size={16} className="text-teal-300" /><span>{new Date(result.certificate.issueDate).toLocaleDateString()}</span></div>
                   </div>
 
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white mb-2">Issuer Information</h3>
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-3">
-                          <User size={18} className="text-[#b7a2c9]" />
-                          <div>
-                            <p className="text-sm text-[#c5c3c4]/70">Issued by</p>
-                            <p className="text-white font-medium">{result.certificate.issuer.name}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          <Mail size={18} className="text-[#b7a2c9]" />
-                          <div>
-                            <p className="text-sm text-[#c5c3c4]/70">Contact</p>
-                            <p className="text-white font-medium">{result.certificate.issuer.email}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          <Search size={18} className="text-[#b7a2c9]" />
-                          <div>
-                            <p className="text-sm text-[#c5c3c4]/70">Verification Code</p>
-                            <p className="text-white font-mono font-medium">{result.certificate.verificationCode}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="space-y-3 rounded-xl border border-zinc-800 bg-zinc-950 p-4">
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-400">Issuer</h3>
+                    <div className="flex items-center gap-3"><User size={16} className="text-teal-300" /><span>{result.certificate.issuer.name}</span></div>
+                    <div className="flex items-center gap-3"><Mail size={16} className="text-teal-300" /><span>{result.certificate.issuer.email}</span></div>
+                    <div className="font-mono text-sm text-zinc-300">Code: {result.certificate.verificationCode}</div>
                   </div>
                 </div>
 
-                {/* Certificate Actions */}
                 {result.certificate.certificateUrl && (
-                  <div className="mt-6 pt-6 border-t border-green-500/20">
+                  <div className="mt-6">
                     <button
-                      onClick={() => window.open(result.certificate?.certificateUrl, '_blank')}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#b7a2c9] text-white rounded-lg hover:bg-[#a690b8] transition-colors"
+                      onClick={() => window.open(result.certificate?.certificateUrl, "_blank")}
+                      className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm text-zinc-100 hover:border-teal-500/40 hover:text-teal-300"
                     >
-                      <ExternalLink size={18} />
+                      <ExternalLink size={16} />
                       View Certificate
                     </button>
                   </div>
                 )}
               </div>
             ) : (
-              <div>
-                {/* Error Header */}
-                <div className="flex items-center gap-3 mb-4">
-                  <XCircle size={32} className="text-red-400" />
+              <div className="rounded-2xl border border-red-500/30 bg-zinc-900 p-6">
+                <div className="mb-4 flex items-center gap-3">
+                  <XCircle size={30} className="text-red-400" />
                   <div>
                     <h2 className="text-2xl font-bold text-red-400">Certificate Not Verified</h2>
-                    <p className="text-red-300">
-                      {result.error || 'The verification code is invalid or the certificate was not found'}
-                    </p>
+                    <p className="text-sm text-zinc-400">{result.error || "Invalid or missing verification code."}</p>
                   </div>
                 </div>
-
-                <div className="bg-red-900/20 border border-red-500/20 rounded-lg p-4">
-                  <h3 className="font-semibold text-red-300 mb-2">Possible reasons:</h3>
-                  <ul className="list-disc list-inside space-y-1 text-red-200/80">
-                    <li>The verification code is incorrect or expired</li>
-                    <li>The certificate has not been officially issued</li>
-                    <li>The certificate may be fraudulent</li>
-                  </ul>
-                </div>
+                <ul className="list-disc space-y-1 pl-5 text-sm text-zinc-300">
+                  <li>Verification code may be incorrect.</li>
+                  <li>Certificate may not be issued yet.</li>
+                  <li>Contact issuer for clarification.</li>
+                </ul>
               </div>
             )}
           </motion.div>
         )}
 
-        {/* How to Find Verification Code */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mt-12 bg-[#272936]/50 rounded-xl p-6"
-        >
-          <h3 className="text-xl font-semibold text-white mb-4">How to find your verification code?</h3>
-          <div className="space-y-3 text-[#c5c3c4]">
-            <p>• The verification code is usually printed on your certificate</p>
-            <p>• Look for a code starting with "VF-" followed by alphanumeric characters</p>
-            <p>• Check your email for the certificate with the verification code</p>
-            <p>• Contact the certificate issuer if you cannot locate the code</p>
-          </div>
-        </motion.div>
-
-        {/* Back to Home */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-8 text-center"
-        >
-          <button
-            onClick={() => router.push('/')}
-            className="text-[#b7a2c9] hover:text-white transition-colors underline"
-          >
-            ← Back to NameFrame
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mt-8 text-center">
+          <button onClick={() => router.push("/")} className="text-sm text-zinc-400 underline transition hover:text-zinc-200">
+            Back to NameFrame
           </button>
         </motion.div>
       </div>

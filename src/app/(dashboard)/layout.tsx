@@ -96,7 +96,7 @@ export default function DashboardLayout({
         themeConfig[isDarkMode ? "dark" : "light"].background
       } ${
         themeConfig[isDarkMode ? "dark" : "light"].text.primary
-      } overflow-hidden transition-all duration-500`}
+      } transition-all duration-500`}
     >
       {/* Mobile Nav Overlay */}
       <AnimatePresence>
@@ -127,7 +127,7 @@ export default function DashboardLayout({
       />
 
       {/* Main Content - Explicitly set to fill remaining space */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-y-auto">
         {/* Clone children and add needed props */}
         {React.cloneElement(children as React.ReactElement, {
           //@ts-ignore

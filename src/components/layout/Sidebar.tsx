@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import Logo from "@/../public/nameframelogo.png";
 import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
-import { cookieFont, delius, justAnotherHand, leckerliOne, merienda, pacifico, styleScript } from "../landing/Hero";
+import { cookieFont } from "../landing/Hero";
 
 type SidebarProps = {
   isSidebarCollapsed: boolean;
@@ -34,12 +34,12 @@ const Sidebar: React.FC<SidebarProps> = ({
     <>
       {/* Desktop Sidebar */}
       <div
-        className={`hidden lg:flex flex-col border-r border-[var(--bluey)] bg-[var(--dark-onyx)] h-full transition-all duration-300 ease-in-out ${
+        className={`hidden lg:flex flex-col border-r border-zinc-800 bg-zinc-950 h-full transition-all duration-300 ease-in-out ${
           isSidebarCollapsed ? "w-18" : "w-52"
         }`}
       >
         {/* Logo and Toggle */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-[var(--bluey)]">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-zinc-800">
           <Link href="/">            <div className="flex items-center">
               <Image
                 src={Logo}
@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 style={{ width: 'auto', height: 'auto' }}
               />
               {!isSidebarCollapsed && (
-                <span className={`ml-3 ${leckerliOne.className} font-medium text-xl text-[var(--text-primary)]`}>
+                <span className={`ml-3 ${cookieFont.className} font-medium text-xl text-zinc-100`}>
                   NameFrame
                 </span>
               )}
@@ -71,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className={`h-screen z-40 ${isSidebarCollapsed? "ml-14":"ml-48"} duration-300 absolute flex justify-end items-center`}>
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className={`p-2  rounded-md mt-4  bg-slate-700 cursor-pointer text-gray-200 hover:bg-[var(--bluey)] transition-colors`}
+            className={`p-2 rounded-md mt-4 bg-zinc-800 cursor-pointer text-zinc-200 hover:bg-zinc-700 transition-colors border border-zinc-700`}
           >
             {isSidebarCollapsed ? (
               <ChevronRight size={18} />
@@ -90,8 +90,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 href={item.href}
                 className={`flex items-center px-3 py-3 rounded-md transition-all duration-200 group ${
                   item.active
-                    ? "bg-[var(--bluey-text)] text-[var(--accent-foreground)]"
-                    : "text-[var(--text-secondary)] hover:bg-[var(--bluey-hover)] hover:text-[var(--text-primary)]"
+                    ? "bg-teal-500/10 border border-teal-500/30 text-teal-300"
+                    : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
                 }`}
               >
                 <item.icon
@@ -105,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* User Button */}
-        <div className="p-4 border-t border-[var(--bluey)]">
+        <div className="p-4 border-t border-zinc-800">
           <div
             className={`flex ${isSidebarCollapsed ? "justify-center" : "justify-between"} items-center`}
           >
@@ -143,10 +143,10 @@ const Sidebar: React.FC<SidebarProps> = ({
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-y-0 left-0 w-64 z-40 lg:hidden bg-[var(--card-bg)] border-r border-[var(--border-color)] overflow-hidden"
+            className="fixed inset-y-0 left-0 w-64 z-40 lg:hidden bg-zinc-950 border-r border-zinc-800 overflow-hidden"
           >
             {/* Mobile Logo */}
-            <div className="flex items-center h-16 px-4 border-b border-[var(--border-color)]">
+            <div className="flex items-center h-16 px-4 border-b border-zinc-800">
               <Link
                 href="/dashboard"
                 className="flex items-center"
@@ -159,7 +159,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   height={32}
                   className="rounded-md"
                 />
-                <span className="ml-3 font-medium text-xl text-[var(--text-primary)]">
+                <span className="ml-3 font-medium text-xl text-zinc-100">
                   NameFrame
                 </span>
               </Link>
@@ -175,8 +175,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                     onClick={() => setIsMobileNavOpen(false)}
                     className={`flex items-center px-3 py-3 rounded-md transition-all duration-200 ${
                       item.active
-                        ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                        : "text-[var(--text-secondary)] hover:bg-[var(--card-hover)] hover:text-[var(--text-primary)]"
+                        ? "bg-teal-500/10 border border-teal-500/30 text-teal-300"
+                        : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
                     }`}
                   >
                     <item.icon size={20} className="mr-3" />

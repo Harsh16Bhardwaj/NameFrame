@@ -5,6 +5,7 @@ import { enqueueEventBatch, processQueueTick } from "@/lib/delivery/service";
 import { prisma } from "@/lib/db";
 
 export async function POST(req: Request) {
+  const startedAt = Date.now();
   try {
     const user = await requireCurrentUser();
     const { subject, transcript, eventId } = await req.json();
@@ -60,6 +61,11 @@ export async function POST(req: Request) {
       failedParticipants,
     });
   } catch (error) {
+    console.error("[send-email/bulk] failed", {
+      durationMs: Date.now() - startedAt,
+      error: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return NextResponse.json(
       {
         success: false,

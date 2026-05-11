@@ -109,6 +109,7 @@ export async function sendSingleParticipant(input: {
   subject: string;
   transcript: string;
 }) {
+  const startedAt = Date.now();
   await assertEventOwner(input.eventId, input.requestedById);
   const participant = await prisma.participant.findUnique({
     where: { id: input.participantId },
@@ -132,18 +133,23 @@ export async function sendSingleParticipant(input: {
   const delays = [0, 15000, 60000];
   let lastError = "";
   for (let attempt = 1; attempt <= 3; attempt += 1) {
+    const attemptStartedAt = Date.now();
     if (delays[attempt - 1] > 0) await sleep(delays[attempt - 1]);
 
     try {
+      const buildStartedAt = Date.now();
       const built = await buildParticipantCertificate({
         userId: input.requestedById,
         eventId: input.eventId,
         participantId: input.participantId,
       });
+      const buildDurationMs = Date.now() - buildStartedAt;
 
+      const certFetchStartedAt = Date.now();
       const certResponse = await fetch(built.certificateUrl);
       if (!certResponse.ok) throw new Error("Certificate fetch failed");
       const certBytes = await certResponse.arrayBuffer();
+      const certFetchDurationMs = Date.now() - certFetchStartedAt;
       const certBase64 = Buffer.from(certBytes).toString("base64");
 
       const html = generateCertificateEmail({
@@ -155,6 +161,7 @@ export async function sendSingleParticipant(input: {
         verificationCode: built.verificationCode,
       });
 
+      const providerSendStartedAt = Date.now();
       const sendResult = await sendWithProviderFallback({
         to: built.participant.email,
         subject: input.subject,
@@ -165,6 +172,19 @@ export async function sendSingleParticipant(input: {
             contentBase64: certBase64,
           },
         ],
+      });
+      const providerSendDurationMs = Date.now() - providerSendStartedAt;
+      console.log("[delivery/single] attempt result", {
+        eventId: input.eventId,
+        participantId: input.participantId,
+        attempt,
+        ok: sendResult.ok,
+        provider: sendResult.provider,
+        buildDurationMs,
+        certFetchDurationMs,
+        providerSendDurationMs,
+        totalAttemptDurationMs: Date.now() - attemptStartedAt,
+        error: sendResult.ok ? null : sendResult.errorMessage,
       });
 
       await prisma.deliveryAttempt.create({
@@ -195,6 +215,13 @@ export async function sendSingleParticipant(input: {
       lastError = sendResult.errorMessage || "Send failed";
     } catch (error) {
       lastError = error instanceof Error ? error.message : "Send failed";
+      console.error("[delivery/single] attempt exception", {
+        eventId: input.eventId,
+        participantId: input.participantId,
+        attempt,
+        durationMs: Date.now() - attemptStartedAt,
+        error: lastError,
+      });
       await prisma.deliveryAttempt.create({
         data: {
           participantId: participant.id,
@@ -212,6 +239,12 @@ export async function sendSingleParticipant(input: {
   await prisma.deliveryJob.update({
     where: { id: job.id },
     data: { status: DeliveryJobStatus.FAILED, completedAt: now() },
+  });
+  console.error("[delivery/single] exhausted retries", {
+    eventId: input.eventId,
+    participantId: input.participantId,
+    durationMs: Date.now() - startedAt,
+    lastError,
   });
 
   return { success: false, error: lastError, failedAttempts: 3 };

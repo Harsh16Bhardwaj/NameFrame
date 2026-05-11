@@ -63,6 +63,7 @@ export async function POST(req: Request) {
       templateUrl,
       roleTemplateUrls,
       textPosition,
+      participantRows,
     } = body;
 
     if (!title || !templateUrl) {
@@ -102,6 +103,30 @@ export async function POST(req: Request) {
       },
     });
 
+    let importedParticipants = 0;
+    if (Array.isArray(participantRows) && participantRows.length > 0) {
+      const sanitizedRows = participantRows
+        .map((row) => ({
+          name: typeof row?.name === "string" ? row.name.trim() : "",
+          email: typeof row?.email === "string" ? row.email.trim().toLowerCase() : "",
+          participated: Boolean(row?.participated),
+        }))
+        .filter((row) => row.name.length > 0 && row.email.length > 0);
+
+      if (sanitizedRows.length > 0) {
+        const result = await prisma.participant.createMany({
+          data: sanitizedRows.map((row) => ({
+            eventId: newEvent.id,
+            name: row.name,
+            email: row.email,
+            participated: row.participated,
+          })),
+          skipDuplicates: true,
+        });
+        importedParticipants = result.count;
+      }
+    }
+
     const bindings: Array<{ role: "DEFAULT" | "FIRST" | "SECOND" | "THIRD"; templateId: string }> = [
       { role: "DEFAULT", templateId: defaultTemplate.id },
     ];
@@ -133,7 +158,10 @@ export async function POST(req: Request) {
       })),
     });
 
-    return NextResponse.json({ success: true, data: newEvent }, { status: 201 });
+    return NextResponse.json(
+      { success: true, data: { ...newEvent, importedParticipants } },
+      { status: 201 }
+    );
   } catch (error: unknown) {
     console.error('Full error object:', error); // Debug log
     if (error instanceof Error) {

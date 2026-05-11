@@ -1,3 +1,5 @@
+"use client";
+
 import { testimonials } from "@/data/testimonials";
 import Image from "next/image";
 

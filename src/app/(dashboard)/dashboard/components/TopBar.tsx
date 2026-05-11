@@ -22,42 +22,33 @@ const TopBar: React.FC<TopBarProps> = ({
   handleKeyPress,
 }) => {
   return (
-    <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-3 bg-[var(--dark-onyx)] shadow-md border-b border-[var(--border-color)]">
+    <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/5 bg-zinc-950 px-6 py-3">
       <div className="flex items-center">
         <button
           onClick={() => setIsMobileNavOpen(true)}
-          className="p-2 mr-4 rounded-md text-[var(--text-secondary)] hover:bg-[var(--card-hover)] transition-colors lg:hidden"
+          className="p-2 mr-4 rounded-md text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 transition-colors lg:hidden"
         >
           <MdMenu className="w-6 h-6" />
         </button>
-        <h1 className={`text-3xl font-semibold ${titanOne.className}  text-[var(--text-primary)] hidden md:block`}>Dashboard</h1>
+        <h1 className={`hidden text-2xl font-semibold text-zinc-100 md:block ${titanOne.className}`}>Dashboard</h1>
       </div>
 
-      <div className="flex  px-6 justify-end  w-full mx-auto">
-        <div className="relative">
+      <div className="flex px-6 justify-end w-full mx-auto">
+        <div className="relative w-full max-w-xs">
           <input
             type="text"
             placeholder="Search events..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyPress}
-            className="w-2xl py-2 pl-10 pr-4 text-sm bg-[var(--bluey-hover)] border border-[var(--tealy)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] transition-colors"
+            className="w-full rounded-lg border border-white/10 bg-zinc-900/70 py-2 pl-10 pr-4 text-sm text-zinc-100 placeholder:text-zinc-500 transition-all focus:outline-none focus:border-teal-500/40 focus:ring-1 focus:ring-teal-500/20"
           />
           <MdSearch
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5 cursor-pointer"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 w-4 h-4 cursor-pointer hover:text-zinc-400 transition"
             onClick={handleSearch}
           />
         </div>
       </div>
-
-      {/* <div className="flex items-center gap-3">
-        <button
-          onClick={() => setIsDarkMode(!isDarkMode)}
-          className="p-2 rounded-full bg-[var(--bluey-text)] text-[var(--pale)] hover:bg-[var(--bluey)] hover:text-[var(--accent-foreground)] transition-colors"
-        >
-          {isDarkMode ? <MdLightMode className="w-5 h-5" /> : <MdDarkMode className="w-5 h-5" />}
-        </button>
-      </div> */}
     </div>
   );
 };

@@ -131,10 +131,8 @@ export async function buildParticipantCertificate(
   });
   const verifyUrl = buildVerifyUrl(verificationCode);
   const qrCodeUrl = buildQrImageUrl(verificationCode);
-  const encodedQrFetch = encodeForCloudinaryFetch(qrCodeUrl);
 
-  const certificateUrl = cloudinary.url(publicId, {
-    transformation: [
+  const transformations: Array<Record<string, unknown>> = [
       {
         overlay: {
           font_family: templateConfig.fontFamily,
@@ -161,18 +159,28 @@ export async function buildParticipantCertificate(
         x: 150,
         y: 20,
       },
-      {
-        overlay: `fetch:${encodedQrFetch}`,
-        width: 120,
-        height: 120,
-        crop: "fit",
-        gravity: "south_east",
-        x: 20,
-        y: 20,
-      },
-    ],
+    ];
+
+  const allowFetchQr = process.env.CLOUDINARY_ALLOW_FETCH_QR === "true";
+  if (allowFetchQr) {
+    const encodedQrFetch = encodeForCloudinaryFetch(qrCodeUrl);
+    transformations.push({
+      overlay: `fetch:${encodedQrFetch}`,
+      width: 120,
+      height: 120,
+      crop: "fit",
+      gravity: "south_east",
+      x: 20,
+      y: 20,
+    });
+  }
+
+  const certificateUrl = cloudinary.url(publicId, {
+    transformation: transformations,
     format: "png",
     quality: "auto:best",
+    secure: true,
+    sign_url: true,
   });
 
   await prisma.participant.update({

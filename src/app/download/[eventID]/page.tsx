@@ -142,55 +142,70 @@ const DownloadPage: React.FC = () => {
   };
 
   return (
-    <div className="fixed pt-50  h-auto inset-0 bg-gradient-to-br from-[#f0f0f0] via-[#b0b0b0] to-[#2c5364] text-gray-800 flex items-center justify-center px-6 py-8 z-50 ">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center px-6 py-8 z-50">
+      {/* Loading State - Show while certificate is rendering */}
+      {showForm && !certificateReady && (
+        <div className="fixed inset-0 bg-zinc-950 flex items-center justify-center z-50">
+          <div className="space-y-6 text-center">
+            <div className="relative w-16 h-16 mx-auto">
+              <div className="absolute inset-0 rounded-full border-4 border-zinc-800"></div>
+              <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-teal-400 animate-spin"></div>
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-zinc-100 mb-1">Loading Certificate</h2>
+              <p className="text-sm text-zinc-400">Preparing your personalized certificate...</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Name Input Dialog */}
       {showForm && (
-        <div className="fixed inset-0 bg-gradient-to-br from-[#0f2027] via-[#203a43] to-[#2c5364] text-gray-700 flex items-center justify-center p-4 z-50 overflow-hidden">
+        <div className="fixed inset-0 bg-zinc-950 text-zinc-100 flex items-center justify-center p-4 z-50 overflow-hidden">
           {/* Animated gradient or background effect */}
           <div className="absolute inset-0 z-0 pointer-events-none">
-            <div className="w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-teal-500/10 via-purple-500/10 to-transparent animate-pulse-slow blur-3xl"></div>
-            <div className="absolute inset-0 bg-noise opacity-[0.05] mix-blend-soft-light pointer-events-none"></div>
+            <div className="w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-teal-500/10 via-cyan-500/5 to-transparent animate-pulse-slow blur-3xl"></div>
           </div>
 
-          <div className="relative z-10 bg-white/10 backdrop-blur-md text-gray-800 rounded-3xl p-8 px-10 max-w-lg w-full shadow-xl border border-white/30 overflow-hidden animate-fade-in transition-all duration-700">
+          <div className="relative z-10 bg-zinc-900/80 backdrop-blur-md rounded-3xl p-8 px-10 max-w-lg w-full shadow-xl border border-zinc-800 overflow-hidden">
             {/* Inner glow bg */}
-            <div className="absolute inset-0 bg-gradient-to-br from-teal-300/10 to-purple-400/10 rounded-3xl pointer-events-none z-0 blur-lg"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-cyan-500/5 rounded-3xl pointer-events-none z-0 blur-lg"></div>
 
             <div className="relative z-10">
               <h1
-                className={`${styleScript.className} text-4xl font-bold text-center mb-3 text-white drop-shadow-lg`}
+                className={`${styleScript.className} text-4xl font-bold text-center mb-3 text-teal-300 drop-shadow-lg`}
               >
                 <span className="underline underline-offset-4 decoration-2">
                   NameFrame
                 </span>{" "}
-                ❤️
+                ✨
               </h1>
-              <p className="text-center text-white/80 mb-6 text-sm">
-                Craft your name into a personalized certificate ✨
+              <p className="text-center text-zinc-400 mb-6 text-sm">
+                Craft your name into a personalized certificate
               </p>
 
-              <h2 className="text-2xl font-semibold text-white mb-2">
+              <h2 className="text-2xl font-semibold text-zinc-100 mb-2">
                 Enter Your Name:
               </h2>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
                   <input
                     {...register("name", { required: "Name is required" })}
-                    className="w-full px-4 py-2 rounded-md border border-white/20 bg-white/20 text-white placeholder-white/70 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-teal-400 transition-all duration-300"
+                    className="w-full px-4 py-2 rounded-lg border border-zinc-700 bg-zinc-800 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-teal-400 transition-all duration-300"
                     placeholder="Your full name as registered"
                   />
                   {errors.name && (
-                    <p className="text-red-400 text-sm mt-1">
+                    <p className="text-rose-400 text-sm mt-1">
                       {errors.name.message}
                     </p>
                   )}
                 </div>
                 {errorMessage && (
-                  <p className="text-red-400 text-sm">{errorMessage}</p>
+                  <p className="text-rose-400 text-sm">{errorMessage}</p>
                 )}
                 <button
                   type="submit"
-                  className="w-full bg-teal-600 hover:bg-gray-200 cursor-pointer hover:text-black active:scale-95 text-white py-2 px-4 rounded-md transition-all duration-300 shadow-lg hover:shadow-teal-400/50"
+                  className="w-full bg-teal-500 hover:bg-teal-400 text-black font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-teal-500/50 active:scale-95"
                 >
                   Generate Certificate
                 </button>
@@ -201,55 +216,63 @@ const DownloadPage: React.FC = () => {
       )}
 
       {/* Main Content */}
-      <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto space-y-4">
+      <div className="min-h-screen w-full py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
-          <div className="flex flex-col justify-center items-center">
-            {/* <Image alt="logo" className="w-14 mt-12 rounded-full" src={NameLogo}></Image> */}
-            <NextImage alt="logo" className="-mt-5 w-3/4" src={NameHeading}></NextImage>
+          <div className="flex flex-col justify-center items-center mb-8">
+            <NextImage alt="logo" className="w-3/4 max-w-xs" src={NameHeading}></NextImage>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-10 animate-slideUpFade">
+          <div className="grid md:grid-cols-3 gap-6">
             {/* Certificate Preview */}
-            <div className="md:col-span-2 bg-white/20 backdrop-blur-lg border border-white/30 p-6 rounded-3xl shadow-xl relative overflow-hidden group transition duration-500 hover:shadow-2xl">
+            <div className="md:col-span-2 bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl relative overflow-hidden group transition duration-500 hover:border-teal-500/30">
               {/* Floating Color Accent */}
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-300/30 rounded-full blur-2xl opacity-70 group-hover:opacity-90 transition duration-500" />
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-teal-500/10 rounded-full blur-3xl opacity-50 group-hover:opacity-70 transition duration-500" />
 
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
-                  🪄 Your Certificate Preview
+              <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
+                <h2 className="text-xl font-semibold text-zinc-100 flex items-center gap-2">
+                  🎓 Certificate Preview
                 </h2>
 
-                <div className="flex items-center gap-2 border border-neutral-300 bg-white/60 backdrop-blur-md rounded-full px-3 py-1 shadow-sm">
-                  <button
-                    onClick={() => adjustFontSize(-2)}
-                    className="text-sm px-2 py-1 bg-gray-800 text-white rounded-full hover:bg-gray-900 transition"
-                    disabled={!certificateReady}
-                  >
-                    –
-                  </button>
-                  <span className="text-sm font-semibold text-blue-800 px-3">
-                    {fontSize}px
-                  </span>
-                  <button
-                    onClick={() => adjustFontSize(2)}
-                    className="text-sm px-2 py-1 bg-gray-800 text-white rounded-full hover:bg-gray-900 transition"
-                    disabled={!certificateReady}
-                  >
-                    +
-                  </button>
-                </div>
+                {certificateReady && (
+                  <div className="flex items-center gap-2 border border-zinc-700 bg-zinc-800 rounded-full px-3 py-1 shadow-sm">
+                    <button
+                      onClick={() => adjustFontSize(-2)}
+                      className="text-sm px-2 py-1 bg-zinc-700 text-zinc-100 rounded-full hover:bg-zinc-600 transition"
+                      disabled={!certificateReady}
+                    >
+                      –
+                    </button>
+                    <span className="text-sm font-semibold text-teal-300 px-3">
+                      {fontSize}px
+                    </span>
+                    <button
+                      onClick={() => adjustFontSize(2)}
+                      className="text-sm px-2 py-1 bg-zinc-700 text-zinc-100 rounded-full hover:bg-zinc-600 transition"
+                      disabled={!certificateReady}
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
               </div>
 
-              <div className="border-2 border-dashed border-gray-300 rounded-xl overflow-hidden shadow-inner bg-white/50">
-                <canvas
-                  ref={canvasRef}
-                  className="w-full rounded-lg"
-                  style={{ display: certificateReady ? "block" : "none" }}
-                />
-                {!certificateReady && (
-                  <div className="h-96 flex items-center justify-center text-gray-500 animate-pulse">
-                    Certificate will appear here after verification
+              <div className="border-2 border-dashed border-zinc-700 rounded-xl overflow-hidden shadow-inner bg-zinc-800/50">
+                {certificateReady ? (
+                  <canvas
+                    ref={canvasRef}
+                    className="w-full rounded-lg"
+                  />
+                ) : (
+                  <div className="h-96 flex flex-col items-center justify-center text-zinc-500 gap-4">
+                    <div className="relative w-12 h-12">
+                      <div className="absolute inset-0 rounded-full border-2 border-zinc-700"></div>
+                      <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-teal-400 animate-spin"></div>
+                    </div>
+                    <div className="text-center">
+                      <p className="font-medium">Generating certificate...</p>
+                      <p className="text-xs text-zinc-600">This may take a moment</p>
+                    </div>
                   </div>
                 )}
               </div>
@@ -258,42 +281,42 @@ const DownloadPage: React.FC = () => {
                 <div className="mt-6 text-center">
                   <button
                     onClick={downloadCertificate}
-                    className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:scale-105 hover:shadow-xl transition duration-300"
+                    className="bg-teal-500 hover:bg-teal-400 text-black font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-teal-500/50 transition duration-300 active:scale-95"
                   >
-                    🎓 Download Certificate
+                    ⬇️ Download Certificate
                   </button>
                 </div>
               )}
             </div>
 
             {/* Event Information */}
-            <div className="bg-white/20 backdrop-blur-lg border border-white/30 p-6 rounded-3xl shadow-xl relative overflow-hidden group transition duration-500 hover:shadow-2xl">
-              <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-blue-300/30 rounded-full blur-2xl opacity-70 group-hover:opacity-90 transition duration-500" />
+            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl relative overflow-hidden group transition duration-500 hover:border-teal-500/30">
+              <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-teal-500/10 rounded-full blur-3xl opacity-50 group-hover:opacity-70 transition duration-500" />
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+              <h2 className="text-xl font-semibold text-zinc-100 mb-6">
                 📅 Event Details
               </h2>
-              <div className="space-y-4 text-gray-800">
+              <div className="space-y-4 text-zinc-400">
                 <div>
-                  <h3 className="font-medium">Date:</h3>
-                  <p>{eventData.eventDate}</p>
+                  <h3 className="font-medium text-zinc-300 mb-1">Date</h3>
+                  <p className="text-sm">{eventData.eventDate}</p>
                 </div>
                 <div>
-                  <h3 className="font-medium">Organized by:</h3>
-                  <p>{eventData.organizer}</p>
+                  <h3 className="font-medium text-zinc-300 mb-1">Organized by</h3>
+                  <p className="text-sm">{eventData.organizer}</p>
                 </div>
                 <div>
-                  <h3 className="font-medium">Description:</h3>
-                  <p className="text-gray-700">{eventData.description}</p>
+                  <h3 className="font-medium text-zinc-300 mb-1">Description</h3>
+                  <p className="text-sm">{eventData.description}</p>
                 </div>
                 <div>
-                  <h3 className="font-medium">Valid Participant Names:</h3>
-                  <ul className="list-disc pl-5 text-sm text-gray-600">
+                  <h3 className="font-medium text-zinc-300 mb-2">Valid Names</h3>
+                  <ul className="list-disc pl-5 text-xs text-zinc-500 space-y-1">
                     {eventData.participants.slice(0, 5).map((name, i) => (
                       <li key={i}>{name}</li>
                     ))}
                     {eventData.participants.length > 5 && (
-                      <li>...and {eventData.participants.length - 5} more</li>
+                      <li>+{eventData.participants.length - 5} more</li>
                     )}
                   </ul>
                 </div>

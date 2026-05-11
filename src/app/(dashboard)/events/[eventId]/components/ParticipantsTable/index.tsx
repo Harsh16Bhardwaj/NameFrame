@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Package, User2, Plus, Send, Loader2, CheckCircle, AlertCircle, User } from 'lucide-react';
+import { Send, Loader2, CheckCircle, User } from 'lucide-react';
 import ParticipantSearch from './ParticipantSearch';
 import FilterControls from './FilterControls';
 import TableList from './TableList';
@@ -87,14 +87,14 @@ export default function ParticipantsTable({
   );
 
   return (
-    <div className="mb-8 overflow-hidden rounded-2xl bg-[#322f42]/30 backdrop-blur-md shadow-lg border border-[#4b3a70]/30">
+    <div className="mb-8 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-lg">
       <div className="p-6">        <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
           <div className="flex flex-col gap-2">
-            <h2 className="text-4xl  flex justify-center items-center font-bold gap-x-4 text-[#ae98c0]"> 
-              <div className='border-2 border-purple-300 rounded-full p-1 text-xs'><User/></div> Participants
+            <h2 className="flex items-center justify-center gap-x-4 text-3xl font-bold text-zinc-100"> 
+              <div className='rounded-full border border-teal-500/40 bg-teal-500/10 p-1 text-xs text-teal-300'><User/></div> Participants
             </h2>
             {personalizedMessage?.trim() && (
-              <div className="flex items-center gap-2 text-sm text-[#b7a2c9]">
+              <div className="flex items-center gap-2 text-sm text-teal-300">
                 <CheckCircle size={16} />
                 <span>Custom email message is active</span>
               </div>
@@ -107,18 +107,18 @@ export default function ParticipantsTable({
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex items-center gap-3 px-4 py-2 rounded-lg bg-[#272936] border border-[#4b3a70]/30"
+                className="flex items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2"
               >
                 <div className="flex items-center">
-                  <Loader2 size={16} className="animate-spin text-[#b7a2c9]" />
-                  <span className="ml-2 text-[#c5c3c4]">
+                  <Loader2 size={16} className="animate-spin text-teal-300" />
+                  <span className="ml-2 text-zinc-300">
                     Sending {emailProgress.sent}/{emailProgress.total} certificates...
                   </span>
                 </div>
                 
-                <div className="w-24 h-2 bg-[#4b3a70]/30 rounded-full overflow-hidden">
+                <div className="h-2 w-24 overflow-hidden rounded-full bg-zinc-800">
                   <div 
-                    className="h-full bg-[#b7a2c9]" 
+                    className="h-full bg-teal-300" 
                     style={{ 
                       width: `${(emailProgress.sent / emailProgress.total) * 100}%`,
                       transition: 'width 0.3s ease'
@@ -132,7 +132,7 @@ export default function ParticipantsTable({
                 whileTap={{ scale: 0.97 }}
                 onClick={sendCertificates}
                 disabled={unsentCount === 0}
-                className={`flex items-center gap-2 rounded-lg bg-[#0c8534] px-4 py-2 text-sm font-medium text-[#d8d8da] cursor-pointer transition-all hover:bg-[#35543e] disabled:opacity-50 disabled:cursor-not-allowed`}
+                className={`flex cursor-pointer items-center gap-2 rounded-lg bg-teal-400 px-4 py-2 text-sm font-medium text-black transition-all hover:bg-teal-300 disabled:cursor-not-allowed disabled:opacity-50`}
               >
                 <Send size={16} />
                 <span>Send All Certificates {unsentCount > 0 && `(${unsentCount})`}</span>
@@ -140,7 +140,7 @@ export default function ParticipantsTable({
             )}
           </div>
         </div>
-        <div className='border-b border-1 border-gray-700 mx-20 mb-8 '></div>
+        <div className='mx-20 mb-8 border-b border-zinc-800'></div>
         
         {/* Search and filters */}
         <div className="mb-10 flex flex-col sm:flex-row  items-start sm:items-center justify-between">
