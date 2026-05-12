@@ -5,7 +5,12 @@ import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import Logo from "@/../public/nameframelogo.png";
 import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
-import { cookieFont } from "../landing/Hero";
+import { Cookie } from "next/font/google";
+
+const cookieFont = Cookie({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 type SidebarProps = {
   isSidebarCollapsed: boolean;
@@ -20,6 +25,12 @@ type SidebarProps = {
     href: string;
     active: boolean;
   }[];
+  devItem?: {
+    icon: any;
+    label: string;
+    href: string;
+    active: boolean;
+  };
 };
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -29,6 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   setIsMobileNavOpen,
   isDarkMode,
   sidebarItems,
+  devItem,
 }) => {
   return (
     <>
@@ -106,6 +118,19 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         {/* User Button */}
         <div className="p-4 border-t border-zinc-800">
+          {devItem ? (
+            <Link
+              href={devItem.href}
+              className={`mb-3 flex items-center px-3 py-2 rounded-md transition-all duration-200 ${
+                devItem.active
+                  ? "bg-teal-500/10 border border-teal-500/30 text-teal-300"
+                  : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
+              }`}
+            >
+              <devItem.icon size={18} className={`${isSidebarCollapsed ? "mx-auto" : "mr-3"}`} />
+              {!isSidebarCollapsed && <span className="text-sm">{devItem.label}</span>}
+            </Link>
+          ) : null}
           <div
             className={`flex ${isSidebarCollapsed ? "justify-center" : "justify-between"} items-center`}
           >
@@ -188,6 +213,20 @@ const Sidebar: React.FC<SidebarProps> = ({
 
             {/* Mobile User */}
             <div className="p-4 border-t border-[var(--border-color)]">
+              {devItem ? (
+                <Link
+                  href={devItem.href}
+                  onClick={() => setIsMobileNavOpen(false)}
+                  className={`mb-3 flex items-center px-3 py-2 rounded-md transition-all duration-200 ${
+                    devItem.active
+                      ? "bg-teal-500/10 border border-teal-500/30 text-teal-300"
+                      : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
+                  }`}
+                >
+                  <devItem.icon size={18} className="mr-3" />
+                  <span className="text-sm">{devItem.label}</span>
+                </Link>
+              ) : null}
               <div className="flex justify-between items-center">
                 <UserButton
                   afterSignOutUrl="/"

@@ -300,11 +300,13 @@
 }
 
 .landing-root {
+  min-height: 100vh;
+  overflow-x: hidden;
+overflow-y: visible;
   background:
     radial-gradient(1200px 700px at 80% -10%, rgba(95, 181, 167, 0.18), transparent 45%),
     linear-gradient(180deg, var(--landing-bg-0), var(--landing-bg-1) 48%, var(--landing-bg-2));
 }
-
 .landing-hero {
   background:
     radial-gradient(800px 500px at 12% 10%, rgba(114, 198, 184, 0.12), transparent 45%),
@@ -315,9 +317,37 @@
   border-top: 1px solid color-mix(in srgb, var(--landing-surface-border) 50%, transparent);
 }
 
+.scrollbar-themed::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollbar-themed::-webkit-scrollbar-track {
+  background: rgba(9, 9, 11, 0.7);
+}
+
+.scrollbar-themed::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #2dd4bf, #6366f1);
+  border-radius: 999px;
+  border: 2px solid rgba(9, 9, 11, 0.9);
+}
+
+.scrollbar-themed::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #5eead4, #818cf8);
+}
+
 .ops-skin {
   background: var(--ops-bg);
   color: var(--ops-text);
+}
+
+html,
+body {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-y: auto;
 }
 
 @layer base {

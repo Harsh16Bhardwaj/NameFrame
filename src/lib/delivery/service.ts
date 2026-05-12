@@ -28,6 +28,11 @@ type QueueTickInput = {
 
 const DEFAULT_MAX_EVENTS_PER_TICK = 1;
 const DEFAULT_PARTICIPANTS_PER_CHUNK = 5;
+const NON_RETRYABLE_FAILURE_CODES = new Set([
+  "INVALID_EMAIL",
+  "SMTP_POOL_EXHAUSTED",
+  "PROVIDER_REJECTED",
+] as const);
 
 function now() {
   return new Date();
@@ -185,6 +190,7 @@ export async function sendSingleParticipant(input: {
         providerSendDurationMs,
         totalAttemptDurationMs: Date.now() - attemptStartedAt,
         error: sendResult.ok ? null : sendResult.errorMessage,
+        failureCode: sendResult.failureCode,
       });
 
       await prisma.deliveryAttempt.create({
@@ -213,6 +219,16 @@ export async function sendSingleParticipant(input: {
       }
 
       lastError = sendResult.errorMessage || "Send failed";
+      if (sendResult.failureCode && NON_RETRYABLE_FAILURE_CODES.has(sendResult.failureCode)) {
+        console.error("[delivery/single] non-retryable send failure", {
+          eventId: input.eventId,
+          participantId: input.participantId,
+          attempt,
+          failureCode: sendResult.failureCode,
+          error: lastError,
+        });
+        break;
+      }
     } catch (error) {
       lastError = error instanceof Error ? error.message : "Send failed";
       console.error("[delivery/single] attempt exception", {

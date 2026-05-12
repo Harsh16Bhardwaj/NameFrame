@@ -23,9 +23,33 @@ export type SendEmailResult = {
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendWithResend(input: SendEmailInput): Promise<SendEmailResult> {
+  if (!process.env.RESEND_API_KEY) {
+    return {
+      ok: false,
+      provider: EmailProvider.RESEND,
+      errorMessage: "RESEND_API_KEY missing",
+      failureCode: "PROVIDER_REJECTED",
+    };
+  }
+
+  const fromValue =
+    process.env.RESEND_FROM ||
+    (process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL
+      ? `NameFrame <noreply@${process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL}>`
+      : null);
+
+  if (!fromValue) {
+    return {
+      ok: false,
+      provider: EmailProvider.RESEND,
+      errorMessage: "RESEND_FROM missing",
+      failureCode: "PROVIDER_REJECTED",
+    };
+  }
+
   try {
     const result = await resend.emails.send({
-      from: process.env.RESEND_FROM || `NameFrame <noreply@${process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL}>`,
+      from: fromValue,
       to: [input.to],
       subject: input.subject,
       html: input.html,

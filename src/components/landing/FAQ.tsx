@@ -1,288 +1,340 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { ChevronDown, HelpCircle, CheckCircle2 } from "lucide-react";
+import { Inter, Space_Grotesk, Poppins } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-inter",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-space-grotesk",
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-poppins",
+});
 
 const faqs = [
   {
-    question:
-      "What makes NameFrame different from other certificate platforms?",
+    question: "What makes NameFrame different from other certificate platforms?",
     answer:
-      "Unlike simple PDF generators, NameFrame integrates AI-powered insights to help you understand your audience and optimize future events. Our platform automates the entire process from creation to distribution, saving you significant time and effort.",
-  },
-  {
-    question: "How secure is my data on NameFrame?",
-    answer:
-      "We prioritize your data security with end-to-end encryption and robust access controls. Your event data and recipient information are handled with the utmost confidentiality, ensuring a safe and secure experience.",
+      "NameFrame is built for the full event certificate workflow. You can manage events, upload participants, generate certificates in bulk, send them by email, and track useful delivery insights from one workspace.",
   },
   {
     question: "Can I use my own certificate designs?",
     answer:
-      "Yes, you can! NameFrame allows you to upload your own design templates. Our platform seamlessly integrates your custom designs, enabling you to maintain your brand's unique identity while leveraging our automation features.",
+      "Yes. You can upload your own certificate templates and place participant names, event details, dates, and custom text exactly where you want them.",
   },
   {
     question: "What kind of events is NameFrame best for?",
     answer:
-      "NameFrame is versatile and can be used for a wide range of events, including professional workshops, online courses, corporate training sessions, and virtual conferences. Our platform adapts to your needs, regardless of event size or type.",
+      "NameFrame works well for hackathons, college society events, workshops, bootcamps, competitions, training sessions, and any event where certificates need to be personalized and delivered quickly.",
   },
   {
-    question: "Do you offer a free trial or a free tier?",
+    question: "Can I send certificates by email?",
     answer:
-      "Yes, we offer a free tier that allows you to create and send a limited number of certificates to explore the platform's core features. This is a great way to test NameFrame before committing to a premium plan.",
+      "Yes. NameFrame can send generated certificates directly to participant emails and help you track sent, pending, or failed deliveries.",
   },
   {
-    question: "What if I need help getting started?",
+    question: "Do you offer a free tier?",
     answer:
-      "Our dedicated support team is here to help! We offer comprehensive documentation, video tutorials, and direct support to ensure a smooth onboarding process. You can reach out to us at any time via the 'Contact Support' button below.",
+      "Yes. The free tier lets you explore the core certificate creation and delivery flow before moving to a larger plan.",
+  },
+  {
+    question: "Is participant data secure?",
+    answer:
+      "NameFrame is designed to keep participant and event data organized and protected. You should still avoid uploading unnecessary sensitive data and only collect the fields required for certificate delivery.",
   },
 ];
 
 export const FAQ = () => {
-  const [expandedFaq, setExpandedFaq] = useState(null);
+  // Closed by default
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
-  const toggleFaq = (index: any) => {
-    setExpandedFaq(expandedFaq === index ? null : index);
+  const toggleFaq = (index: number) => {
+    setExpandedFaq((current) => (current === index ? null : index));
   };
 
   return (
-    <motion.section
-      className="py-16 sm:py-24 bg-gradient-to-b from-[#000] via-[#0e0e0e] to-[#101010] text-[#D3D3D3] font-sans relative overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
+    <section
+      className={`${inter.variable} relative overflow-hidden bg-black py-16 sm:py-20`}
+      style={{ fontFamily: inter.style.fontFamily }}
     >
-      {/* 🔹 Subtle Accent Shape */}
-      <motion.div
-        className="absolute top-1/4 -right-32 w-96 h-96 rounded-full bg-gradient-to-r from-[#4eb3a3] to-[#4C72B0] opacity-5 blur-3xl"
-        animate={{ scale: [1, 1.05, 1] }}
-        transition={{ duration: 12, repeat: Infinity, repeatType: "reverse" }}
-      />
+      {/* Ambient glows */}
+      <div className="pointer-events-none absolute left-[-10rem] top-20 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-9rem] bottom-10 h-72 w-72 rounded-full bg-rose-500/10 blur-3xl" />
 
-      <div className="sun-blob absolute left-5/6 mt-40 w-1/3 h-1/3 rounded-full bg-[#4C72B0] blur-[100px]"></div>
+      <div className="relative z-10 mx-auto max-w-5xl px-5 sm:px-6">
+        {/* Header */}
+        <div className="relative mx-auto mb-10 max-w-3xl text-center">
+          {/* Subtle spin element */}
+          <div className="pointer-events-none absolute left-1/2 top-[-5.4rem] hidden h-28 w-28 -translate-x-1/2 items-center justify-center sm:flex">
+            <div className="nf-spin-ring absolute inset-0 rounded-full border border-teal-400/20" />
+            <div className="nf-spin-ring-reverse absolute inset-4 rounded-full border border-rose-500/10" />
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-teal-500/20 bg-teal-400/10 text-teal-400 shadow-[0_0_30px_rgba(45,212,191,0.1)]">
+              <HelpCircle className="h-5 w-5" />
+            </div>
+          </div>
 
-      {/* 🔹 Content container */}
-      <div className="container mx-auto px-4 max-w-3xl relative z-10">
-        <motion.div
-          className="text-center mb-10"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <h2 className="text-3xl md:text-5xl font-bold text-[#FFFFFF] relative inline-block">
-            <span className="relative z-10">Frequently Asked Questions</span>
-            <motion.span
-              className="absolute bottom-1 left-0 h-3 w-full bg-gradient-to-r from-[#4eb3a3]/20 to-[#4C72B0]/20 -z-10 rounded-lg"
-              initial={{ width: "0%" }}
-              animate={{ width: "100%" }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-            />
-          </h2>
-          <motion.p
-            className="text-[#A9A9A9] text-md md:text-lg mt-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+          <p
+            className="mb-6 mt-5  text-xs font-medium uppercase tracking-[0.24em] text-teal-400/90 sm:text-sm"
+            style={{ fontFamily: poppins.style.fontFamily }}
           >
-            Everything you need to know about NameFrame.
-          </motion.p>
-        </motion.div>
-
-        {/* 🔹 FAQ list */}
-        <motion.div
-          className="space-y-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          {faqs.map((faq, index) => (
-            <motion.div
-              key={index}
-              className={`relative rounded-lg border-2 ${
-                expandedFaq === index
-                  ? "border-[#4eb3a3]"
-                  : "border-transparent"
-              }`}
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(31, 31, 31, 0.85) 0%, rgba(42, 42, 42, 0.85) 100%)",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
-              }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                scale: expandedFaq === index ? 1.02 : 1,
-                boxShadow:
-                  expandedFaq === index
-                    ? "0 8px 30px rgba(78, 179, 163, 0.15)"
-                    : "0 2px 8px rgba(0, 0, 0, 0.2)",
-              }}
-              transition={{
-                duration: 0.4,
-                ease: [0.25, 0.1, 0.25, 1],
-                delay: index * 0.05,
-              }}
-              whileHover={{
-                scale: 1.08,
-                transition: { duration: 0.2 },
-              }}
-            >
-              <button
-                className="w-full p-6 flex justify-between items-start text-left focus:outline-none"
-                onClick={() => toggleFaq(index)}
-              >
-                <motion.span
-                  className={`font-semibold text-sm md:text-md mr-4 ${
-                    expandedFaq === index ? "text-[#4eb3a3]" : ""
-                  }`}
-                  animate={{
-                    color: expandedFaq === index ? "#4eb3a3" : "",
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {faq.question}
-                </motion.span>
-                <motion.div
-                  initial={false}
-                  animate={{
-                    rotate: expandedFaq === index ? 180 : 0,
-                    scale: expandedFaq === index ? 1.1 : 1,
-                  }}
-                  transition={{
-                    duration: 0.4,
-                    type: "spring",
-                    stiffness: 200,
-                    damping: 15,
-                  }}
-                >
-                  {expandedFaq === index ? (
-                    <ChevronUp className="flex-shrink-0 h-5 w-5 text-[#4eb3a3]" />
-                  ) : (
-                    <ChevronDown className="flex-shrink-0 h-5 w-5 text-[#A9A9A9]" />
-                  )}
-                </motion.div>
-              </button>
-
-              <AnimatePresence>
-                {expandedFaq === index && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{
-                      height: "auto",
-                      opacity: 1,
-                      transition: {
-                        height: {
-                          duration: 0.4,
-                          ease: [0.04, 0.62, 0.23, 0.98],
-                        },
-                        opacity: {
-                          duration: 0.25,
-                          delay: 0.15,
-                        },
-                      },
-                    }}
-                    exit={{
-                      height: 0,
-                      opacity: 0,
-                      transition: {
-                        height: {
-                          duration: 0.3,
-                          ease: [0.04, 0.62, 0.23, 0.98],
-                        },
-                        opacity: { duration: 0.25 },
-                      },
-                    }}
-                    className="overflow-hidden"
-                  >
-                    <motion.div
-                      className="p-6 pt-0 text-xs md:text-sm text-[#D3D3D3] border-t border-[#2A2A2A]"
-                      initial={{ y: 10 }}
-                      animate={{ y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.1 }}
-                    >
-                      {faq.answer}
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* 🔹 Contact section */}
-        <motion.div
-          className="text-center mt-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-        >
-          <h3 className="text-xl font-semibold text-[#FFFFFF]">
-            Still have questions?
-          </h3>
-          <p className="text-[#A9A9A9] mb-6">
-            Can't find the answer you're looking for? Feel free to reach out to
-            our team.
+            Quick answers
           </p>
-          <a href="/contact">
-            <motion.button
-              className="px-6 py-3 bg-transparent border-2 border-[#4eb3a3] text-[#4eb3a3] rounded-xl font-medium hover:bg-[#4eb3a3] hover:text-[#1F1F1F] transition-all duration-300"
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 0 15px rgba(78, 179, 163, 0.5)",
-              }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Contact Support
-            </motion.button>
-          </a>
-        </motion.div>
+
+          <h2
+            className="nf-heading-reveal text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
+            style={{ fontFamily: spaceGrotesk.style.fontFamily }}
+          >
+            Questions before you frame it?
+          </h2>
+
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-zinc-500 sm:text-base">
+            Everything you need to know about creating, customizing, and sending
+            certificates with NameFrame.
+          </p>
+        </div>
+
+        {/* Centered FAQ Layout */}
+        <div className="mx-auto grid max-w-4xl gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
+          {/* Compact Side Banner */}
+          <aside className="relative overflow-hidden rounded-3xl border border-teal-500/20 bg-zinc-900/45 p-5 lg:self-start">
+            <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-teal-400/10 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-20 left-8 h-36 w-36 rounded-full bg-rose-500/10 blur-3xl" />
+
+            <div className="relative z-10">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-teal-500/20 bg-black/30 text-teal-400">
+                  <HelpCircle className="h-5 w-5" />
+                </div>
+
+                <div>
+                  <h3
+                    className="text-base font-semibold text-white"
+                    style={{ fontFamily: spaceGrotesk.style.fontFamily }}
+                  >
+                    Still figuring things out?
+                  </h3>
+                  <p className="text-xs text-zinc-500">Here is the quick version.</p>
+                </div>
+              </div>
+
+              <p className="text-sm leading-relaxed text-zinc-400">
+                NameFrame removes repetitive work from event certificates, from
+                participant uploads to final email delivery.
+              </p>
+
+              <div className="mt-4 grid gap-2">
+                <MiniPoint text="Bulk certificate generation" />
+                <MiniPoint text="Custom templates" />
+                <MiniPoint text="Email delivery tracking" />
+              </div>
+
+              <Link href="/contact">
+                <button
+                  className="mt-5 w-full rounded-xl border border-teal-500/30 bg-teal-400/10 px-4 py-2.5 text-sm font-medium text-teal-300 transition-all hover:border-teal-400 hover:bg-teal-400 hover:text-zinc-950 hover:shadow-[0_0_24px_rgba(45,212,191,0.18)]"
+                  style={{ fontFamily: poppins.style.fontFamily }}
+                >
+                  Contact Support
+                </button>
+              </Link>
+            </div>
+          </aside>
+
+          {/* FAQ Accordion */}
+          <div className="space-y-3">
+            {faqs.map((faq, index) => {
+              const isOpen = expandedFaq === index;
+
+              return (
+                <div
+                  key={faq.question}
+                  className={[
+                    "overflow-hidden rounded-2xl border transition-all duration-300",
+                    isOpen
+                      ? "border-teal-500/30 bg-zinc-900/70 shadow-[0_0_35px_rgba(45,212,191,0.06)]"
+                      : "border-white/5 bg-zinc-900/45 hover:border-teal-500/20 hover:bg-zinc-900/65",
+                  ].join(" ")}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleFaq(index)}
+                    aria-expanded={isOpen}
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                  >
+                    <span
+                      className={[
+                        "text-sm font-semibold transition-colors sm:text-[15px]",
+                        isOpen ? "text-teal-300" : "text-zinc-100",
+                      ].join(" ")}
+                    >
+                      {faq.question}
+                    </span>
+
+                    <span
+                      className={[
+                        "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-all duration-300",
+                        isOpen
+                          ? "rotate-180 border-teal-500/30 bg-teal-400/10 text-teal-400"
+                          : "border-white/5 bg-black/20 text-zinc-500",
+                      ].join(" ")}
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </span>
+                  </button>
+
+                  {/* Smooth dropdown */}
+                  <div
+                    className={[
+                      "grid transition-[grid-template-rows] duration-300 ease-out",
+                      isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+                    ].join(" ")}
+                  >
+                    <div className="overflow-hidden">
+                      <div
+                        className={[
+                          "border-t border-white/5 px-5 pb-5 pt-4 text-sm leading-relaxed text-zinc-400",
+                          "transition-all duration-300",
+                          isOpen
+                            ? "translate-y-0 opacity-100"
+                            : "-translate-y-2 opacity-0",
+                        ].join(" ")}
+                      >
+                        {faq.answer}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
-      <style jsx>{`
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-        opacity: 0.85;
-      }
-      50% {
-        transform: scale(1.05);
-        opacity: 1;
-      }
-    }
 
-    @keyframes rotate {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
+      <style>
+        {`
+          .nf-heading-reveal {
+            background: linear-gradient(
+              90deg,
+              rgba(255,255,255,0.58),
+              rgba(255,255,255,1),
+              rgba(45,212,191,0.95),
+              rgba(255,255,255,1),
+              rgba(255,255,255,0.58)
+            );
+            background-size: 220% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: nfHeadingShine 7s ease-in-out infinite;
+          }
 
-    @keyframes wave {
-      0%, 100% {
-        border-radius: 50% 50% 50% 50%;
-      }
-      25% {
-        border-radius: 55% 45% 55% 50%;
-      }
-      50% {
-        border-radius: 50% 60% 50% 55%;
-      }
-      75% {
-        border-radius: 55% 50% 50% 45%;
-      }
-    }
+          .nf-spin-ring {
+            animation: nfSpin 18s linear infinite;
+          }
 
-    .sun-blob {
-      animation:
-        rotate 10s linear infinite,
-        wave 5s ease-in-out infinite;
-      transition: all 0.3s ease;
-    }
-  `}</style>
-    </motion.section>
+          .nf-spin-ring::before {
+            content: "";
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            border-radius: 9999px;
+            background: rgb(45 212 191);
+            box-shadow: 0 0 18px rgba(45,212,191,0.8);
+          }
+
+          .nf-spin-ring-reverse {
+            animation: nfSpinReverse 28s linear infinite;
+          }
+
+          .nf-spin-ring-reverse::before {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 35%;
+            width: 6px;
+            height: 6px;
+            border-radius: 9999px;
+            background: rgb(244 63 94);
+            box-shadow: 0 0 16px rgba(244,63,94,0.55);
+          }
+
+          @keyframes nfHeadingShine {
+            0% {
+              background-position: 220% center;
+            }
+
+            45% {
+              background-position: 0% center;
+            }
+
+            100% {
+              background-position: 0% center;
+            }
+          }
+
+          @keyframes nfSpin {
+            from {
+              transform: rotate(0deg);
+            }
+
+            to {
+              transform: rotate(360deg);
+            }
+          }
+
+          @keyframes nfSpinReverse {
+            from {
+              transform: rotate(360deg);
+            }
+
+            to {
+              transform: rotate(0deg);
+            }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .nf-heading-reveal,
+            .nf-spin-ring,
+            .nf-spin-ring-reverse {
+              animation: none;
+            }
+
+            .nf-heading-reveal {
+              color: white;
+              background: none;
+              -webkit-background-clip: initial;
+              background-clip: initial;
+            }
+          }
+        `}
+      </style>
+    </section>
+  );
+};
+
+interface MiniPointProps {
+  text: string;
+}
+
+const MiniPoint: React.FC<MiniPointProps> = ({ text }) => {
+  return (
+    <div className="flex items-center gap-2 rounded-xl border border-white/5 bg-black/25 px-3 py-2">
+      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-teal-400" />
+      <span className="text-xs text-zinc-400">{text}</span>
+    </div>
   );
 };
 

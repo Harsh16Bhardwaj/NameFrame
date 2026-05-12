@@ -1,7 +1,6 @@
 import React from "react";
 import { MdSearch, MdDarkMode, MdLightMode, MdMenu } from "react-icons/md";
-import { titanOne } from "@/components/landing/Hero";
-
+import { titanOne } from "@/lib/fonts";
 interface TopBarProps {
   isDarkMode: boolean;
   setIsDarkMode: (value: boolean) => void;

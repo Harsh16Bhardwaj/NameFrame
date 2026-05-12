@@ -2,13 +2,9 @@
 
 import React, { useRef, useState } from "react";
 import Image from "next/image";
-import { Download } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Download, Settings2, Type, Palette, LayoutTemplate } from "lucide-react";
 import { DM_Sans, Inter, Space_Grotesk, Poppins } from "next/font/google";
-import { SparklesText } from "@/components/magicui/sparkles-text";
-import html2canvas from "html2canvas";
 
-// Font Definitions
 const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
@@ -33,15 +29,15 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
+const templates = ["/1.png", "/2.png", "/3.png", "/4.png"];
+
 const InteractivePreview = () => {
-  const certificateRef = useRef(null);
   const imageRef = useRef<HTMLImageElement>(null);
+
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [previewName, setPreviewName] = useState("");
   const [currentTemplate, setCurrentTemplate] = useState(0);
-  const templates = ["/1.png", "/2.png", "/3.png", "/4.png"];
 
-  // Text position and font settings
   const [textPosition, setTextPosition] = useState({
     x: 50,
     y: 50,
@@ -52,12 +48,14 @@ const InteractivePreview = () => {
   const [fontSettings, setFontSettings] = useState({
     family: "Poppins",
     size: 70,
-    color: "#4C72B0", // --accent-primary
-    weight: "400",
+    color: "#2DD4BF",
+    weight: "500",
   });
 
-  // Toolbar handlers
-  const handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>, axis: keyof typeof textPosition) => {
+  const handlePositionChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    axis: keyof typeof textPosition
+  ) => {
     setTextPosition((prev) => ({
       ...prev,
       [axis]: Number(e.target.value),
@@ -94,6 +92,7 @@ const InteractivePreview = () => {
 
   const handleTemplateChange = (index: number) => {
     setCurrentTemplate(index);
+    setIsImageLoaded(false);
   };
 
   const handleDownload = async () => {
@@ -109,6 +108,7 @@ const InteractivePreview = () => {
       if (!ctx) return;
 
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
       ctx.font = `${fontSettings.weight} ${fontSettings.size}px ${fontSettings.family}`;
       ctx.fillStyle = fontSettings.color;
       ctx.textAlign = "center";
@@ -121,7 +121,9 @@ const InteractivePreview = () => {
       ctx.fillText(previewName || "Your Name", x, y, maxWidth);
 
       const link = document.createElement("a");
-      link.download = `certificate-${(previewName || "your-name").replace(/\s+/g, "-").toLowerCase()}.png`;
+      link.download = `certificate-${(previewName || "your-name")
+        .replace(/\s+/g, "-")
+        .toLowerCase()}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
     } catch (error) {
@@ -130,111 +132,128 @@ const InteractivePreview = () => {
   };
 
   return (
-    <motion.section
+    <section
       id="action"
-      className="py-12 sm:py-16 bg-gradient-to-r from-[#000000] via-[#171717] to-[#000000]"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      className={`${inter.variable} relative overflow-hidden bg-black py-20 sm:py-24`}
       style={{ fontFamily: inter.style.fontFamily }}
     >
-      <div className="container mx-auto px-4 grid grid-cols-1  gap-4">
-        {/* Main Content */}
-        <motion.div
-          className="flex-1"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <motion.div
-            className="text-center mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+      {/* Soft NameFrame-style ambience */}
+      <div className="pointer-events-none absolute left-[-8rem] top-20 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-8rem] bottom-16 h-72 w-72 rounded-full bg-rose-500/10 blur-3xl" />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-6">
+        {/* Header */}
+        <div className="mx-auto mb-10 max-w-3xl text-center">
+          <p
+            className="mb-3 text-sm font-medium uppercase tracking-[0.22em] text-teal-400/90"
+            style={{ fontFamily: poppins.style.fontFamily }}
           >
-            <motion.h2
-              className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-[var(--font-light)]"
-              style={{ fontFamily: spaceGrotesk.style.fontFamily }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <SparklesText>Customize Your Certificate</SparklesText>
-            </motion.h2>
-            <motion.p
-              className="text-sm sm:text-base md:text-lg text-[var(--font-secondary)] max-w-2xl mx-auto"
-              style={{ fontFamily: inter.style.fontFamily }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              Enter your name and adjust settings to preview your certificate.
-            </motion.p>
-          </motion.div>
-          <div>
-            <motion.div
-              className="max-w-6xl mx-auto flex space-y-2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            >
-              {/* Toolbar */}
-              <motion.aside
-                className="p-4  bg-[var(--bg-secondary)] border border-[var(--onyx)] shadow-md max-h-[730px] "
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h3
-                  className="text-lg text-center font-semibold mb-4 text-[var(--font-light)]"
-                  style={{ fontFamily: spaceGrotesk.style.fontFamily }}
-                >
-                  Customize Certificate
-                </h3>
+            Try the designer
+          </p>
+
+          <h2
+            className="text-3xl font-bold tracking-tight text-white sm:text-4xl"
+            style={{ fontFamily: spaceGrotesk.style.fontFamily }}
+          >
+            Preview your certificate before sending.
+          </h2>
+
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-zinc-500">
+            Choose a template, type a sample name, adjust the placement, and see
+            how your final certificate will look.
+          </p>
+        </div>
+
+        {/* Main Card */}
+        <div className="rounded-3xl border border-white/5 bg-zinc-900/40 p-3 shadow-[0_0_70px_rgba(45,212,191,0.05)] sm:p-4">
+          {/* Window Bar */}
+          <div className="flex h-10 items-center justify-between rounded-t-2xl border border-white/5 bg-black/40 px-4">
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-rose-500/90" />
+              <span className="h-2.5 w-2.5 rounded-full bg-amber-400/90" />
+              <span className="h-2.5 w-2.5 rounded-full bg-teal-400/90" />
+            </div>
+
+            <p className="hidden text-xs text-zinc-500 sm:block">
+              NameFrame Certificate Studio
+            </p>
+
+            <div className="h-2.5 w-14" />
+          </div>
+
+          <div className="grid gap-4 rounded-b-2xl border-x border-b border-white/5 bg-zinc-950/70 p-4 lg:grid-cols-[280px_1fr]">
+            {/* Toolbar */}
+            <aside className="rounded-2xl border border-white/5 bg-zinc-900/50 p-4">
+              <div className="mb-5 flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-teal-500/20 bg-teal-400/10 text-teal-400">
+                  <Settings2 className="h-4 w-4" />
+                </div>
+
+                <div>
+                  <h3
+                    className="text-base font-semibold text-white"
+                    style={{ fontFamily: spaceGrotesk.style.fontFamily }}
+                  >
+                    Customize
+                  </h3>
+                  <p className="text-xs text-zinc-500">Live preview controls</p>
+                </div>
+              </div>
+
+              <div className="space-y-5">
+                {/* Name Input */}
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-zinc-400">
+                    Preview Name
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-zinc-600 focus:border-teal-500/40"
+                    placeholder="Enter your name"
+                    value={previewName}
+                    onChange={(e) => setPreviewName(e.target.value)}
+                    style={{ fontFamily: dmSans.style.fontFamily }}
+                  />
+                </div>
 
                 {/* Position Controls */}
-                <div className="mb-4">
+                <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+                  <div className="mb-3 flex items-center gap-2 text-sm font-medium text-zinc-300">
+                    <LayoutTemplate className="h-4 w-4 text-teal-400" />
+                    Position
+                  </div>
+
                   <div className="space-y-4">
-                    <div>
-                      <label className="block text-xs text-[var(--font-secondary)]">
-                        X Position (%)
-                      </label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={textPosition.x}
-                        onChange={(e) => handlePositionChange(e, "x")}
-                        className="w-full h-1 bg-[var(--onyx)] rounded"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs text-[var(--font-secondary)]">
-                        Y Position (%)
-                      </label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={textPosition.y}
-                        onChange={(e) => handlePositionChange(e, "y")}
-                        className="w-full h-1 bg-[var(--onyx)] rounded"
-                      />
-                    </div>
+                    <RangeControl
+                      label="X Position"
+                      value={textPosition.x}
+                      onChange={(e) => handlePositionChange(e, "x")}
+                    />
+
+                    <RangeControl
+                      label="Y Position"
+                      value={textPosition.y}
+                      onChange={(e) => handlePositionChange(e, "y")}
+                    />
                   </div>
                 </div>
 
                 {/* Typography Controls */}
-                <div className="mb-4">
-                  <div className="space-y-2">
+                <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+                  <div className="mb-3 flex items-center gap-2 text-sm font-medium text-zinc-300">
+                    <Type className="h-4 w-4 text-teal-400" />
+                    Typography
+                  </div>
+
+                  <div className="space-y-3">
                     <div>
-                      <label className="block text-xs mb-1 text-[var(--font-secondary)]">
+                      <label className="mb-1.5 block text-xs text-zinc-500">
                         Font Family
                       </label>
                       <select
                         value={fontSettings.family}
                         onChange={handleFontFamilyChange}
-                        className="w-full mb-2 p-1 text-xs bg-[var(--bg-tertiary)] text-[var(--font-light)] rounded border border-[var(--onyx)] "
+                        className="w-full rounded-lg border border-white/10 bg-zinc-950 px-2 py-2 text-xs text-zinc-200 outline-none focus:border-teal-500/40"
                       >
                         <option value="Poppins">Poppins</option>
                         <option value={dmSans.style.fontFamily}>DM Sans</option>
@@ -244,174 +263,201 @@ const InteractivePreview = () => {
                         </option>
                       </select>
                     </div>
+{/* 
+                    <RangeControl
+                      label="Font Size"
+                      value={fontSettings.size}
+                      min={20}
+                      max={120}
+                      onChange={handleFontSizeChange}
+                    /> */}
+{/* 
                     <div>
-                      <label className="block text-xs  text-[var(--font-secondary)]">
-                        Font Size (px)
-                      </label>
-                      <input
-                        type="range"
-                        min="20"
-                        max="120"
-                        value={fontSettings.size}
-                        onChange={handleFontSizeChange}
-                        className="w-full h-1 bg-[var(--onyx)] rounded"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs mb-1 text-[var(--font-secondary)]">
+                      <label className="mb-1.5 block text-xs text-zinc-500">
                         Font Weight
                       </label>
                       <select
                         value={fontSettings.weight}
                         onChange={handleFontWeightChange}
-                        className="w-full mb-2 p-1 bg-[var(--bg-tertiary)] text-[var(--font-light)] rounded border border-[var(--onyx)] text-xs"
+                        className="w-full rounded-lg border border-white/10 bg-zinc-950 px-2 py-2 text-xs text-zinc-200 outline-none focus:border-teal-500/40"
                       >
                         <option value="400">Regular</option>
                         <option value="500">Medium</option>
                         <option value="700">Bold</option>
                       </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs text-[var(--font-secondary)]">
+                    </div> */}
+
+                    {/* <div>
+                      <label className="mb-1.5 flex items-center gap-2 text-xs text-zinc-500">
+                        <Palette className="h-3.5 w-3.5" />
                         Font Color
                       </label>
                       <input
                         type="color"
                         value={fontSettings.color}
                         onChange={handleFontColorChange}
-                        className="w-full h-8 rounded border border-[var(--onyx)]"
+                        className="h-9 w-full cursor-pointer rounded-lg border border-white/10 bg-zinc-950 p-1"
                       />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
                 {/* Template Selection */}
-                <div>
-                  <h4 className="text-xs font-medium text-[var(--font-secondary)] mb-1">
-                    Template
+                <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+                  <h4 className="mb-3 text-sm font-medium text-zinc-300">
+                    Templates
                   </h4>
-                  <div className="grid grid-cols-2 gap-1">
+
+                  <div className="grid grid-cols-2 gap-2">
                     {templates.map((template, index) => (
-                      <motion.button
-                        key={index}
+                      <button
+                        key={template}
                         onClick={() => handleTemplateChange(index)}
-                        className={`p-1 border rounded ${
+                        className={[
+                          "overflow-hidden rounded-xl border bg-zinc-950 p-1 transition-all",
                           currentTemplate === index
-                            ? "border-[var(--cta)] bg-[var(--bg-tertiary)]"
-                            : "border-[var(--onyx)]"
-                        }`}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                            ? "border-teal-500/50 shadow-[0_0_20px_rgba(45,212,191,0.08)]"
+                            : "border-white/10 hover:border-teal-500/25",
+                        ].join(" ")}
                       >
                         <Image
                           src={template}
                           alt={`Template ${index + 1}`}
-                          width={80}
-                          height={60}
-                          className="w-full h-auto rounded"
+                          width={160}
+                          height={110}
+                          className="aspect-[4/3] w-full rounded-lg object-cover"
                         />
-                      </motion.button>
+                      </button>
                     ))}
                   </div>
                 </div>
-              </motion.aside>
+              </div>
+            </aside>
 
-              <motion.div
-                className="p-4 bg-[var(--bg-secondary)] border border-[var(--onyx)] shadow-md"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-              >
-                <motion.div
-                  className="mb-3"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.7 }}
-                >
-                  <input
-                    type="text"
-                    className="w-full p-2 bg-[var(--bg-tertiary)] text-[var(--font-light)] rounded border border-[var(--onyx)] focus:border-[var(--cta)] focus:outline-none text-sm"
-                    placeholder="Enter your name"
-                    value={previewName}
-                    onChange={(e) => setPreviewName(e.target.value)}
-                    style={{ fontFamily: dmSans.style.fontFamily }}
-                  />
-                </motion.div>
-
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentTemplate}
-                    ref={certificateRef}
-                    className="relative overflow-hidden rounded"
-                    initial={{ x: "100%" }}
-                    animate={{ x: 0 }}
-                    exit={{ x: "-100%" }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
+            {/* Preview */}
+            <div className="rounded-2xl border border-white/5 bg-black/30 p-4">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3
+                    className="text-lg font-semibold text-white"
+                    style={{ fontFamily: spaceGrotesk.style.fontFamily }}
                   >
-                    <Image
-                      ref={imageRef}
-                      src={templates[currentTemplate]}
-                      alt="Certificate preview"
-                      width={1000}
-                      height={800}
-                      className="w-full h-auto"
-                      onLoad={() => setIsImageLoaded(true)}
-                    />
+                    Certificate Preview
+                  </h3>
+                  <p className="text-sm text-zinc-500">
+                    This is how the participant name will appear.
+                  </p>
+                </div>
+
+                <button
+                  onClick={handleDownload}
+                  disabled={!isImageLoaded}
+                  className="inline-flex items-center justify-center rounded-xl bg-teal-400 px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-teal-300 disabled:cursor-not-allowed disabled:opacity-50"
+                  style={{ fontFamily: poppins.style.fontFamily }}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </button>
+              </div>
+
+              <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-zinc-950 p-3">
+                <div className="relative overflow-hidden rounded-xl bg-white">
+                  <Image
+                    ref={imageRef}
+                    key={templates[currentTemplate]}
+                    src={templates[currentTemplate]}
+                    alt="Certificate preview"
+                    width={1000}
+                    height={800}
+                    className="h-auto w-full"
+                    onLoad={() => setIsImageLoaded(true)}
+                    priority
+                  />
+
+                  <div
+                    className="absolute flex items-center justify-center"
+                    style={{
+                      left: `${textPosition.x - textPosition.width / 2}%`,
+                      top: `${textPosition.y}%`,
+                      width: `${textPosition.width}%`,
+                      height: `${textPosition.height}%`,
+                      transform: "translateY(-50%)",
+                    }}
+                  >
                     <div
-                      className="absolute flex items-center justify-center w-full"
+                      className="certificate-name text-center font-bold"
                       style={{
-                        left: "0%",
-                        top: `${textPosition.y}%`,
-                        width: "100%",
-                        height: `${textPosition.height}%`,
+                        fontFamily: fontSettings.family,
+                        color: fontSettings.color,
+                        fontSize: `${fontSettings.size / 2}px`,
+                        fontWeight: fontSettings.weight,
+                        lineHeight: 1,
                       }}
                     >
-                      <motion.div
-                        className="text-center"
-                        initial={{ x: "100%" }}
-                        animate={{ x: 0 }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
-                      >
-                        <div
-                          className="certificate-name text-xl sm:text-2xl md:text-3xl font-bold"
-                          style={{
-                            fontFamily: fontSettings.family,
-                            color: fontSettings.color,
-                            fontSize: `${fontSettings.size / 2}px`,
-                            fontWeight: fontSettings.weight,
-                          }}
-                        >
-                          {previewName || "Your Name"}
-                        </div>
-                      </motion.div>
+                      {previewName || "Your Name"}
                     </div>
-                  </motion.div>
-                </AnimatePresence>
+                  </div>
+                </div>
+              </div>
 
-                <motion.div
-                  className="mt-4 flex justify-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.8 }}
-                >
-                  <motion.button
-                    onClick={handleDownload}
-                    disabled={!isImageLoaded}
-                    className="px-4 py-2 bg-[var(--cta)] text-[var(--font-light)] rounded hover:bg-[var(--tealy)] transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    style={{ fontFamily: poppins.style.fontFamily }}
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    Download
-                  </motion.button>
-                </motion.div>
-              </motion.div>
-            </motion.div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <MiniInfo label="Template" value={`Style ${currentTemplate + 1}`} />
+                <MiniInfo label="Font Size" value={`${fontSettings.size}px`} />
+                <MiniInfo label="Position" value={`${textPosition.x}%, ${textPosition.y}%`} />
+              </div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
+  );
+};
+
+interface RangeControlProps {
+  label: string;
+  value: number;
+  min?: number;
+  max?: number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const RangeControl: React.FC<RangeControlProps> = ({
+  label,
+  value,
+  min = 0,
+  max = 100,
+  onChange,
+}) => {
+  return (
+    <div>
+      <div className="mb-1.5 flex items-center justify-between">
+        <label className="text-xs text-zinc-500">{label}</label>
+        <span className="text-xs text-teal-400">{value}</span>
+      </div>
+
+      <input
+        type="range"
+        min={min}
+        max={max}
+        value={value}
+        onChange={onChange}
+        className="w-full accent-teal-400"
+      />
+    </div>
+  );
+};
+
+interface MiniInfoProps {
+  label: string;
+  value: string;
+}
+
+const MiniInfo: React.FC<MiniInfoProps> = ({ label, value }) => {
+  return (
+    <div className="rounded-xl border border-white/5 bg-zinc-900/50 px-4 py-3">
+      <p className="text-xs text-zinc-500">{label}</p>
+      <p className="mt-1 text-sm font-medium text-zinc-200">{value}</p>
+    </div>
   );
 };
 
