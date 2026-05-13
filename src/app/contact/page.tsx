@@ -15,7 +15,7 @@ import {
   FaEnvelope,
 } from 'react-icons/fa';
 import { SparklesText } from '@/components/magicui/sparkles-text';
-import { josefinFont } from '@/components/landing/Hero';
+import { josefinFont } from '@/lib/fonts';
 
 interface ContactForm {
   name: string;
@@ -134,20 +134,6 @@ const ContactPage = () => {
           objectFit="cover"
           priority
           className="animate-pulse-slow"
-        />
-      </div>
-
-      {/* Neon Particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          className="w-32 h-32 bg-purple-500 rounded-full absolute top-10 left-16 opacity-20 blur-2xl"
-          animate={{ y: [0, -20, 0], scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        />
-        <motion.div
-          className="w-48 h-48 bg-indigo-500 rounded-full absolute bottom-20 right-24 opacity-20 blur-2xl"
-          animate={{ y: [0, 20, 0], scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 4, repeat: Infinity }}
         />
       </div>
 
@@ -304,10 +290,8 @@ const ContactPage = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="bg-zinc-900/80 backdrop-blur-xl p-8 rounded-2xl border border-zinc-800 relative flex flex-col items-center"
           >
-            <SparklesText>
 
             <h2 className="text-2xl md:text-4xl font-bold mb-6 text-teal-400 relative">Connect With Us</h2>
-            </SparklesText>
             <p className="text-sm text-zinc-400 mb-6 font-[var(--font-inter)] text-center">
               Reach out to us through any of our social channels or visit our office in Delhi.
             </p>
