@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
+import { getSiteUrl } from '@/lib/site'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.nameframe.site'
+  const baseUrl = getSiteUrl()
   const currentDate = new Date()
   
   return [

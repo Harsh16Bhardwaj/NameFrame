@@ -1,3 +1,5 @@
+import { getSiteUrl } from "@/lib/site";
+
 export function generateCertificateEmail({
   subject,
   eventTitle,
@@ -14,6 +16,7 @@ export function generateCertificateEmail({
   verificationCode?: string;
 }) {
   const preheader = `Congratulations ${participantName}! Your certificate for "${eventTitle}" is here.`;
+  const siteUrl = getSiteUrl();
 
   return `
   <!DOCTYPE html>
@@ -110,8 +113,8 @@ export function generateCertificateEmail({
               </div>
               <p style="margin-top: 15px; font-size: 14px; color: #666;">
                 Anyone can verify this certificate at: 
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://nameframe.site'}/verify" style="color: #004080;">
-                  ${process.env.NEXT_PUBLIC_APP_URL || 'https://nameframe.site'}/verify
+                <a href="${siteUrl}/verify" style="color: #004080;">
+                  ${siteUrl}/verify
                 </a>
               </p>
             </div>

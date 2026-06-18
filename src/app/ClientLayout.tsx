@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -15,6 +16,12 @@ export default function ClientLayout({
   const isEvents = pathname.startsWith("/events");
   const isParticipants = pathname.startsWith("/participants");
   const isTemplate = pathname.startsWith("/templates");
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") {
+      console.info("[Clerk] Using explicit publishable key and no custom proxy URL.");
+    }
+  }, []);
 
   const showHeaderFooter = !isDashboard && !isEvents && !isTemplate && !isParticipants;
 

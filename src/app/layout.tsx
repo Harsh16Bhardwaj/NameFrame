@@ -13,6 +13,7 @@ import {
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
+import { getSiteUrl } from "@/lib/site";
 
 // Font Configs
 const geistSans = Geist({
@@ -104,7 +105,7 @@ export const metadata: Metadata = {
     description: "Create, customize, and distribute professional certificates for events, courses, and achievements.",
     images: ['/og-image.png'],
     type: 'website',
-    url: 'https://www.nameframe.site/',
+    url: getSiteUrl(),
   },
   twitter: {
     card: 'summary_large_image',
@@ -123,7 +124,7 @@ export default function RootLayout({
   // No need for path checking here - moved to client layout
 
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
       <html lang="en" className="dark">
         <body
           className={`${geistSans.variable} ${geistMono.variable} ${styleScript.variable} ${bangers.variable} ${titanOne.variable} ${signika.variable} ${raleway.variable} ${josefinSans.variable} antialiased`}
