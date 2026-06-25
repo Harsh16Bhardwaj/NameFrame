@@ -1,6 +1,6 @@
 "use client";
 
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton } from "@/components/auth/clerk-client";
 import { X, Scale, Gavel, BookOpen, Scroll } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";

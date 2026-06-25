@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import Logo from "@/../public/nameframelogo.png";
 import Image from "next/image";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton } from "@/components/auth/clerk-client";
 import { Cookie } from "next/font/google";
 
 const cookieFont = Cookie({

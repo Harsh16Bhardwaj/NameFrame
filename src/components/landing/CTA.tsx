@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton } from "@/components/auth/clerk-client";
 import {
   ArrowRight,
   Award,

@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton } from "@/components/auth/clerk-client";
 import Link from "next/link";
 import { Inter, Space_Grotesk, Poppins } from "next/font/google";
 

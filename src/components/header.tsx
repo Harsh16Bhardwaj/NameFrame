@@ -13,7 +13,7 @@ import {
   SignInButton,
   SignUpButton,
   UserButton,
-} from "@clerk/nextjs";
+} from "@/components/auth/clerk-client";
 import { Manrope, Style_Script, Poppins } from "next/font/google";
 import Logo from "../../public/nameframelogo.png";
 import {
