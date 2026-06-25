@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Search, CheckCircle2, XCircle, Calendar, User, Mail, Award, ExternalLink, ShieldCheck } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -22,7 +22,7 @@ interface VerificationResult {
   error?: string;
 }
 
-export default function VerifyPage() {
+function VerifyPageContent() {
   const [verificationCode, setVerificationCode] = useState("");
   const [result, setResult] = useState<VerificationResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -183,5 +183,13 @@ export default function VerifyPage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-zinc-950 text-zinc-200" />}>
+      <VerifyPageContent />
+    </Suspense>
   );
 }
