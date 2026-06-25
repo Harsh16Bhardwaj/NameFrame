@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { DeliveryQueueTier } from "@/generated/prisma/enums";
 import { requireCurrentUser, isProUser } from "@/lib/auth/user";
 import { enqueueEventBatch } from "@/lib/delivery/service";
+import { MAILING_SERVICE_DOWN_MESSAGE } from "@/lib/delivery/public-messages";
 
 export async function POST(req: Request) {
   try {
@@ -48,7 +49,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Failed to schedule send",
+        error: MAILING_SERVICE_DOWN_MESSAGE,
       },
       { status: 500 }
     );

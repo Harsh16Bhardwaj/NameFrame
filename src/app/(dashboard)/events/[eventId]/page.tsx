@@ -7,6 +7,7 @@ import LoadingState from "./components/LoadingState";
 import ErrorState from "./components/ErrorState";
 import EventHeader from "./components/EventHeader";
 import ProtectedPage from "@/components/protectedPage";
+import { MAILING_SERVICE_DOWN_MESSAGE } from "@/lib/delivery/public-messages";
 
 const ParticipantsTable = dynamic(() => import("./components/ParticipantsTable"), {
   ssr: false,
@@ -71,6 +72,7 @@ export default function EventDashboard() {
   const [isSending, setIsSending] = useState(false);
   const [sendingStatus, setSendingStatus] = useState<SendingStatus>({});
   const [emailProgress, setEmailProgress] = useState({ sent: 0, total: 0 });
+  const [mailingError, setMailingError] = useState("");
   const [dummyName, setDummyName] = useState("John Doe");
   const [personalizedMessage, setPersonalizedMessage] = useState("");
 
@@ -131,6 +133,16 @@ export default function EventDashboard() {
     } catch {}
   };
 
+  const getMailingErrorMessage = (error: unknown) => {
+    if (axios.isAxiosError(error)) {
+      const serverMessage = error.response?.data?.error;
+      return typeof serverMessage === "string" && serverMessage.trim()
+        ? serverMessage
+        : MAILING_SERVICE_DOWN_MESSAGE;
+    }
+    return MAILING_SERVICE_DOWN_MESSAGE;
+  };
+
   const sendCertificates = async () => {
     if (!event) return;
     const unsentParticipants = event.participants.filter((p) => !p.emailed);
@@ -139,6 +151,7 @@ export default function EventDashboard() {
     unsentParticipants.forEach((p) => (initialStatus[p.id] = "pending"));
     setSendingStatus(initialStatus);
     setEmailProgress({ sent: 0, total: unsentParticipants.length });
+    setMailingError("");
     setIsSending(true);
     try {
       const defaultMessage = `Dear {name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`;
@@ -154,7 +167,12 @@ export default function EventDashboard() {
         const sent = response.data.summary?.sent ?? 0;
         const pending = response.data.summary?.pending ?? 0;
         setEmailProgress({ sent, total: sent + pending });
+        if ((response.data.summary?.failed ?? 0) > 0) {
+          setMailingError(MAILING_SERVICE_DOWN_MESSAGE);
+        }
       }
+    } catch (error) {
+      setMailingError(getMailingErrorMessage(error));
     } finally {
       setIsSending(false);
       const refreshed = await axios.get(`/api/events/${eventId}`);
@@ -167,6 +185,7 @@ export default function EventDashboard() {
     const participant = event.participants.find((p) => p.id === participantId);
     if (!participant || participant.emailed) return;
     setSendingStatus((prev) => ({ ...prev, [participantId]: "sending" }));
+    setMailingError("");
     try {
       const defaultMessage = `Dear ${participant.name},\n\nCongratulations on completing the ${event.title}! Please find your certificate attached.\n\nBest regards,\nThe NameFrame Team`;
       const finalMessage = personalizedMessage.trim()
@@ -190,9 +209,11 @@ export default function EventDashboard() {
         );
       } else {
         setSendingStatus((prev) => ({ ...prev, [participantId]: "error" }));
+        setMailingError(MAILING_SERVICE_DOWN_MESSAGE);
       }
-    } catch {
+    } catch (error) {
       setSendingStatus((prev) => ({ ...prev, [participantId]: "error" }));
+      setMailingError(getMailingErrorMessage(error));
     }
   };
 
@@ -207,6 +228,12 @@ export default function EventDashboard() {
           {!error && event && (
             <>
               <EventHeader event={event} />
+
+              {mailingError && (
+                <div className="mb-6 rounded-lg border border-red-500/30 bg-red-950/40 px-4 py-3 text-sm text-red-200">
+                  {mailingError}
+                </div>
+              )}
 
               <div className="mb-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
                 <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">

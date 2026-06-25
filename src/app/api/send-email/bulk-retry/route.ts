@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/db";
+import { MAILING_SERVICE_DOWN_MESSAGE } from "@/lib/delivery/public-messages";
 
 
 export async function POST(req: Request) {
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       { 
         success: false, 
-        error: "Failed to initiate bulk email sending" 
+        error: MAILING_SERVICE_DOWN_MESSAGE
       },
       { status: 500 }
     );

@@ -3,6 +3,7 @@ import { DeliveryQueueTier } from "@/generated/prisma/enums";
 import { requireCurrentUser, isProUser } from "@/lib/auth/user";
 import { enqueueEventBatch, processQueueTick } from "@/lib/delivery/service";
 import { prisma } from "@/lib/db";
+import { MAILING_SERVICE_DOWN_MESSAGE } from "@/lib/delivery/public-messages";
 
 export async function POST(req: Request) {
   const startedAt = Date.now();
@@ -47,7 +48,7 @@ export async function POST(req: Request) {
       .filter((x) => x.status === "FAILED")
       .map((x) => ({
         participantId: x.participantId,
-        reason: x.lastError || "Send failed",
+        reason: MAILING_SERVICE_DOWN_MESSAGE,
         attemptCount: x.attemptCount,
       }));
 
@@ -69,7 +70,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Failed to process bulk send",
+        error: MAILING_SERVICE_DOWN_MESSAGE,
       },
       { status: 500 }
     );

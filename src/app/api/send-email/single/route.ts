@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireCurrentUser } from "@/lib/auth/user";
 import { sendSingleParticipant } from "@/lib/delivery/service";
+import { MAILING_SERVICE_DOWN_MESSAGE } from "@/lib/delivery/public-messages";
 
 export async function POST(req: Request) {
   const startedAt = Date.now();
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: result.error || "Send failed",
+          error: MAILING_SERVICE_DOWN_MESSAGE,
           failedAttempts: result.failedAttempts ?? 3,
           toastCode: "EMAIL_FAILED_3_ATTEMPTS",
         },
@@ -55,7 +56,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Failed to send certificate",
+        error: MAILING_SERVICE_DOWN_MESSAGE,
       },
       { status: 500 }
     );

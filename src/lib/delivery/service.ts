@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db";
 import { buildParticipantCertificate } from "@/lib/certificate/pipeline";
 import { generateCertificateEmail } from "@/app/api/send-email/emailTemplate";
 import { sendWithProviderFallback } from "@/lib/delivery/providers";
-import { mapFailureCode } from "@/lib/delivery/error-codes";
+import { DeliveryFailureCode, mapFailureCode } from "@/lib/delivery/error-codes";
 import {
   DeliveryJobStatus,
   DeliveryMode,
@@ -10,6 +10,7 @@ import {
   DeliveryQueueItemStatus,
   DeliveryQueueTier,
   DeliveryAttemptStatus,
+  EmailProvider,
 } from "@/generated/prisma/enums";
 
 type EnqueueInput = {
@@ -28,11 +29,11 @@ type QueueTickInput = {
 
 const DEFAULT_MAX_EVENTS_PER_TICK = 1;
 const DEFAULT_PARTICIPANTS_PER_CHUNK = 5;
-const NON_RETRYABLE_FAILURE_CODES = new Set([
+const NON_RETRYABLE_FAILURE_CODES: ReadonlySet<DeliveryFailureCode> = new Set([
   "INVALID_EMAIL",
   "SMTP_POOL_EXHAUSTED",
   "PROVIDER_REJECTED",
-] as const);
+]);
 
 function now() {
   return new Date();
@@ -127,7 +128,7 @@ export async function sendSingleParticipant(input: {
   const job = await prisma.deliveryJob.create({
     data: {
       eventId: input.eventId,
-      provider: "RESEND",
+      provider: EmailProvider.NODEMAILER,
       mode: DeliveryMode.SINGLE,
       status: DeliveryJobStatus.RUNNING,
       startedAt: now(),
@@ -242,7 +243,7 @@ export async function sendSingleParticipant(input: {
         data: {
           participantId: participant.id,
           jobId: job.id,
-          provider: "RESEND",
+          provider: EmailProvider.NODEMAILER,
           status: DeliveryAttemptStatus.FAILED,
           attemptNo: attempt,
           errorMessage: lastError,

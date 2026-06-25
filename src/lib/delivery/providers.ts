@@ -154,25 +154,25 @@ export async function sendWithNodemailerPool(input: SendEmailInput): Promise<Sen
 }
 
 export async function sendWithProviderFallback(input: SendEmailInput): Promise<SendEmailResult> {
-  const resendStartedAt = Date.now();
-  const resendResult = await sendWithResend(input);
-  console.log("[delivery/provider] resend result", {
-    to: input.to,
-    ok: resendResult.ok,
-    durationMs: Date.now() - resendStartedAt,
-    error: resendResult.ok ? null : resendResult.errorMessage,
-    failureCode: resendResult.failureCode,
-  });
-  if (resendResult.ok) return resendResult;
-
   const nodemailerStartedAt = Date.now();
   const nodemailerResult = await sendWithNodemailerPool(input);
-  console.log("[delivery/provider] nodemailer fallback result", {
+  console.log("[delivery/provider] nodemailer primary result", {
     to: input.to,
     ok: nodemailerResult.ok,
     durationMs: Date.now() - nodemailerStartedAt,
     error: nodemailerResult.ok ? null : nodemailerResult.errorMessage,
     failureCode: nodemailerResult.failureCode,
   });
-  return nodemailerResult;
+  if (nodemailerResult.ok) return nodemailerResult;
+
+  const resendStartedAt = Date.now();
+  const resendResult = await sendWithResend(input);
+  console.log("[delivery/provider] resend fallback result", {
+    to: input.to,
+    ok: resendResult.ok,
+    durationMs: Date.now() - resendStartedAt,
+    error: resendResult.ok ? null : resendResult.errorMessage,
+    failureCode: resendResult.failureCode,
+  });
+  return resendResult;
 }
