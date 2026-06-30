@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import { attachLegacyTemplateConfig } from "@/lib/certificate/editor-config";
 
 // Initialize Prisma Client
-const prisma = new PrismaClient();
 
 // Define the type for the response data structure for multiple templates
 interface TemplatesResponse {
@@ -24,14 +24,8 @@ interface Event {
   template: { 
     id: string; 
     name: string; 
-    fontFamily: string; 
-    fontSize: number; 
     userId: string; 
-    textPositionX: number; 
-    textPositionY: number; 
-    textWidth: number; 
-    textHeight: number; 
-    fontColor: string; 
+    editorConfigJson: unknown;
     backgroundUrl: string; 
     createdAt: Date; 
     updatedAt: Date; 
@@ -75,7 +69,7 @@ export async function GET(req: Request): Promise<NextResponse<TemplatesResponse 
       // Return the complete template data
       return NextResponse.json({ 
         success: true, 
-        data: event.template 
+        data: attachLegacyTemplateConfig(event.template) 
       });
     } 
     // Otherwise, fetch all distinct templates as before
@@ -103,7 +97,5 @@ export async function GET(req: Request): Promise<NextResponse<TemplatesResponse 
       { success: false, error: "An unexpected error occurred. Please try again later." },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

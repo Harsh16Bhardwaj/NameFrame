@@ -1,23 +1,50 @@
 export const testimonials = [
   {
-    name: "Sarah Johnson",
-    role: "Event Manager at TechCorp",
-    image: "https://randomuser.me/api/portraits/women/32.jpg",
-    text: "NameFrame saved our team hours of manual certificate creation. We sent 500+ certificates in minutes!",
+    name: "Rohit Goel",
+    role: "GDG Lead",
+    text: "We used this for our community event certificates, and the process was flawless. Saved us hours of manual work and the final certificates looked incredibly professional. The team was able to handle a huge list of attendees with zero hassle.",
     rating: 5
   },
   {
-    name: "Michael Chen",
-    role: "University Program Coordinator",
-    image: "https://randomuser.me/api/portraits/men/44.jpg",
-    text: "The drag-and-drop name positioning is a game-changer. Our certificates look professional with minimal effort.",
+    name: "Aryan Chauhan",
+    role: "Technical Lead at TechXtract",
+    text: "I needed to issue certificates for a hackathon we organized. The entire workflow was automated and took minutes, not days. The team behind this service is fast and reliable. A huge time-saver.",
     rating: 5
   },
   {
-    name: "Emily Rodriguez",
-    role: "HR Director",
-    image: "https://randomuser.me/api/portraits/women/68.jpg",
-    text: "We switched from another tool and immediately saw a difference in quality and ease of use. Highly recommended!",
-    rating: 4
+    name: "Vikas Gupta",
+    role: "Event Management at SPMCIL",
+    text: "Managing event logistics is already a lot, so having the certification process completely automated was a massive relief. The platform is so easy to use, and our attendees loved the sleek design of the certificates.",
+    rating: 5
+  },
+  {
+    name: "Anya Singh",
+    role: "Society at MAIT",
+    text: "Our society needed a way to recognize our members with certificates. This platform was perfect—we just uploaded our list and they handled everything else. It was so simple and the certificates looked great.",
+    rating: 5
+  },
+  {
+    name: "Karan Sharma",
+    role: "Computer Science, DTU",
+    text: "Getting a personalized certificate for my internship took no time at all. It's so much better than a generic template. The whole process was quick and easy.",
+    rating: 5
+  },
+  {
+    name: "Simran Kaur",
+    role: "Head of Public Relations, MSIT",
+    text: "We awarded certificates for a workshop, and the automated delivery was a huge hit. It made the entire experience feel more professional and organized.",
+    rating: 5
+  },
+  {
+    name: "Sarthak Aggarwal",
+    role: "Freelance Graphic Designer",
+    text: "I was able to create custom certificate designs and then use this service to automate the distribution. It's an incredible tool that allows me to focus on the creative side while they handle the boring stuff.",
+    rating: 5
+  },
+  {
+    name: "Priyanka Bose",
+    role: "Founder of 'Artisan Bites'",
+    text: "We give out certificates for our baking classes, and manually creating them was a nightmare. Now, it's all automated. I can focus on my business and not get bogged down in admin tasks.",
+    rating: 5
   }
 ];

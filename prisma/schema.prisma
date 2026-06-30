@@ -1,73 +1,391 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+enum EventStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum CertificateTemplateRole {
+  DEFAULT
+  FIRST
+  SECOND
+  THIRD
+}
+
+enum AwardPosition {
+  FIRST
+  SECOND
+  THIRD
+}
+
+enum EmailProvider {
+  NODEMAILER
+  RESEND
+  SENDGRID
+}
+
+enum DeliveryMode {
+  SINGLE
+  BATCH
+  ALL
+  SCHEDULED
+}
+
+enum DeliveryJobStatus {
+  PENDING
+  RUNNING
+  PAUSED
+  COMPLETED
+  FAILED
+}
+
+enum DeliveryAttemptStatus {
+  SENT
+  FAILED
+  BOUNCED
+  DEFERRED
+}
+
+enum DeliveryQueueTier {
+  PREMIUM
+  REGULAR
+}
+
+enum DeliveryQueueEventStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum DeliveryQueueItemStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+enum PaymentProvider {
+  RAZORPAY
+}
+
+enum PaymentStatus {
+  CREATED
+  CAPTURED
+  FAILED
+  REFUNDED
+}
+
+enum PlanCode {
+  PRO_MONTHLY
+  PRO_ANNUAL
+}
+
+enum UserRole {
+  FREE
+  PRO
 }
 
 model User {
-  id        String   @id //clerk id
-  email     String   @unique
-  name      String
-  password  String?
-  createdAt DateTime @default(now())
+  id                  String   @id
+  email               String   @unique
+  name                String
+  role                UserRole @default(FREE)
+  isPro               Boolean  @default(false)
+  razorpayCustomerId  String?
+  groqApiKeyEncrypted String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
-  events    Event[]
-  templates CertificateTemplate[]
+  events          Event[]
+  templates       CertificateTemplate[]
+  emailTemplates  EmailTemplate[]
+  paymentRecords  PaymentRecord[]
+  queueEvents     DeliveryQueueEvent[]      @relation("RequestedByUserQueueEvents")
+  smtpCredentials SmtpCredentialPool[]      @relation("CreatedByUserSmtpCredentials")
 }
 
 model Event {
-  id        String   @id @default(uuid())
-  title     String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
+  id                   String      @id @default(uuid())
+  title                String
+  description          String?
+  imageUrl             String?
+  organizationName     String?
+  organizationLogoUrl  String?
+  certificateTitle     String?
+  location             String?
+  emailContentText     String?
+  status               EventStatus @default(DRAFT)
+  scheduledSendAt      DateTime?
+  emailTemplateId      String?
+  userId               String
+  templateId           String?
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
 
-  templateId   String?
-  template     CertificateTemplate? @relation(fields: [templateId], references: [id])
-  participants Participant[]
+  user              User                        @relation(fields: [userId], references: [id])
+  template          CertificateTemplate?        @relation("DefaultEventTemplate", fields: [templateId], references: [id])
+  emailTemplate     EmailTemplate?              @relation(fields: [emailTemplateId], references: [id])
+  participants      Participant[]
+  templateBindings  EventCertificateTemplate[]
+  awardAssignments  EventAwardAssignment[]
+  deliveryJobs      DeliveryJob[]
+  queueEvents       DeliveryQueueEvent[]
+  certificateIssues CertificateIssue[]
+  insightSnapshot   InsightSnapshot?
+
+  @@index([userId, createdAt])
 }
 
 model CertificateTemplate {
+  id               String   @id @default(cuid())
+  name             String
+  backgroundUrl    String
+  editorConfigJson Json
+  userId           String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user             User                       @relation(fields: [userId], references: [id])
+  events           Event[]                    @relation("DefaultEventTemplate")
+  eventBindings    EventCertificateTemplate[]
+  certificateIssues CertificateIssue[]
+}
+
+model EventCertificateTemplate {
+  id         String                  @id @default(cuid())
+  eventId    String
+  templateId String
+  role       CertificateTemplateRole @default(DEFAULT)
+  createdAt  DateTime                @default(now())
+  updatedAt  DateTime                @updatedAt
+
+  event    Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  template CertificateTemplate @relation(fields: [templateId], references: [id], onDelete: Restrict)
+
+  @@unique([eventId, role])
+  @@index([templateId])
+}
+
+model EventAwardAssignment {
+  id            String        @id @default(cuid())
+  eventId       String
+  participantId String
+  position      AwardPosition
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  event       Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, participantId])
+  @@index([eventId, position])
+}
+
+model EmailTemplate {
   id            String   @id @default(cuid())
-  name          String
-  backgroundUrl String
   userId        String
-  user          User     @relation(fields: [userId], references: [id])
+  name          String
+  subject       String
+  bodyHtml      String?
+  bodyText      String?
+  variablesJson Json
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  textPositionX Float    @default(50)  // X position as percentage (0-100)
-  textPositionY Float    @default(50)  // Y position as percentage (0-100)
-  textWidth     Float    @default(80)  // Width as percentage (0-100)
-  textHeight    Float    @default(15)  // Height as percentage (0-100)
-  fontFamily    String   @default("Arial")
-  fontSize      Int      @default(48)
-  fontColor     String   @default("#000000")
 
+  user   User    @relation(fields: [userId], references: [id])
   events Event[]
 }
 
 model Participant {
-  id             String   @id @default(uuid())
-  name           String
-  email          String
-  eventId        String
-  event          Event    @relation(fields: [eventId], references: [id])
-  certificateUrl String? // Optional: generated cert link
-  emailed        Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  
-  // Email Retry System
-  emailAttempts     Int      @default(0)        // Number of email attempts
-  emailStatus       String   @default("pending") // pending, sending, sent, failed
-  lastEmailAttempt  DateTime?                   // Last attempt timestamp
-  emailError        String?                     // Last error message
-  
-  // Certificate Verification Fields
-  verificationCode    String?   @unique // Unique code for verification
-  certificateHash     String?   // Hash of certificate for integrity
-  verifiedAt          DateTime? // When certificate was generated/verified
-  isVerified          Boolean   @default(false)
+  id               String   @id @default(uuid())
+  name             String
+  email            String
+  eventId          String
+  certificateUrl   String?
+  qrCodeUrl        String?
+  emailed          Boolean  @default(false)
+  participated     Boolean  @default(false)
+  verificationCode String?  @unique
+  certificateHash  String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  event            Event                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  awardAssignments EventAwardAssignment[]
+  deliveryAttempts DeliveryAttempt[]
+  queueItems        DeliveryQueueItem[]
+  certificateIssues CertificateIssue[]
+
+  @@unique([eventId, email])
+  @@index([eventId, createdAt])
+}
+
+model CertificateIssue {
+  id               String                  @id @default(uuid())
+  eventId          String
+  participantId    String
+  templateId       String
+  role             CertificateTemplateRole @default(DEFAULT)
+  certificateUrl   String?
+  qrCodeUrl        String?
+  verificationCode String                  @unique
+  certificateHash  String?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  event       Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  participant Participant         @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  template    CertificateTemplate @relation(fields: [templateId], references: [id], onDelete: Restrict)
+
+  @@unique([eventId, participantId, role])
+  @@index([participantId, createdAt])
+  @@index([eventId, role])
+}
+
+model DeliveryJob {
+  id           String            @id @default(uuid())
+  eventId      String
+  provider     EmailProvider
+  mode         DeliveryMode
+  status       DeliveryJobStatus @default(PENDING)
+  scheduledFor DateTime?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  batchSize    Int               @default(50)
+  lastCursor   String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  event    Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  attempts DeliveryAttempt[]
+
+  @@index([eventId, createdAt])
+  @@index([status, scheduledFor])
+}
+
+model DeliveryAttempt {
+  id                String                @id @default(uuid())
+  participantId     String
+  jobId             String
+  provider          EmailProvider
+  status            DeliveryAttemptStatus
+  attemptNo         Int
+  providerMessageId String?
+  errorMessage      String?
+  sentAt            DateTime?
+  createdAt         DateTime              @default(now())
+
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  job         DeliveryJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([participantId, attemptNo])
+  @@index([jobId, status])
+}
+
+model DeliveryQueueEvent {
+  id            String                   @id @default(uuid())
+  eventId       String
+  requestedById String
+  tier          DeliveryQueueTier
+  status        DeliveryQueueEventStatus @default(PENDING)
+  scheduledFor  DateTime?
+  subject       String
+  transcript    String
+  enqueuedAt    DateTime                 @default(now())
+  startedAt     DateTime?
+  completedAt   DateTime?
+  lastError     String?
+  attemptCount  Int                      @default(0)
+  nextRetryAt   DateTime?
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+
+  event         Event                    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  requestedBy   User                     @relation("RequestedByUserQueueEvents", fields: [requestedById], references: [id], onDelete: Cascade)
+  items         DeliveryQueueItem[]
+
+  @@index([status, tier, scheduledFor, enqueuedAt])
+  @@index([eventId, createdAt])
+}
+
+model DeliveryQueueItem {
+  id                String                  @id @default(uuid())
+  queueEventId      String
+  participantId     String
+  status            DeliveryQueueItemStatus @default(PENDING)
+  attemptCount      Int                     @default(0)
+  lastError         String?
+  lastTriedAt       DateTime?
+  sentAt            DateTime?
+  provider          EmailProvider?
+  providerMessageId String?
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+
+  queueEvent        DeliveryQueueEvent      @relation(fields: [queueEventId], references: [id], onDelete: Cascade)
+  participant       Participant             @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([queueEventId, participantId])
+  @@index([status, updatedAt])
+}
+
+model SmtpCredentialPool {
+  id               String   @id @default(cuid())
+  label            String
+  host             String
+  port             Int
+  username         String
+  passwordEncrypted String
+  secure           Boolean  @default(true)
+  active           Boolean  @default(true)
+  sendCount        Int      @default(0)
+  sendLimit        Int      @default(400)
+  createdById      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  createdBy        User?    @relation("CreatedByUserSmtpCredentials", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([active, sendCount, sendLimit])
+}
+
+model PaymentRecord {
+  id                     String          @id @default(uuid())
+  userId                 String
+  provider               PaymentProvider @default(RAZORPAY)
+  providerPaymentId      String          @unique
+  providerSubscriptionId String?
+  status                 PaymentStatus
+  plan                   PlanCode
+  amount                 Int
+  currency               String          @default("INR")
+  createdAt              DateTime        @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+}
+
+model InsightSnapshot {
+  id                String   @id @default(uuid())
+  eventId           String   @unique
+  totalParticipants Int
+  participatedCount Int
+  sentCount         Int
+  failedCount       Int
+  deliveryRate      Float
+  participationRate Float
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }

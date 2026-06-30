@@ -130,7 +130,7 @@ export const SparklesText: React.FC<SparklesTextProps> = ({
 
   return (
     <motion.div
-      className={cn(" text-2xl md:text-6xl font-bold", className)}
+      className={cn(" text-2xl md:text-5xl font-bold", className)}
       {...props}
       style={{
         "--sparkles-first-color": colors.first,

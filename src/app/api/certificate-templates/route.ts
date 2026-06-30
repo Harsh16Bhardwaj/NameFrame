@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import { attachLegacyTemplateConfig, DEFAULT_EDITOR_CONFIG } from "@/lib/certificate/editor-config";
 
 // Initialize Prisma Client
-const prisma = new PrismaClient();
 
 // Fetch all certificate templates for the current user
 export async function GET() {
@@ -21,7 +21,7 @@ export async function GET() {
     });
 
     // Return the templates
-    return NextResponse.json({ success: true, data: templates });
+    return NextResponse.json({ success: true, data: templates.map(attachLegacyTemplateConfig) });
   } catch (error) {
     // Handle unexpected errors
     console.error("Error fetching certificate templates:", error);
@@ -29,9 +29,6 @@ export async function GET() {
       { success: false, error: "An unexpected error occurred. Please try again later." },
       { status: 500 }
     );
-  } finally {
-    // Ensure Prisma Client is properly disconnected
-    await prisma.$disconnect();
   }
 }
 
@@ -51,11 +48,11 @@ export async function POST(req: Request) {
 
     // Create a new certificate template
     const newTemplate = await prisma.certificateTemplate.create({
-      data: { name, backgroundUrl, userId },
+      data: { name, backgroundUrl, userId, editorConfigJson: DEFAULT_EDITOR_CONFIG },
     });
 
     // Return the newly created template
-    return NextResponse.json({ success: true, data: newTemplate }, { status: 201 });
+    return NextResponse.json({ success: true, data: attachLegacyTemplateConfig(newTemplate) }, { status: 201 });
 
     
   } catch (error) {
@@ -65,7 +62,5 @@ export async function POST(req: Request) {
       { status: 500 }
     );
 
-  } finally {
-    await prisma.$disconnect();
   }
 }

@@ -1,16 +1,16 @@
 // app/api/verify/[code]/route.ts
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import { buildVerifyUrl } from "@/lib/verification/qr";
 
-const prisma = new PrismaClient();
 
 // GET /api/verify/[code] - Public endpoint to verify certificates
 export async function GET(
   request: Request,
-  { params }: { params: { code: string } }
+  { params }: { params: Promise<{ code: string }> }
 ) {
   try {
-    const { code } = params;
+    const { code } = await params;
 
     if (!code) {
       return NextResponse.json(
@@ -19,7 +19,47 @@ export async function GET(
       );
     }
 
-    // Find participant by verification code
+    const issue = await prisma.certificateIssue.findUnique({
+      where: { verificationCode: code },
+      include: {
+        participant: true,
+        event: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        template: true,
+      },
+    });
+
+    if (issue) {
+      return NextResponse.json({
+        success: true,
+        verified: true,
+        certificate: {
+          recipientName: issue.participant.name,
+          recipientEmail: issue.participant.email,
+          eventTitle: issue.event.title,
+          issueDate: issue.createdAt,
+          createdAt: issue.createdAt,
+          role: issue.role,
+          issuer: {
+            name: issue.event.user.name,
+            email: issue.event.user.email,
+          },
+          verificationCode: issue.verificationCode,
+          certificateUrl: issue.certificateUrl,
+          qrCodeUrl: issue.qrCodeUrl,
+          verifyUrl: issue.verificationCode ? buildVerifyUrl(issue.verificationCode) : null,
+        },
+      });
+    }
+
     const participant = await prisma.participant.findUnique({
       where: { verificationCode: code },
       include: {
@@ -31,7 +71,6 @@ export async function GET(
                 email: true,
               },
             },
-            template: true,
           },
         },
       },
@@ -48,19 +87,6 @@ export async function GET(
       );
     }
 
-    // Check if certificate is verified
-    if (!participant.isVerified) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: "Certificate is not verified", 
-          verified: false 
-        },
-        { status: 400 }
-      );
-    }
-
-    // Return verification details
     const verificationData = {
       success: true,
       verified: true,
@@ -68,7 +94,7 @@ export async function GET(
         recipientName: participant.name,
         recipientEmail: participant.email,
         eventTitle: participant.event.title,
-        issueDate: participant.verifiedAt,
+        issueDate: participant.createdAt,
         createdAt: participant.createdAt,
         issuer: {
           name: participant.event.user.name,
@@ -76,6 +102,8 @@ export async function GET(
         },
         verificationCode: participant.verificationCode,
         certificateUrl: participant.certificateUrl,
+        qrCodeUrl: participant.qrCodeUrl,
+        verifyUrl: participant.verificationCode ? buildVerifyUrl(participant.verificationCode) : null,
       },
     };
 
@@ -86,7 +114,5 @@ export async function GET(
       { success: false, error: "Internal Server Error", verified: false },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { BarChart, LineChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -8,14 +8,15 @@ interface AnalyticsCardProps {
     title: string;
     participants: { emailed: boolean }[];
   }[];
-  stats: any;
+  stats: {
+    attendanceRate?: number;
+    deliveryRate?: number;
+  };
   loadingEvents: boolean;
   isDarkMode: boolean;
 }
 
-const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents }) => {
-  const [activeTab, setActiveTab] = useState("week");
-  
+const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents, stats }) => {
   const completionData = events.map((event) => {
     const total = event.participants.length;
     const completed = event.participants.filter(p => p.emailed).length;
@@ -34,15 +35,25 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents }) 
     };
   });
 
+  const completionAvg = completionData.length
+    ? Math.round(completionData.reduce((sum, item) => sum + item.value, 0) / completionData.length)
+    : 0;
+
+  const deliveryAvg = typeof stats.deliveryRate === "number"
+    ? Math.round(stats.deliveryRate)
+    : emailData.length
+      ? Math.round(emailData.reduce((sum, item) => sum + item.value, 0) / emailData.length)
+      : 0;
+
   return (
     <motion.div
-      className="bg-[var(--dark-onyx)] rounded-2xl p-5  shadow-md border border-[var(--dark-onyx-text)] overflow-hidden"
+      className="overflow-hidden rounded-2xl border border-white/5 bg-zinc-900/60 p-5"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5 }}
     >
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg md:text-xl font-bold text-[var(--tealy-heading) underline decoration-2 underline-offset-4 decoration-1]">Analytics</h2>
+        <h2 className="text-lg font-bold text-zinc-100 md:text-xl">Analytics</h2>
         
 
       </div>
@@ -50,10 +61,10 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents }) 
       <div className="space-y-6 px-1">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-sm font-medium text-[var(--text-primary)]">Event Completion Rate</h3>
-            <span className="text-xs text-[var(--text-secondary)]">% Avg</span>
+            <h3 className="text-sm font-medium text-zinc-100">Event Completion Rate</h3>
+            <span className="text-xs text-zinc-400">{completionAvg}% Avg</span>
           </div>
-          <p className="text-xs text-[var(--text-secondary)] mb-4">Certificate completion rates per event</p>
+          <p className="mb-4 text-xs text-zinc-400">Certificate completion rates per event</p>
           
           <div className="h-[180px]">
             {loadingEvents ? (
@@ -96,7 +107,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents }) 
                       position: 'top', 
                       fill: '#F4D6CC',
                       fontSize: 12,
-                      formatter: (v) => `${v}%` 
+                      formatter: (v: number) => `${v}%` 
                     }}
                   />
                 </BarChart>
@@ -107,10 +118,10 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents }) 
 
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-sm font-medium text-[var(--text-primary)]">Email Delivery Success</h3>
-            <span className="text-xs text-[var(--text-secondary)]">50% Avg</span>
+            <h3 className="text-sm font-medium text-zinc-100">Email Delivery Success</h3>
+            <span className="text-xs text-zinc-400">{deliveryAvg}% Avg</span>
           </div>
-          <p className="text-xs text-[var(--text-secondary)] mb-4">Successful email delivery rates by event date</p>
+          <p className="mb-4 text-xs text-zinc-400">Successful email delivery rates by event date</p>
           
           <div className="h-[180px]">
             {loadingEvents ? (
@@ -156,7 +167,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ events, loadingEvents }) 
                       position: 'top',
                       fill: '#c5c3c4',
                       fontSize: 12,
-                      formatter: (v) => `${v}%`
+                      formatter: (v: number) => `${v}%`
                     }}
                   />
                 </LineChart>

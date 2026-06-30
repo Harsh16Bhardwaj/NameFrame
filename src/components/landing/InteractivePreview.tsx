@@ -2,109 +2,97 @@
 
 import React, { useRef, useState } from "react";
 import Image from "next/image";
-import { Download } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Dancing_Script,
-  Cookie,
-  Josefin_Sans,
-  Pacifico,
-  Merienda,
-  Leckerli_One,
-  Just_Another_Hand,
-  Titan_One,
-  Style_Script,
-  Delius,
-} from "next/font/google";
-import { SparklesText } from "@/components/magicui/sparkles-text";
-import html2canvas from "html2canvas";
+import { Download, Settings2, Type, Palette, LayoutTemplate } from "lucide-react";
+import { DM_Sans, Inter, Space_Grotesk, Poppins } from "next/font/google";
 
-export const cookieFont = Cookie({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-cookie",
+  weight: ["400", "500", "700"],
+  variable: "--font-dm-sans",
 });
 
-export const josefinFont = Josefin_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-josefin",
+  weight: ["400", "500", "700"],
+  variable: "--font-inter",
 });
 
-export const dancingScript = Dancing_Script({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-dancing-script",
+  weight: ["400", "500", "700"],
+  variable: "--font-space-grotesk",
 });
 
-export const delius = Delius({
-  weight: "400",
+const poppins = Poppins({
   subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-poppins",
 });
 
-export const titanOne = Titan_One({
-  weight: "400",
-  subsets: ["latin"],
-});
+const templates = ["/1.png", "/2.png", "/3.png", "/4.png"];
 
-export const pacifico = Pacifico({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-pacifico",
-});
-
-export const styleScript = Style_Script({
-  weight: "400",
-  subsets: ["latin"],
-});
-
-export const merienda = Merienda({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-merienda",
-});
-
-export const leckerliOne = Leckerli_One({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-leckerli-one",
-});
-
-export const justAnotherHand = Just_Another_Hand({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-just-another-hand",
-});
-
-interface InteractivePreviewProps {
-  previewName: string;
-  setPreviewName: (name: string) => void;
-  currentTemplate: number;
-  templates: string[];
-}
-
-export const InteractivePreview: React.FC<InteractivePreviewProps> = ({
-  previewName,
-  setPreviewName,
-  currentTemplate,
-  templates,
-}) => {
-  const certificateRef = useRef<HTMLDivElement>(null);
+const InteractivePreview = () => {
   const imageRef = useRef<HTMLImageElement>(null);
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-  // Adjusted parameters for text position and font settings to match the preview
-  const textPosition = {
-    x: 50, // Center horizontally (adjusted to match the preview's centering)
-    y: 46, // Position below the "Certificate of Appreciation" text
-    width: 80, // Wider to accommodate longer names
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [previewName, setPreviewName] = useState("");
+  const [currentTemplate, setCurrentTemplate] = useState(0);
+
+  const [textPosition, setTextPosition] = useState({
+    x: 50,
+    y: 50,
+    width: 80,
     height: 10,
+  });
+
+  const [fontSettings, setFontSettings] = useState({
+    family: "Poppins",
+    size: 70,
+    color: "#2DD4BF",
+    weight: "500",
+  });
+
+  const handlePositionChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    axis: keyof typeof textPosition
+  ) => {
+    setTextPosition((prev) => ({
+      ...prev,
+      [axis]: Number(e.target.value),
+    }));
   };
 
-  const fontSettings = {
-    family: "Poppins", // Match the preview and certificate style
-    size: 70, // Base font size; will be halved in preview
-    color: "#414141", // Match the certificate's text color
+  const handleFontSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFontSettings((prev) => ({
+      ...prev,
+      size: Number(e.target.value),
+    }));
+  };
+
+  const handleFontFamilyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFontSettings((prev) => ({
+      ...prev,
+      family: e.target.value,
+    }));
+  };
+
+  const handleFontWeightChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFontSettings((prev) => ({
+      ...prev,
+      weight: e.target.value,
+    }));
+  };
+
+  const handleFontColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFontSettings((prev) => ({
+      ...prev,
+      color: e.target.value,
+    }));
+  };
+
+  const handleTemplateChange = (index: number) => {
+    setCurrentTemplate(index);
+    setIsImageLoaded(false);
   };
 
   const handleDownload = async () => {
@@ -112,7 +100,6 @@ export const InteractivePreview: React.FC<InteractivePreviewProps> = ({
     if (!image || !isImageLoaded) return;
 
     try {
-      // Create canvas
       const canvas = document.createElement("canvas");
       canvas.width = image.naturalWidth;
       canvas.height = image.naturalHeight;
@@ -120,25 +107,23 @@ export const InteractivePreview: React.FC<InteractivePreviewProps> = ({
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Draw the certificate background
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-      // Apply font settings
-      ctx.font = `${fontSettings.size}px ${fontSettings.family}`; // Match the preview's font size
+      ctx.font = `${fontSettings.weight} ${fontSettings.size}px ${fontSettings.family}`;
       ctx.fillStyle = fontSettings.color;
-      ctx.textAlign = "center"; // Center the text
+      ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      // Calculate absolute position
       const x = (textPosition.x / 100) * canvas.width;
-      const y = (textPosition.y / 100) * canvas.height + 30;
+      const y = (textPosition.y / 100) * canvas.height;
       const maxWidth = (textPosition.width / 100) * canvas.width;
 
-      // Draw participant name
       ctx.fillText(previewName || "Your Name", x, y, maxWidth);
-      // Create download link
+
       const link = document.createElement("a");
-      link.download = `certificate-${(previewName || "your-name").replace(/\s+/g, "-").toLowerCase()}.png`;
+      link.download = `certificate-${(previewName || "your-name")
+        .replace(/\s+/g, "-")
+        .toLowerCase()}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
     } catch (error) {
@@ -147,160 +132,332 @@ export const InteractivePreview: React.FC<InteractivePreviewProps> = ({
   };
 
   return (
-    <motion.section
+    <section
       id="action"
-      className="py-16 sm:py-24 bg-gradient-to-b from-[#1a1930] to-[#151423]"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      className={`${inter.variable} relative overflow-hidden bg-black py-20 sm:py-24`}
+      style={{ fontFamily: inter.style.fontFamily }}
     >
-      <motion.div
-        className="container mx-auto px-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <motion.div
-          className="text-center mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <motion.h2
-            className={`${titanOne.className} text-2xl sm:text-3xl md:text-5xl mt-8 sm:mt-10 font-bold mb-2`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <SparklesText>Don't Miss The Action</SparklesText>
-          </motion.h2>
-          <motion.p
-            className={`text-sm sm:text-base md:text-xl text-gray-400 max-w-2xl mx-auto ${delius.className}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            Type your name below to see how it looks on our certificate
-            templates.
-          </motion.p>
-        </motion.div>
+      {/* Soft NameFrame-style ambience */}
+      <div className="pointer-events-none absolute left-[-8rem] top-20 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-8rem] bottom-16 h-72 w-72 rounded-full bg-rose-500/10 blur-3xl" />
 
-        <motion.div
-          className="max-w-3xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <motion.div
-            className="p-4 sm:p-6 darkOnyx border border-gray-800 rounded-xl shadow-xl"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
+      <div className="relative z-10 mx-auto max-w-6xl px-6">
+        {/* Header */}
+        <div className="mx-auto mb-10 max-w-3xl text-center">
+          <p
+            className="mb-3 text-sm font-medium uppercase tracking-[0.22em] text-teal-400/90"
+            style={{ fontFamily: poppins.style.fontFamily }}
           >
-            <motion.div
-              className="mb-3"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
-            >
-              <div className="flex gap-2 mb-2">
-                <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500"></div>
-                <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-yellow-500"></div>
-                <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
+            Try the designer
+          </p>
+
+          <h2
+            className="text-3xl font-bold tracking-tight text-white sm:text-4xl"
+            style={{ fontFamily: spaceGrotesk.style.fontFamily }}
+          >
+            Preview your certificate before sending.
+          </h2>
+
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-zinc-500">
+            Choose a template, type a sample name, adjust the placement, and see
+            how your final certificate will look.
+          </p>
+        </div>
+
+        {/* Main Card */}
+        <div className="rounded-3xl border border-white/5 bg-zinc-900/40 p-3 shadow-[0_0_70px_rgba(45,212,191,0.05)] sm:p-4">
+          {/* Window Bar */}
+          <div className="flex h-10 items-center justify-between rounded-t-2xl border border-white/5 bg-black/40 px-4">
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-rose-500/90" />
+              <span className="h-2.5 w-2.5 rounded-full bg-amber-400/90" />
+              <span className="h-2.5 w-2.5 rounded-full bg-teal-400/90" />
+            </div>
+
+            <p className="hidden text-xs text-zinc-500 sm:block">
+              NameFrame Certificate Studio
+            </p>
+
+            <div className="h-2.5 w-14" />
+          </div>
+
+          <div className="grid gap-4 rounded-b-2xl border-x border-b border-white/5 bg-zinc-950/70 p-4 lg:grid-cols-[280px_1fr]">
+            {/* Toolbar */}
+            <aside className="rounded-2xl border border-white/5 bg-zinc-900/50 p-4">
+              <div className="mb-5 flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-teal-500/20 bg-teal-400/10 text-teal-400">
+                  <Settings2 className="h-4 w-4" />
+                </div>
+
+                <div>
+                  <h3
+                    className="text-base font-semibold text-white"
+                    style={{ fontFamily: spaceGrotesk.style.fontFamily }}
+                  >
+                    Customize
+                  </h3>
+                  <p className="text-xs text-zinc-500">Live preview controls</p>
+                </div>
               </div>
-            </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-            >
-              <motion.div
-                className="mb-4"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.9 }}
-              >
-                <input
-                  type="text"
-                  className={`w-full p-3 px-5 ${delius.className} bg-[#141423] rounded-lg border border-gray-700 focus:border-violet-500 focus:outline-none text-sm sm:text-base`}
-                  placeholder="Enter your name"
-                  value={previewName}
-                  onChange={(e) => setPreviewName(e.target.value)} // Allow empty string
-                />
-              </motion.div>
+              <div className="space-y-5">
+                {/* Name Input */}
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-zinc-400">
+                    Preview Name
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-zinc-600 focus:border-teal-500/40"
+                    placeholder="Enter your name"
+                    value={previewName}
+                    onChange={(e) => setPreviewName(e.target.value)}
+                    style={{ fontFamily: dmSans.style.fontFamily }}
+                  />
+                </div>
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentTemplate}
-                  ref={certificateRef}
-                  className="relative overflow-hidden rounded-lg"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                {/* Position Controls */}
+                <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+                  <div className="mb-3 flex items-center gap-2 text-sm font-medium text-zinc-300">
+                    <LayoutTemplate className="h-4 w-4 text-teal-400" />
+                    Position
+                  </div>
+
+                  <div className="space-y-4">
+                    <RangeControl
+                      label="X Position"
+                      value={textPosition.x}
+                      onChange={(e) => handlePositionChange(e, "x")}
+                    />
+
+                    <RangeControl
+                      label="Y Position"
+                      value={textPosition.y}
+                      onChange={(e) => handlePositionChange(e, "y")}
+                    />
+                  </div>
+                </div>
+
+                {/* Typography Controls */}
+                <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+                  <div className="mb-3 flex items-center gap-2 text-sm font-medium text-zinc-300">
+                    <Type className="h-4 w-4 text-teal-400" />
+                    Typography
+                  </div>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="mb-1.5 block text-xs text-zinc-500">
+                        Font Family
+                      </label>
+                      <select
+                        value={fontSettings.family}
+                        onChange={handleFontFamilyChange}
+                        className="w-full rounded-lg border border-white/10 bg-zinc-950 px-2 py-2 text-xs text-zinc-200 outline-none focus:border-teal-500/40"
+                      >
+                        <option value="Poppins">Poppins</option>
+                        <option value={dmSans.style.fontFamily}>DM Sans</option>
+                        <option value={inter.style.fontFamily}>Inter</option>
+                        <option value={spaceGrotesk.style.fontFamily}>
+                          Space Grotesk
+                        </option>
+                      </select>
+                    </div>
+{/* 
+                    <RangeControl
+                      label="Font Size"
+                      value={fontSettings.size}
+                      min={20}
+                      max={120}
+                      onChange={handleFontSizeChange}
+                    /> */}
+{/* 
+                    <div>
+                      <label className="mb-1.5 block text-xs text-zinc-500">
+                        Font Weight
+                      </label>
+                      <select
+                        value={fontSettings.weight}
+                        onChange={handleFontWeightChange}
+                        className="w-full rounded-lg border border-white/10 bg-zinc-950 px-2 py-2 text-xs text-zinc-200 outline-none focus:border-teal-500/40"
+                      >
+                        <option value="400">Regular</option>
+                        <option value="500">Medium</option>
+                        <option value="700">Bold</option>
+                      </select>
+                    </div> */}
+
+                    {/* <div>
+                      <label className="mb-1.5 flex items-center gap-2 text-xs text-zinc-500">
+                        <Palette className="h-3.5 w-3.5" />
+                        Font Color
+                      </label>
+                      <input
+                        type="color"
+                        value={fontSettings.color}
+                        onChange={handleFontColorChange}
+                        className="h-9 w-full cursor-pointer rounded-lg border border-white/10 bg-zinc-950 p-1"
+                      />
+                    </div> */}
+                  </div>
+                </div>
+
+                {/* Template Selection */}
+                <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+                  <h4 className="mb-3 text-sm font-medium text-zinc-300">
+                    Templates
+                  </h4>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    {templates.map((template, index) => (
+                      <button
+                        key={template}
+                        onClick={() => handleTemplateChange(index)}
+                        className={[
+                          "overflow-hidden rounded-xl border bg-zinc-950 p-1 transition-all",
+                          currentTemplate === index
+                            ? "border-teal-500/50 shadow-[0_0_20px_rgba(45,212,191,0.08)]"
+                            : "border-white/10 hover:border-teal-500/25",
+                        ].join(" ")}
+                      >
+                        <Image
+                          src={template}
+                          alt={`Template ${index + 1}`}
+                          width={160}
+                          height={110}
+                          className="aspect-[4/3] w-full rounded-lg object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            {/* Preview */}
+            <div className="rounded-2xl border border-white/5 bg-black/30 p-4">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3
+                    className="text-lg font-semibold text-white"
+                    style={{ fontFamily: spaceGrotesk.style.fontFamily }}
+                  >
+                    Certificate Preview
+                  </h3>
+                  <p className="text-sm text-zinc-500">
+                    This is how the participant name will appear.
+                  </p>
+                </div>
+
+                <button
+                  onClick={handleDownload}
+                  disabled={!isImageLoaded}
+                  className="inline-flex items-center justify-center rounded-xl bg-teal-400 px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-teal-300 disabled:cursor-not-allowed disabled:opacity-50"
+                  style={{ fontFamily: poppins.style.fontFamily }}
                 >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </button>
+              </div>
+
+              <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-zinc-950 p-3">
+                <div className="relative overflow-hidden rounded-xl bg-white">
                   <Image
                     ref={imageRef}
+                    key={templates[currentTemplate]}
                     src={templates[currentTemplate]}
                     alt="Certificate preview"
                     width={1000}
                     height={800}
-                    className="w-full h-auto"
+                    className="h-auto w-full"
                     onLoad={() => setIsImageLoaded(true)}
+                    priority
                   />
+
                   <div
-                    className="absolute flex items-center justify-center w-full"
+                    className="absolute flex items-center justify-center"
                     style={{
-                      left: "0%", // Position the container at the left edge
+                      left: `${textPosition.x - textPosition.width / 2}%`,
                       top: `${textPosition.y}%`,
-                      width: "100%", // Full width to allow centering
+                      width: `${textPosition.width}%`,
                       height: `${textPosition.height}%`,
+                      transform: "translateY(-50%)",
                     }}
                   >
-                    <motion.div
-                      className="text-center"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5, delay: 0.1 }}
+                    <div
+                      className="certificate-name text-center font-bold"
+                      style={{
+                        fontFamily: fontSettings.family,
+                        color: fontSettings.color,
+                        fontSize: `${fontSettings.size / 2}px`,
+                        fontWeight: fontSettings.weight,
+                        lineHeight: 1,
+                      }}
                     >
-                      <div
-                        className={`certificate-name text-2xl sm:text-3xl md:text-4xl ${dancingScript.className} font-bold`}
-                        style={{
-                          fontFamily: fontSettings.family,
-                          color: fontSettings.color,
-                        }}
-                      >
-                        {previewName || "Your Name"}{" "}
-                        {/* Fallback to "Your Name" only for display */}
-                      </div>
-                    </motion.div>
+                      {previewName || "Your Name"}
+                    </div>
                   </div>
-                </motion.div>
-              </AnimatePresence>
-            </motion.div>
+                </div>
+              </div>
 
-            <motion.div
-              className="mt-6 flex justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.0 }}
-            >
-              <motion.button
-                onClick={handleDownload}
-                disabled={!isImageLoaded}
-                className="px-6 py-2 bg-violet-600 rounded-lg hover:bg-violet-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Download Preview
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-      </motion.div>
-    </motion.section>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <MiniInfo label="Template" value={`Style ${currentTemplate + 1}`} />
+                <MiniInfo label="Font Size" value={`${fontSettings.size}px`} />
+                <MiniInfo label="Position" value={`${textPosition.x}%, ${textPosition.y}%`} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+interface RangeControlProps {
+  label: string;
+  value: number;
+  min?: number;
+  max?: number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const RangeControl: React.FC<RangeControlProps> = ({
+  label,
+  value,
+  min = 0,
+  max = 100,
+  onChange,
+}) => {
+  return (
+    <div>
+      <div className="mb-1.5 flex items-center justify-between">
+        <label className="text-xs text-zinc-500">{label}</label>
+        <span className="text-xs text-teal-400">{value}</span>
+      </div>
+
+      <input
+        type="range"
+        min={min}
+        max={max}
+        value={value}
+        onChange={onChange}
+        className="w-full accent-teal-400"
+      />
+    </div>
+  );
+};
+
+interface MiniInfoProps {
+  label: string;
+  value: string;
+}
+
+const MiniInfo: React.FC<MiniInfoProps> = ({ label, value }) => {
+  return (
+    <div className="rounded-xl border border-white/5 bg-zinc-900/50 px-4 py-3">
+      <p className="text-xs text-zinc-500">{label}</p>
+      <p className="mt-1 text-sm font-medium text-zinc-200">{value}</p>
+    </div>
   );
 };
 

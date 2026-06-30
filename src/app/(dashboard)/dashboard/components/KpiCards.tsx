@@ -2,14 +2,21 @@ import React from "react";
 import { motion } from "framer-motion";
 import { IoCalendarOutline, IoPeopleOutline, IoMailOutline } from "react-icons/io5";
 import { FaCertificate } from "react-icons/fa";
+import { TrendingUp, Users } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface KpiCardsProps {
   stats: {
     totalEvents: number;
     totalParticipants: number;
+    uniqueParticipants: number;
+    repeatParticipants: number;
     totalCertificates: number;
     totalEmailsSent: number;
+    totalEmailsPending?: number;
+    totalEmailsFailed?: number;
+    emailSuccessRate?: number;
+    attendanceRate?: number;
   };
   loading: boolean;
   isDarkMode: boolean;
@@ -20,63 +27,76 @@ const KpiCards: React.FC<KpiCardsProps> = ({ stats, loading }) => {
     {
       title: "Total Events",
       value: stats.totalEvents,
-      icon: <IoCalendarOutline className="w-8 h-8 text-[var(--pale-text)]" />,
-      trend: "+2",
+      icon: <IoCalendarOutline className="h-5 w-5 text-teal-300" />,
+      suffix: "",
+      insight: "+3 this month",
     },
     {
-      title: "Total Participants",
-      value: stats.totalParticipants,
-      icon: <IoPeopleOutline className="w-8 h-8 text-[var(--pale-text)]" />,
-      trend: "+5",
+      title: "Unique Participants",
+      value: stats.uniqueParticipants,
+      icon: <IoPeopleOutline className="h-5 w-5 text-teal-300" />,
+      suffix: "",
+      insight: `${stats.totalParticipants} total entries`,
+    },
+    {
+      title: "Returning Participants",
+      value: stats.repeatParticipants,
+      icon: <Users className="h-5 w-5 text-teal-300" />,
+      suffix: "",
+      insight: `${stats.repeatParticipants > 0 ? Math.round((stats.repeatParticipants / stats.uniqueParticipants) * 100) : 0}% of unique`,
     },
     {
       title: "Certificates Generated",
       value: stats.totalCertificates,
-      icon: <FaCertificate className="w-8 h-8 text-[var(--pale-text)]" />,
-      trend: "+10",
+      icon: <FaCertificate className="h-5 w-5 text-teal-300" />,
+      suffix: "",
+      insight: "100% completion rate",
     },
     {
       title: "Emails Sent",
       value: stats.totalEmailsSent,
-      icon: <IoMailOutline className="w-8 h-8 text-[var(--pale-text)]" />,
-      trend: "+5",
+      icon: <IoMailOutline className="h-5 w-5 text-teal-300" />,
+      suffix: "",
+      insight: stats.totalEmailsPending ? `${stats.totalEmailsPending} pending` : "All delivered",
+    },
+    {
+      title: "Email Success Rate",
+      value: stats.emailSuccessRate ?? 0,
+      icon: <TrendingUp className="h-5 w-5 text-teal-300" />,
+      suffix: "%",
+      insight: stats.totalEmailsFailed ? `${stats.totalEmailsFailed} failed` : "Excellent delivery",
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       {cards.map((card, index) => (
         <motion.div
           key={card.title}
-          className="bg-[var(--dark-onyx)] rounded-xl p-6 shadow-md border border-[var(--bluey-text)] relative overflow-hidden transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:bg-[var(--dark-onyx-text)]"
+          className="relative overflow-hidden rounded-2xl border border-white/5 bg-zinc-900/60 p-4 transition-all duration-300 ease-in-out hover:border-teal-500/30 hover:bg-zinc-900"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 * index }}
+          transition={{ delay: 0.05 * index }}
         >
-          <div className="flex items-start justify-between">
-            <div className="bg-[var(--bluey1)] p-3 rounded-lg transition-transform duration-300 group-hover:scale-110">
+          <div className="flex items-start justify-between mb-3">
+            <div className="rounded-lg border border-teal-500/20 bg-teal-500/10 p-2">
               {card.icon}
             </div>
-            {!loading ? (
-              <div className="text-[var(--tealy-text)] text-sm font-medium flex items-center transition-opacity duration-300 hover:opacity-80">
-                <svg className="w-3 h-3 mr-1" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 1L9 5L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M1 5H9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                {card.trend}
-              </div>
-            ) : (
-              <Skeleton className="h-4 w-10" />
-            )}
           </div>
-          
-          <div className="mt-4">
-            <h3 className="text-sm font-medium text-[var(--text-secondary)] transition-colors duration-300 hover:text-[var(--pale)]">{card.title}</h3>
+
+          <div>
+            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
+              {card.title}
+            </h3>
             {!loading ? (
-              <p className="text-3xl font-bold text-[var(--pale)] mt-1 transition-transform duration-300 hover:translate-x-1">{card.value}</p>
+              <p className="text-2xl font-bold text-zinc-100">
+                {card.value}
+                <span className="text-sm text-zinc-400">{card.suffix}</span>
+              </p>
             ) : (
-              <Skeleton className="h-8 w-16 mt-1" />
+              <Skeleton className="h-8 w-16" />
             )}
+            <p className="text-xs text-zinc-500 mt-2">{card.insight}</p>
           </div>
         </motion.div>
       ))}

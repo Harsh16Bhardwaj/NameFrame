@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Sidebar from "@/components/layout/Sidebar";
 import { themeConfig } from "@/config/theme";
 import { usePathname } from "next/navigation";
-import { Home, Calendar, FileType, Users } from "lucide-react";
+import { Home, Calendar, FileType, Users, Code2 } from "lucide-react";
 
 export default function DashboardLayout({
   children,
@@ -43,6 +43,12 @@ export default function DashboardLayout({
       label: "Participants", 
       href: "/participants", 
       active: pathname === "/participants" || pathname.startsWith("/participants/") 
+    },
+    {
+      icon: Code2,
+      label: "Analytics & Dev",
+      href: "/analytics-dev",
+      active: pathname === "/analytics-dev" || pathname.startsWith("/admin"),
     },
   ];
   // Persist sidebar state in localStorage
@@ -96,7 +102,7 @@ export default function DashboardLayout({
         themeConfig[isDarkMode ? "dark" : "light"].background
       } ${
         themeConfig[isDarkMode ? "dark" : "light"].text.primary
-      } overflow-hidden transition-all duration-500`}
+      } transition-all duration-500`}
     >
       {/* Mobile Nav Overlay */}
       <AnimatePresence>
@@ -107,7 +113,7 @@ export default function DashboardLayout({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             className={`fixed inset-0 ${
-              isDarkMode ? "bg-black/50" : "bg-black/30"
+              isDarkMode ? "bg-black/60" : "bg-black/30"
             } z-30 lg:hidden backdrop-blur-sm`}
             onClick={() => setIsMobileNavOpen(false)}
           />
@@ -122,15 +128,15 @@ export default function DashboardLayout({
         setIsMobileNavOpen={setIsMobileNavOpen}
         isDarkMode={isDarkMode}
         themeConfig={themeConfig}
-        //@ts-ignore
-        sidebarItems={sidebarItems}
+        sidebarItems={sidebarItems.filter((item) => item.href !== "/analytics-dev")}
+        devItem={sidebarItems.find((item) => item.href === "/analytics-dev")}
       />
 
       {/* Main Content - Explicitly set to fill remaining space */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-y-auto">
         {/* Clone children and add needed props */}
         {React.cloneElement(children as React.ReactElement, {
-          //@ts-ignore
+          // @ts-expect-error child pages accept these props in current dashboard runtime pattern
           isDarkMode,
           setIsDarkMode,
           setIsMobileNavOpen,

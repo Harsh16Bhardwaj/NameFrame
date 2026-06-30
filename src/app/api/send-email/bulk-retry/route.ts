@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import { MAILING_SERVICE_DOWN_MESSAGE } from "@/lib/delivery/public-messages";
 
-const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   try {
@@ -57,11 +57,9 @@ export async function POST(req: Request) {
     return NextResponse.json(
       { 
         success: false, 
-        error: "Failed to initiate bulk email sending" 
+        error: MAILING_SERVICE_DOWN_MESSAGE
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

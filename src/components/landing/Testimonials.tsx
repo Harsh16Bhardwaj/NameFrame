@@ -1,138 +1,223 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Star } from "lucide-react";
-import { testimonials } from "@/data/testimonials";
-import { partners } from "@/data/partners";
+import React from "react";
 import Image from "next/image";
-import { MorphingText } from "../magicui/morphing-text";
+import { Quote } from "lucide-react";
+import { Inter, Space_Grotesk, Poppins } from "next/font/google";
 
-export const Testimonials: React.FC = () => {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-inter",
+});
 
-  // Auto rotate testimonials
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-space-grotesk",
+});
 
-    return () => clearInterval(interval);
-  }, []);
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-poppins",
+});
 
+const testimonials = [
+  {
+    quote:
+      "We used this for our community event certificates and the process was flawless. It saved hours of manual work.",
+    name: "Rohit Goel",
+    role: "GDG Lead",
+    size: "featured",
+    accent: "teal",
+  },
+  {
+    quote:
+      "I needed certificates for a hackathon. The whole flow took minutes, not days.",
+    name: "Aryan Chauhan",
+    role: "Technical Lead at TechXtract",
+    size: "normal",
+    accent: "teal",
+  },
+  {
+    quote:
+      "Our society needed a way to recognize members with certificates. NameFrame made it simple.",
+    name: "Anya Singh",
+    role: "Society at MAIT",
+    size: "tall",
+    accent: "rose",
+  },
+  {
+    quote:
+      "Managing event logistics is already a lot. Automating certificates was a massive relief.",
+    name: "Vikas Gupta",
+    role: "Event Management at SPMCIL",
+    size: "normal",
+    accent: "zinc",
+  },
+  {
+    quote:
+      "I created custom designs and used NameFrame to handle the repetitive certificate work.",
+    name: "Sarthak Aggarwal",
+    role: "Freelance Graphic Designer",
+    size: "normal",
+    accent: "purple",
+  },
+];
+
+const Testimonials = () => {
   return (
-    <section className="py-24 mt-10 bg-[#151423]">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-xl md:text-3xl flex items-center justify-center font-bold mb-2">
-            Loved by{" "}
+    <section
+      className={`${inter.variable} relative overflow-hidden bg-black py-20 sm:py-24`}
+      style={{ fontFamily: inter.style.fontFamily }}
+    >
+      {/* Ambient glows */}
+      <div className="pointer-events-none absolute left-[-10rem] top-24 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-8rem] bottom-16 h-72 w-72 rounded-full bg-rose-500/10 blur-3xl" />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-6">
+        {/* Heading */}
+        <div className="mx-auto mb-10 max-w-3xl text-center">
+          <p
+            className="mb-3 text-sm font-medium uppercase tracking-[0.24em] text-teal-400/90"
+            style={{ fontFamily: poppins.style.fontFamily }}
+          >
+            Loved by event teams
+          </p>
+
+          <h2
+            className="nf-heading-reveal text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
+            style={{ fontFamily: spaceGrotesk.style.fontFamily }}
+          >
+            Certificates that people actually remember.
           </h2>
 
-          <MorphingText
-            texts={["College Socities", "Teams WorldWide", "6th Sem Students"]}
-          ></MorphingText>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Be a part of the community we are building here, Trust in us..{" "}
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-zinc-500">
+            From hackathons to college societies, NameFrame helps teams send
+            polished certificates without getting buried in manual work.
           </p>
         </div>
 
-        {/* Partner logos with gradient placeholders */}
-        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 mb-16 max-w-5xl mx-auto">
-          {partners.map((partner, index) => (
-            <motion.div
-              key={index}
-              className="group transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
+        {/* Compact testimonial grid */}
+        <div className="grid auto-rows-[150px] gap-4 md:grid-cols-6">
+          {testimonials.map((item, index) => (
+            <article
+              key={item.name}
+              className={[
+                "group relative overflow-hidden rounded-2xl border bg-zinc-900/45 p-5 transition-all duration-300",
+                "hover:-translate-y-1 hover:bg-zinc-900/70",
+                getCardSize(item.size),
+                getAccent(item.accent),
+              ].join(" ")}
+              style={{
+                animationDelay: `${index * 90}ms`,
+              }}
             >
-              <div className="h-16 w-36 relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 overflow-hidden flex items-center justify-center transition-all duration-300 group-hover:border-violet-500/50 group-hover:shadow-lg group-hover:shadow-violet-500/10">
-                <div
-                  className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300"
-                  style={{
-                    background: `linear-gradient(135deg, 
-                                    hsl(${(index * 60) % 360}, 70%, 30%), 
-                                    hsl(${(index * 60 + 30) % 360}, 70%, 20%))`,
-                  }}
-                ></div>
-                <div className="text-center flex flex-col items-center justify-center z-10">
-                  <div className="text-xl font-bold text-white/80 group-hover:text-white transition-all duration-300">
-                    {partner.shortName}
-                  </div>
-                  <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-all duration-300 mt-1">
-                    {partner.name}
-                  </div>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 -translate-x-full group-hover:translate-x-full transition-all duration-1000 ease-in-out"></div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-teal-400/0 blur-2xl transition-all duration-300 group-hover:bg-teal-400/10" />
 
-        {/* Testimonials carousel */}
-        <div className="max-w-3xl mx-auto">
-          <div className="relative bg-[#1a1930] p-8 rounded-xl border border-gray-800">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentTestimonial}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col md:flex-row gap-6"
+              <Quote className="mb-3 h-4 w-4 text-teal-400/80" />
+
+              <p
+                className={[
+                  "relative z-10 leading-relaxed text-zinc-300",
+                  item.size === "featured"
+                    ? "text-sm sm:text-base"
+                    : "text-sm",
+                ].join(" ")}
               >
-                <div className="md:w-1/4 flex flex-col items-center">
-                  <div className="w-16 h-16 rounded-full overflow-hidden mb-2 border-2 border-violet-500/30">
-                    <img
-                      src={testimonials[currentTestimonial].image}
-                      alt={testimonials[currentTestimonial].name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex items-center mb-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        size={14}
-                        className={
-                          i < testimonials[currentTestimonial].rating
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-600"
-                        }
-                      />
-                    ))}
-                  </div>
-                </div>
+                “{item.quote}”
+              </p>
 
-                <div className="md:w-3/4">
-                  <blockquote className="text-gray-300 mb-4">
-                    "{testimonials[currentTestimonial].text}"
-                  </blockquote>
-                  <div className="text-sm">
-                    <div className="font-semibold text-white">
-                      {testimonials[currentTestimonial].name}
-                    </div>
-                    <div className="text-violet-400">
-                      {testimonials[currentTestimonial].role}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+              <div className="relative z-10 mt-5">
+                <h3 className="text-sm font-semibold text-white">
+                  {item.name}
+                </h3>
+                <p className="mt-0.5 text-xs text-zinc-500">{item.role}</p>
+              </div>
+            </article>
+          ))}
 
-            <div className="mt-6 flex justify-center gap-2">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    currentTestimonial === index
-                      ? "bg-violet-500 w-6"
-                      : "bg-gray-600"
-                  }`}
-                  onClick={() => setCurrentTestimonial(index)}
-                />
-              ))}
-            </div>
+          {/* Brand tile */}
+          <div className="group relative hidden overflow-hidden rounded-2xl border border-teal-500/20 bg-teal-400/5 p-5 md:col-span-2 md:row-span-1 md:flex md:items-center md:justify-center">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.12),transparent_65%)]" />
+
+            <Image
+              src="/title-2.png"
+              alt="NameFrame"
+              width={260}
+              height={120}
+              className="relative z-10 opacity-80 transition-opacity duration-300 group-hover:opacity-100"
+            />
           </div>
         </div>
       </div>
+
+      <style>
+        {`
+          .nf-heading-reveal {
+            background: linear-gradient(
+              90deg,
+              rgba(255,255,255,0.55),
+              rgba(255,255,255,1),
+              rgba(45,212,191,0.9),
+              rgba(255,255,255,1),
+              rgba(255,255,255,0.55)
+            );
+            background-size: 220% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: nfHeadingShine 7s ease-in-out infinite;
+          }
+
+          @keyframes nfHeadingShine {
+            0% {
+              background-position: 220% center;
+            }
+            45% {
+              background-position: 0% center;
+            }
+            100% {
+              background-position: 0% center;
+            }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .nf-heading-reveal {
+              animation: none;
+              color: white;
+              background: none;
+              -webkit-background-clip: initial;
+              background-clip: initial;
+            }
+          }
+        `}
+      </style>
     </section>
   );
 };
+
+const getCardSize = (size: string) => {
+  switch (size) {
+    case "featured":
+      return "md:col-span-4 md:row-span-1";
+    case "tall":
+      return "md:col-span-2 md:row-span-2";
+    default:
+      return "md:col-span-2 md:row-span-1";
+  }
+};
+
+const getAccent = (accent: string) => {
+  switch (accent) {
+    case "teal":
+      return "border-teal-500/20 hover:border-teal-500/35 shadow-[0_0_35px_rgba(45,212,191,0.04)]";
+    case "rose":
+      return "border-rose-500/20 hover:border-rose-500/35 shadow-[0_0_35px_rgba(244,63,94,0.05)]";
+    case "purple":
+      return "border-fuchsia-500/15 hover:border-fuchsia-500/30 shadow-[0_0_35px_rgba(217,70,239,0.04)]";
+    default:
+      return "border-white/5 hover:border-white/10";
+  }
+};
+
+export default Testimonials;

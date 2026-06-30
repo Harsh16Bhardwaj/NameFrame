@@ -1,15 +1,16 @@
 // app/api/events/[id]/route.ts
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import { toLegacyTemplateConfig } from "@/lib/certificate/editor-config";
+import { groupTemplateBindings } from "@/lib/events/templates";
 
 interface Params {
   params: { eventId: string };
 }
 
 export async function GET(_: Request, { params }: Params) {
-  const prisma = new PrismaClient();
-
+  
   try {
     // Authenticate the user
     const { userId } = await auth();
@@ -34,6 +35,8 @@ export async function GET(_: Request, { params }: Params) {
       include: {
         template: true,
         participants: true,
+        templateBindings: { include: { template: true } },
+        awardAssignments: { include: { participant: true } },
       },
     });
 
@@ -41,9 +44,20 @@ export async function GET(_: Request, { params }: Params) {
       console.error(`[API][Event GET] Event not found for eventId: ${eventId}, userId: ${userId}`);
       return NextResponse.json({ error: "Event not found" }, { status: 404 });
     }    // Ensure participants is always an array
+    const legacyConfig = event.template ? toLegacyTemplateConfig(event.template.editorConfigJson) : {};
     const safeEvent = {
       ...event,
-      participants: Array.isArray(event.participants) ? event.participants : [],
+      templateUrl: event.template?.backgroundUrl ?? "",
+      ...legacyConfig,
+      roleTemplates: groupTemplateBindings(event.templateBindings),
+      participants: Array.isArray(event.participants)
+        ? event.participants.map((participant) => ({
+            ...participant,
+            emailStatus: participant.emailed ? "sent" : "pending",
+            emailAttempts: 0,
+          }))
+        : [],
+      awards: event.awardAssignments,
     };
 
     return NextResponse.json({
@@ -56,7 +70,5 @@ export async function GET(_: Request, { params }: Params) {
       { error: "An unexpected error occurred. Please try again later." },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

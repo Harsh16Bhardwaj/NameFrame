@@ -18,7 +18,7 @@ export default function TablePagination({
 }: TablePaginationProps) {
   return (
     <div className="mt-6 flex items-center justify-between">
-      <div className="text-sm text-[#c5c3c4]/60">
+      <div className="text-sm text-zinc-400">
         Showing {(currentPage - 1) * participantsPerPage + 1} to {Math.min(currentPage * participantsPerPage, totalParticipants)} of {totalParticipants} participants
       </div>
       
@@ -26,7 +26,7 @@ export default function TablePagination({
         <button
           onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
           disabled={currentPage === 1}
-          className="flex h-8 w-8 items-center justify-center rounded-md border border-[#4b3a70]/30 bg-[#272936] transition-colors hover:bg-[#4b3a70]/30 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex h-8 w-8 items-center justify-center rounded-md border border-zinc-700 bg-zinc-900 transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <ChevronLeft size={16} />
         </button>
@@ -41,8 +41,8 @@ export default function TablePagination({
               onClick={() => onPageChange(pageNumber)}
               className={`flex h-8 w-8 items-center justify-center rounded-md transition-colors ${
                 isActive
-                  ? "bg-[#b7a2c9] text-[#212531]"
-                  : "border border-[#4b3a70]/30 bg-[#272936] hover:bg-[#4b3a70]/30"
+                  ? "border border-teal-500/30 bg-teal-500/15 text-teal-300"
+                  : "border border-zinc-700 bg-zinc-900 hover:bg-zinc-800"
               }`}
             >
               {pageNumber}
@@ -51,7 +51,7 @@ export default function TablePagination({
         })}
         
         {totalPages > 5 && (
-          <span className="flex h-8 items-center justify-center px-2 text-[#c5c3c4]/60">
+          <span className="flex h-8 items-center justify-center px-2 text-zinc-400">
             ...
           </span>
         )}
@@ -59,7 +59,7 @@ export default function TablePagination({
         <button
           onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
           disabled={currentPage === totalPages}
-          className="flex h-8 w-8 items-center justify-center rounded-md border border-[#4b3a70]/30 bg-[#272936] transition-colors hover:bg-[#4b3a70]/30 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex h-8 w-8 items-center justify-center rounded-md border border-zinc-700 bg-zinc-900 transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <ChevronRight size={16} />
         </button>

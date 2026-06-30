@@ -15,7 +15,7 @@ import {
   FaEnvelope,
 } from 'react-icons/fa';
 import { SparklesText } from '@/components/magicui/sparkles-text';
-import { josefinFont } from '@/components/landing/Hero';
+import { josefinFont } from '@/lib/fonts';
 
 interface ContactForm {
   name: string;
@@ -113,7 +113,7 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen mt-10  bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white relative overflow-hidden">
+    <div className="min-h-screen mt-10 bg-zinc-950 text-white relative overflow-hidden">
       <Toaster position="top-right" toastOptions={{ className: 'bg-gray-900 text-white border border-purple-500' }} />
       {showConfetti && (
         <Confetti
@@ -137,27 +137,13 @@ const ContactPage = () => {
         />
       </div>
 
-      {/* Neon Particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          className="w-32 h-32 bg-purple-500 rounded-full absolute top-10 left-16 opacity-20 blur-2xl"
-          animate={{ y: [0, -20, 0], scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        />
-        <motion.div
-          className="w-48 h-48 bg-indigo-500 rounded-full absolute bottom-20 right-24 opacity-20 blur-2xl"
-          animate={{ y: [0, 20, 0], scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 4, repeat: Infinity }}
-        />
-      </div>
-
       {/* Main Content */}
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <motion.h1
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-5xl md:text-5xl decoration-2  underline-offset-4 font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#0F4C75] to-indigo-500 ]"
+          className="text-5xl md:text-5xl font-extrabold text-center mb-12 text-white"
         >
           Want a Feature?
           <span className={`text-[#d6d6d5] ${josefinFont.className} -mt-4 md:mt-0 text-2xl ml-4`}>Just Ask...</span>
@@ -169,15 +155,15 @@ const ContactPage = () => {
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-gray-900/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-purple-500/30"
+            className="bg-zinc-900/80 backdrop-blur-xl p-8 rounded-2xl border border-zinc-800"
           >
-            <h2 className="text-3xl font-bold mb-6 text-center text-[#C83E4D]">Contact Our Team</h2>
-            <p className="text-sm text-gray-400 mb-6 font-[var(--font-inter)]">
+            <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">Contact Our Team</h2>
+            <p className="text-sm text-zinc-400 mb-6 font-[var(--font-inter)]">
               Fill out the form below and our team will get back to you within 24 hours.
             </p>
             <form onSubmit={submitForm} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-200 mb-2 font-[var(--font-inter)]">
+                <label htmlFor="name" className="block text-sm font-medium text-zinc-200 mb-2 font-[var(--font-inter)]">
                   Your Name
                 </label>
                 <input
@@ -187,12 +173,12 @@ const ContactPage = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-2 md:p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  className="w-full p-2 md:p-3 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
                   placeholder="John Doe"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2 font-[var(--font-inter)]">
+                <label htmlFor="email" className="block text-sm font-medium text-zinc-200 mb-2 font-[var(--font-inter)]">
                   Email Address
                 </label>
                 <input
@@ -202,12 +188,12 @@ const ContactPage = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-2 md:p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  className="w-full p-2 md:p-3 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
                   placeholder="you@example.com"
                 />
               </div>
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-200 mb-2 font-[var(--font-inter)]">
+                <label htmlFor="phone" className="block text-sm font-medium text-zinc-200 mb-2 font-[var(--font-inter)]">
                   Phone Number (Optional)
                 </label>
                 <input
@@ -216,12 +202,12 @@ const ContactPage = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="w-full p-2 md:p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  className="w-full p-2 md:p-3 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
                   placeholder="+91 1234567890"
                 />
               </div>
               <div>
-                <label htmlFor="caseType" className="block text-sm font-medium text-gray-200 mb-2 font-[var(--font-inter)]">
+                <label htmlFor="caseType" className="block text-sm font-medium text-zinc-200 mb-2 font-[var(--font-inter)]">
                   Type of Feature
                 </label>
                 <select
@@ -229,7 +215,7 @@ const ContactPage = () => {
                   name="caseType"
                   value={formData.caseType}
                   onChange={handleInputChange}
-                  className="w-full p-2 md:p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  className="w-full p-2 md:p-3 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
                 >
                   <option value="">Select a Type</option>
                   {caseTypes.map((type) => (
@@ -238,7 +224,7 @@ const ContactPage = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-200 mb-2 font-[var(--font-inter)]">
+                <label htmlFor="message" className="block text-sm font-medium text-zinc-200 mb-2 font-[var(--font-inter)]">
                   Your Message
                 </label>
                 <textarea
@@ -248,21 +234,21 @@ const ContactPage = () => {
                   onChange={handleInputChange}
                   required
                   rows={5}
-                  className="w-full p-2 md:p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
-                  placeholder="Brief description of your legal matter..."
+                  className="w-full p-2 md:p-3 bg-zinc-800/50 border border-zinc-700/50 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+                  placeholder="Tell us about your request..."
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full p-2 md:p-3 bg-gradient-to-r from-purple-600 to-indigo-600 cursor-pointer border border-gray-100/50 rounded-lg font-semibold text-white transition duration-300 hover:from-purple-500/80 hover:to-indigo-500/80 ${
+                className={`w-full p-2 md:p-3 bg-teal-400 text-black font-semibold rounded-lg transition duration-300 hover:bg-teal-300 ${
                   loading ? 'opacity-50 cursor-not-allowed' : ''
                 } font-[var(--font-inter)]`}
               >
                 {loading ? (
                   <span className="flex items-center justify-center">
                     <motion.div
-                      className="w-5 h-5 border-2 border-white border-solid rounded-full mr-2"
+                      className="w-5 h-5 border-2 border-black border-solid rounded-full mr-2"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                     />
@@ -281,8 +267,8 @@ const ContactPage = () => {
                   exit={{ opacity: 0, y: 20 }}
                   className={`mt-6 p-4 rounded-lg ${
                     result.success
-                      ? 'bg-green-100/20 text-green-300 border border-green-400/50'
-                      : 'bg-red-100/20 text-red-300 border border-red-400/50'
+                      ? 'bg-teal-500/10 text-teal-300 border border-teal-500/30'
+                      : 'bg-rose-500/10 text-rose-300 border border-rose-500/30'
                   } font-[var(--font-inter)]`}
                 >
                   {result.success ? (
@@ -302,13 +288,11 @@ const ContactPage = () => {
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="bg-gray-900/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-indigo-500/30 relative flex flex-col items-center"
+            className="bg-zinc-900/80 backdrop-blur-xl p-8 rounded-2xl border border-zinc-800 relative flex flex-col items-center"
           >
-            <SparklesText>
 
-            <h2 className="text-2xl md:text-4xl underline underline-offset-4 decoration-1 font-bold mb-6 text-[#048a91] x-40 relative ">Connect With Us</h2>
-            </SparklesText>
-            <p className="text-sm text-gray-400 mb-6 font-[var(--font-inter)] text-center">
+            <h2 className="text-2xl md:text-4xl font-bold mb-6 text-teal-400 relative">Connect With Us</h2>
+            <p className="text-sm text-zinc-400 mb-6 font-[var(--font-inter)] text-center">
               Reach out to us through any of our social channels or visit our office in Delhi.
             </p>
 
@@ -318,7 +302,7 @@ const ContactPage = () => {
             <div className="relative w-full h-80 flex items-center justify-center mb-8">
               {/* Central Node */}
               <motion.div
-                className="absolute w-16 h-16 text-xs bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center font-semibold font-[var(--font-inter)] border-2 border-white/20"
+                className="absolute w-16 h-16 text-xs bg-teal-500/20 rounded-full flex items-center justify-center font-semibold font-[var(--font-inter)] border-2 border-teal-500/30 text-teal-300"
                 animate={{ scale: [1, 1.1, 1], opacity: [0.8, 1, 0.8] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -379,23 +363,23 @@ const ContactPage = () => {
             </div>
 
             {/* Office Information */}
-            <div className="w-full mb-8 p-4 bg-gray-800/50 rounded-xl border border-indigo-500/20">
-              <h3 className="text-lg font-bold text-[#f7c172] mb-3 ">Our Office :</h3>
+            <div className="w-full mb-8 p-4 bg-zinc-800/50 rounded-xl border border-zinc-700/50">
+              <h3 className="text-lg font-bold text-teal-300 mb-3">Our Office :</h3>
               <div className="space-y-2">
-                <p className="text-gray-300 text-sm flex items-center">
-                  <span className="w-5 h-5 mr-2 flex items-center justify-center bg-indigo-500/20 rounded-full">
+                <p className="text-zinc-300 text-sm flex items-center">
+                  <span className="w-5 h-5 mr-2 flex items-center justify-center bg-teal-500/20 rounded-full text-teal-300">
                     📍
                   </span>
                   Mahraja Agrasen Institute of Technology, Sec-22, Rohini, New Delhi
                 </p>
-                <p className="text-gray-300 text-sm flex items-center">
-                  <span className="w-5 h-5 mr-2 flex items-center justify-center bg-indigo-500/20 rounded-full">
+                <p className="text-zinc-300 text-sm flex items-center">
+                  <span className="w-5 h-5 mr-2 flex items-center justify-center bg-teal-500/20 rounded-full text-teal-300">
                     🕒
                   </span>
                   Mon-Fri: 11:00 AM - 3:00 PM
                 </p>
-                <p className="text-gray-300 text-sm flex items-center">
-                  <span className="w-5 h-5 mr-2 flex items-center justify-center bg-indigo-500/20 rounded-full">
+                <p className="text-zinc-300 text-sm flex items-center">
+                  <span className="w-5 h-5 mr-2 flex items-center justify-center bg-teal-500/20 rounded-full text-teal-300">
                     📞
                   </span>
                   +91 8826200156
@@ -404,22 +388,22 @@ const ContactPage = () => {
             </div>
 
             {/* Quick Contact Form */}
-            <div className="w-full p-4 bg-gray-800/50 rounded-xl border border-indigo-500/20">
+            <div className="w-full p-4 bg-zinc-800/50 rounded-xl border border-zinc-700/50">
               <h3 className="text-lg font-semibold text-white mb-3 font-[var(--font-inter)]">Quick Message</h3>
               <form className="space-y-3">
                 <input
                   type="text"
                   placeholder="Your name"
-                  className="w-full p-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full p-2 bg-zinc-700/50 border border-zinc-600/50 rounded-lg text-white placeholder-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"
                 />
                 <textarea
                   placeholder="Your message"
                   rows={3}
-                  className="w-full p-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full p-2 bg-zinc-700/50 border border-zinc-600/50 rounded-lg text-white placeholder-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"
                 />
                 <button
                   type="submit"
-                  className="w-full py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold text-sm hover:from-indigo-500 hover:to-purple-500 transition-all"
+                  className="w-full py-2 bg-teal-400 text-black rounded-lg font-semibold text-sm hover:bg-teal-300 transition-all"
                 >
                   Send Quick Message
                 </button>

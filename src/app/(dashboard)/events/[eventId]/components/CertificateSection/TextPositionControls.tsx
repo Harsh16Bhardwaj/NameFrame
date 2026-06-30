@@ -1,47 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Sliders, Type, Palette } from "lucide-react";
-import axios from "axios";
-import { useParams } from "next/navigation";
 
 interface TextPositionControlsProps {
-  eventId: string;
+  textPosition: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+  fontSettings: {
+    family: string;
+    size: number;
+    color: string;
+  };
   onPositionChange: (property: string, value: number) => void;
   onFontChange: (property: string, value: string | number) => void;
   onSavePositions: () => Promise<void>;
 }
 
 export default function TextPositionControls({
+  textPosition,
+  fontSettings,
   onPositionChange,
   onFontChange,
   onSavePositions,
 }: TextPositionControlsProps) {
   const [isSaving, setIsSaving] = useState(false);
-  const [textPosition, setTextPosition] = useState({
-    x: 50,
-    y: 50,
-    width: 80,
-    height: 15,
-  });
-  const [fontSettings, setFontSettings] = useState({
-    family: "Arial",
-    size: 48,
-    color: "#000000",
-  });
-  const { eventId } = useParams<{ eventId: string }>();
-  useEffect(() => {
-    async function fetchSettings() {
-      try {
-        const res = await axios.get(`/api/events/${eventId}/template`);
-        if (res.data.success) {
-          setTextPosition(res.data.textPosition);
-          setFontSettings(res.data.fontSettings);
-        }
-      } catch (err) {
-        // fallback to defaults
-      }
-    }
-    fetchSettings();
-  }, [eventId]);
 
   const fontFamilies = [
     "Arial",
@@ -61,29 +45,26 @@ export default function TextPositionControls({
     setIsSaving(false);
   };
 
-  // Local change handlers to update state and call parent
   const handlePositionChange = (property: string, value: number) => {
-    setTextPosition((prev) => ({ ...prev, [property]: value }));
     onPositionChange(property, value);
   };
 
   const handleFontChange = (property: string, value: string | number) => {
-    setFontSettings((prev) => ({ ...prev, [property]: value }));
     onFontChange(property, value);
   };
 
   return (
-    <div className="lg:col-span-2 overflow-hidden rounded-2xl bg-[#322f42]/90 backdrop-blur-md shadow-lg border border-[#4b3a70]/30">
+    <div className="lg:col-span-2 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-lg">
       <div className="p-6">
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-2xl cursor-pointer font-semibold text-white">
+          <h2 className="cursor-pointer text-2xl font-semibold text-white">
             Text Customization
           </h2>
           <div className="flex items-center gap-2">
             <button
               onClick={handleSave}
               disabled={isSaving}
-              className={`flex cursor-pointer items-center gap-1 rounded-lg bg-[#b7a2c9] px-3 py-1 text-xs font-medium text-[#212531] transition-all hover:bg-[#c9b8d7] disabled:opacity-50 disabled:cursor-not-allowed`}
+              className={`flex cursor-pointer items-center gap-1 rounded-lg bg-teal-400 px-3 py-1 text-xs font-medium text-black transition-all hover:bg-teal-300 disabled:cursor-not-allowed disabled:opacity-50`}
             >
               {isSaving ? (
                 <>
@@ -99,23 +80,23 @@ export default function TextPositionControls({
             </button>
           </div>
         </div>
-        <div className="border-b border-[#4a4c57] m-3"></div>
+        <div className="m-3 border-b border-zinc-800"></div>
         <div className="space-y-5">
           {/* Font Family Selection */}
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-[#cfc3d9]">
-                <Type className="inline w-3 h-3 mr-1 text-[#cfc3d9]" /> Font
+              <label className="text-sm font-medium text-zinc-300">
+                <Type className="mr-1 inline h-3 w-3 text-zinc-300" /> Font
                 Family
               </label>
-              <span className="text-xs bg-[#272936] rounded-md px-2 py-1">
+              <span className="rounded-md bg-zinc-800 px-2 py-1 text-xs">
                 {fontSettings.family}
               </span>
             </div>
             <select
               value={fontSettings.family}
               onChange={(e) => handleFontChange("family", e.target.value)}
-              className="w-full rounded-md border border-[#4b3a70]/30 bg-[#232530] px-3 py-2 text-md text-gray-100 font-semibold"
+              className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-md font-semibold text-gray-100"
             >
               {fontFamilies.map((font) => (
                 <option key={font} value={font}>
@@ -128,8 +109,8 @@ export default function TextPositionControls({
           {/* Font Size Control */}
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium [#cfc3d9]">Font Size</label>
-              <span className="text-xs bg-[#272936] text-[#cfc3d9] rounded-md px-2 py-1">
+              <label className="text-sm font-medium text-zinc-300">Font Size</label>
+              <span className="rounded-md bg-zinc-800 px-2 py-1 text-xs text-zinc-300">
                 {fontSettings.size}px
               </span>
             </div>
@@ -142,7 +123,7 @@ export default function TextPositionControls({
                 onChange={(e) =>
                   handleFontChange("size", parseInt(e.target.value))
                 }
-                className="w-full accent-[#e5e1e8] focus:outline-none focus:accent-[#e5e1e8]"
+                className="w-full accent-teal-300 focus:outline-none"
               />
               <input
                 type="number"
@@ -152,7 +133,7 @@ export default function TextPositionControls({
                 onChange={(e) =>
                   handleFontChange("size", parseInt(e.target.value) || 48)
                 }
-                className="w-16 rounded-md border border-[#4b3a70]/30 bg-[#232530] px-2 py-1 text-center text-sm text-[#c5c3c4]"
+                className="w-16 rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-center text-sm text-zinc-300"
               />
             </div>
           </div>
@@ -160,11 +141,11 @@ export default function TextPositionControls({
           {/* Font Color Control */}
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium [#cfc3d9]">
-                <Palette className="inline w-3 h-3 mr-1 text-[#a98ec0]" /> Font
+              <label className="text-sm font-medium text-zinc-300">
+                <Palette className="mr-1 inline h-3 w-3 text-teal-300" /> Font
                 Color
               </label>
-              <span className="text-xs bg-[#272936] text-gray-300 rounded-md px-2 py-1">
+              <span className="rounded-md bg-zinc-800 px-2 py-1 text-xs text-gray-300">
                 {fontSettings.color}
               </span>
             </div>
@@ -173,13 +154,13 @@ export default function TextPositionControls({
                 type="color"
                 value={fontSettings.color}
                 onChange={(e) => handleFontChange("color", e.target.value)}
-                className="w-12 h-10 text-gray-300 rounded border border-[#4b3a70]/30 bg-[#272936] cursor-pointer"
+                className="h-10 w-12 cursor-pointer rounded border border-zinc-700 bg-zinc-800 text-gray-300"
               />
               <input
                 type="text"
                 value={fontSettings.color}
                 onChange={(e) => handleFontChange("color", e.target.value)}
-                className="flex-1 rounded-md border border-[#4b3a70]/30 hover:bg-[#232530] bg-[#232530] px-2 py-2 focus:bg-[#1a1b23] text-sm text-[#c5c3c4]"
+                className="flex-1 rounded-md border border-zinc-700 bg-zinc-800 px-2 py-2 text-sm text-zinc-300 hover:bg-zinc-800 focus:bg-zinc-950"
                 placeholder="#000000"
               />
             </div>
@@ -188,10 +169,10 @@ export default function TextPositionControls({
           {/* Horizontal Position */}
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-[#cfc3d9]">
+              <label className="text-sm font-medium text-zinc-300">
                 Horizontal Position (X)
               </label>
-              <span className="text-xs bg-[#272936] rounded-md px-2 py-1">
+              <span className="rounded-md bg-zinc-800 px-2 py-1 text-xs">
                 {textPosition.x}%
               </span>
             </div>
@@ -204,7 +185,7 @@ export default function TextPositionControls({
                 onChange={(e) =>
                   handlePositionChange("x", parseInt(e.target.value))
                 }
-                className="w-full accent-[#e5e1e8]"
+                className="w-full accent-teal-300"
               />
               <input
                 type="number"
@@ -214,7 +195,7 @@ export default function TextPositionControls({
                 onChange={(e) =>
                   handlePositionChange("x", parseInt(e.target.value) || 50)
                 }
-                className="w-16 rounded-md border border-[#4b3a70]/30 bg-[#232530] px-2 py-1 text-center text-sm text-[#c5c3c4]"
+                className="w-16 rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-center text-sm text-zinc-300"
               />
             </div>
           </div>
@@ -222,10 +203,10 @@ export default function TextPositionControls({
           {/* Vertical Position */}
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium [#cfc3d9]">
+              <label className="text-sm font-medium text-zinc-300">
                 Vertical Position (Y)
               </label>
-              <span className="text-xs bg-[#272936] rounded-md px-2 py-1">
+              <span className="rounded-md bg-zinc-800 px-2 py-1 text-xs">
                 {textPosition.y}%
               </span>
             </div>
@@ -238,7 +219,7 @@ export default function TextPositionControls({
                 onChange={(e) =>
                   handlePositionChange("y", parseInt(e.target.value))
                 }
-                className="w-full accent-[#e5e1e8]"
+                className="w-full accent-teal-300"
               />
               <input
                 type="number"
@@ -248,7 +229,7 @@ export default function TextPositionControls({
                 onChange={(e) =>
                   handlePositionChange("y", parseInt(e.target.value) || 50)
                 }
-                className="w-16 rounded-md border border-[#4b3a70]/30 bg-[#232530] px-2 py-1 text-center text-sm text-[#c5c3c4]"
+                className="w-16 rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-center text-sm text-zinc-300"
               />
             </div>
           </div>
@@ -256,10 +237,10 @@ export default function TextPositionControls({
           {/* Text Area Width */}
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-[#cfc3d9]">
+              <label className="text-sm font-medium text-zinc-300">
                 Text Width
               </label>
-              <span className="text-xs bg-[#272936] rounded-md px-2 py-1">
+              <span className="rounded-md bg-zinc-800 px-2 py-1 text-xs">
                 {textPosition.width}%
               </span>
             </div>
@@ -272,7 +253,7 @@ export default function TextPositionControls({
                 onChange={(e) =>
                   handlePositionChange("width", parseInt(e.target.value))
                 }
-                className="w-full accent-[#e5e1e8]"
+                className="w-full accent-teal-300"
               />
               <input
                 type="number"
@@ -282,7 +263,7 @@ export default function TextPositionControls({
                 onChange={(e) =>
                   handlePositionChange("width", parseInt(e.target.value) || 80)
                 }
-                className="w-16 rounded-md border border-[#4b3a70]/30 bg-[#232530] px-2 py-1 text-center text-sm text-[#c5c3c4]"
+                className="w-16 rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-center text-sm text-zinc-300"
               />
             </div>
           </div>
@@ -290,10 +271,10 @@ export default function TextPositionControls({
           {/* Text Area Height */}
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-[#cfc3d9]">
+              <label className="text-sm font-medium text-zinc-300">
                 Text Height
               </label>
-              <span className="text-xs bg-[#272936] rounded-md px-2 py-1">
+              <span className="rounded-md bg-zinc-800 px-2 py-1 text-xs">
                 {textPosition.height}%
               </span>
             </div>
@@ -306,7 +287,7 @@ export default function TextPositionControls({
                 onChange={(e) =>
                   handlePositionChange("height", parseInt(e.target.value))
                 }
-                className="w-full accent-[#e5e1e8]"
+                className="w-full accent-teal-300"
               />
               <input
                 type="number"
@@ -316,7 +297,7 @@ export default function TextPositionControls({
                 onChange={(e) =>
                   handlePositionChange("height", parseInt(e.target.value) || 15)
                 }
-                className="w-16 rounded-md border border-[#4b3a70]/30 bg-[#232530] px-2 py-1 text-center text-sm text-[#c5c3c4]"
+                className="w-16 rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-center text-sm text-zinc-300"
               />
             </div>
           </div>

@@ -1,271 +1,187 @@
-"use client";
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Upload, Award, Mail } from "lucide-react";
-import { MorphingText } from "@/components/magicui/morphing-text";
-import { CardSpotlight } from "@/components/ui/card-spotlight";
-import { Cookie, Josefin_Sans, Dancing_Script, Pacifico, Merienda, Leckerli_One, Just_Another_Hand, Titan_One, Delius } from "next/font/google";
+import {
+  Upload,
+  Award,
+  Mail,
+  Sparkles,
+  TrendingUp,
+  CheckCircle2,
+} from "lucide-react";
+import { Inter, Space_Grotesk } from "next/font/google";
 
-export const cookieFont = Cookie({
+const inter = Inter({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-cookie",
+  variable: "--font-inter",
 });
 
-export const josefinFont = Josefin_Sans({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-josefin",
+  weight: ["400", "500", "700"],
+  variable: "--font-space-grotesk",
 });
 
-export const dancingScript = Dancing_Script({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-dancing-script",
-});
-
-export const delius = Delius({
-  weight: "400",
-  subsets: ["latin"],
-});
-
-export const titanOne = Titan_One({
-  weight: "400",
-  subsets: ["latin"],
-});
-
-export const pacifico = Pacifico({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-pacifico",
-});
-
-export const merienda = Merienda({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-merienda",
-});
-
-export const leckerliOne = Leckerli_One({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-leckerli-one",
-});
-
-export const justAnotherHand = Just_Another_Hand({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-just-another-hand",
-});
+const features = [
+  {
+    icon: Upload,
+    step: "01",
+    title: "Bulk Upload",
+    description:
+      "Import participant names, emails, and event data using CSV or Excel instead of creating certificates manually.",
+    accentText: "Clean participant data in one place.",
+  },
+  {
+    icon: Award,
+    step: "02",
+    title: "Visual Designer",
+    description:
+      "Position names, dates, event titles, and custom text precisely on your certificate templates.",
+    accentText: "Bring your own design or use a template.",
+  },
+  {
+    icon: CheckCircle2,
+    step: "03",
+    title: "Generate Certificates",
+    description:
+      "Create personalized certificates for every participant in bulk without editing files one by one.",
+    accentText: "Fast generation for large events.",
+  },
+  {
+    icon: Mail,
+    step: "04",
+    title: "Automated Delivery",
+    description:
+      "Send certificates directly to participant emails with event-specific messages and delivery tracking.",
+    accentText: "Know what was sent and what failed.",
+  },
+  {
+    icon: Sparkles,
+    step: "05",
+    title: "Custom Mails",
+    description:
+      "Personalize email content with participant names, event details, and certificate links.",
+    accentText: "Make every certificate feel intentional.",
+  },
+  {
+    icon: TrendingUp,
+    step: "06",
+    title: "Actionable Insights",
+    description:
+      "Track participants, generated certificates, sent emails, failed deliveries, and event performance.",
+    accentText: "Improve future events with real data.",
+  },
+];
 
 export const Features: React.FC = () => {
   return (
-    <motion.section
-      className="py-16 sm:py-24 darkOnyx"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+    <section
+      className={`${inter.variable} relative bg-black py-24 sm:py-28`}
+      style={{ fontFamily: inter.style.fontFamily }}
     >
-      <motion.div
-        className="container mx-auto px-4 max-w-7xl"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <motion.div
-          className="text-center mb-12 sm:mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <motion.h4
-            className={`${justAnotherHand.className} text-2xl sm:text-3xl md:text-4xl text-gray-200 font-bold mt-8 sm:mt-10`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+      {/* Subtle background glows */}
+      <div className="pointer-events-none absolute left-1/2 top-24 h-72 w-72 -translate-x-1/2 rounded-full bg-teal-400/10 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-8rem] bottom-20 h-72 w-72 rounded-full bg-rose-500/10 blur-3xl" />
+
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 sm:px-4">
+        {/* Section Header */}
+        <div className="mx-auto mb-14 max-w-4xl text-center">
+          <p className="mb-4 text-sm font-medium uppercase tracking-[0.24em] text-teal-400/90">
+            How NameFrame Works
+          </p>
+
+          <h2
+            className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
+            style={{ fontFamily: spaceGrotesk.style.fontFamily }}
           >
-            <MorphingText
-              texts={[
-                "Powerful Features",
-                "Simple Interface",
-                "Fully Automated",
-              ]}
-            />
-          </motion.h4>
-          <motion.p
-            className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto mt-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            Everything you need to create, manage, and distribute professional certificates for any events.
-          </motion.p>
-        </motion.div>
+            From participant list to delivered certificates.
+          </h2>
 
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          {/* Feature 1 */}
-          <AnimatePresence>
-            <CardSpotlight className="hover:scale-103 mx-4 md:mx-0 ease-in-out duration-300 hover:ease-in-out hover:duration-300">
-              <motion.div
-                className="bg-transparent cursor-pointer relative z-30 p-6 h-72 md:h-80 rounded-xl border border-gray-700 hover:border-violet-500/50 transition-all duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                whileHover={{
-                  y: -5,
-                  boxShadow: "0 10px 30px -15px rgba(124, 58, 237, 0.3)",
-                }}
-              >
-                <motion.div
-                  className="w-full flex justify-center"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.7 }}
-                >
-                  <div className="w-12 h-12 rounded-lg bg-violet-500/20 flex items-center justify-center mb-4">
-                    <Upload className="text-violet-400" />
-                  </div>
-                </motion.div>
-                <motion.h3
-                  className="text-xl sm:text-2xl text-center font-bold mb-2"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.8 }}
-                >
-                  Bulk Upload
-                </motion.h3>
-                <motion.p
-                  className="text-sm sm:text-base text-gray-400 text-center"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.9 }}
-                >
-                  Upload hundreds of participant names at once via CSV or Excel. No more creating each certificate manually.
-                </motion.p>
-                <motion.p
-                  className={`absolute text-sm sm:text-base bottom-4 text-teal-600 text-center ${delius.className}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.0 }}
-                >
-                  Ensure Proper formats Please :D
-                </motion.p>
-              </motion.div>
-            </CardSpotlight>
-          </AnimatePresence>
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-zinc-400 sm:text-sm">
+            Everything you need to create, manage, and send event
+            certificates without repetitive manual work.
+          </p>
+        </div>
 
-          {/* Feature 2 */}
-          <AnimatePresence>
-            <CardSpotlight className="hover:scale-103 mx-4 md:mx-0 ease-in-out duration-300 hover:ease-in-out hover:duration-300">
-              <motion.div
-                className="bg-transparent cursor-pointer relative z-30 p-6 h-72 md:h-80 rounded-xl border border-gray-700 hover:border-violet-500/50 transition-all duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5, delay: 0.7 }}
-                whileHover={{
-                  y: -5,
-                  boxShadow: "0 10px 30px -15px rgba(124, 58, 237, 0.3)",
-                }}
-              >
-                <motion.div
-                  className="w-full flex justify-center"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.8 }}
+        {/* Workflow Strip */}
+        <div className="mb-10 hidden rounded-3xl border border-white/5 bg-zinc-900/40 p-4 md:block">
+          <div className="grid grid-cols-4 gap-3">
+            {["Upload Data", "Design Template", "Generate in Bulk", "Send & Track"].map(
+              (item, index) => (
+                <div
+                  key={item}
+                  className="relative rounded-xl border border-white/5 bg-black/30 px-4 py-3 text-center"
                 >
-                  <div className="w-12 h-12 rounded-lg bg-violet-500/20 flex items-center justify-center mb-4">
-                    <Award className="text-violet-400" />
-                  </div>
-                </motion.div>
-                <motion.h3
-                  className="text-xl sm:text-2xl font-bold text-center mb-2"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.9 }}
-                >
-                  Visual Designer
-                </motion.h3>
-                <motion.p
-                  className="text-sm sm:text-base text-gray-400 text-center"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.0 }}
-                >
-                  Drag-and-drop interface to position names perfectly on your certificates. No design skills required. Fast AF
-                </motion.p>
-                <motion.p
-                  className={`absolute text-sm sm:text-base bottom-4 text-pink-700 text-center ${delius.className}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.1 }}
-                >
-                  Be Creative With Canva Though...
-                </motion.p>
-              </motion.div>
-            </CardSpotlight>
-          </AnimatePresence>
+                  <span className="text-sm font-medium text-zinc-300">
+                    {item}
+                  </span>
 
-          {/* Feature 3 */}
-          <AnimatePresence>
-            <CardSpotlight className="hover:scale-103 md:mx-0 mx-4 ease-in-out duration-300 hover:ease-in-out hover:duration-300">
-              <motion.div
-                className="bg-transparent cursor-pointer relative z-30 p-6 h-72 md:h-80 rounded-xl border border-gray-700 hover:border-violet-500/50 transition-all duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
-                whileHover={{
-                  y: -5,
-                  boxShadow: "0 10px 30px -15px rgba(124, 58, 237, 0.3)",
-                }}
+                  {index < 3 && (
+                    <span className="absolute right-[-18px] top-1/2 hidden h-px w-9 -translate-y-1/2 bg-teal-400/30 md:block" />
+                  )}
+                </div>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Feature Grid */}
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            const isPrimary = index === 2;
+
+            return (
+              <article id="workflow" 
+                key={feature.title}
+                className={[
+                  "group relative overflow-hidden rounded-2xl border p-6 transition-all duration-300",
+                  "bg-zinc-900/50 hover:bg-zinc-900/80",
+                  isPrimary
+                    ? "border-teal-500/30 shadow-[0_0_45px_rgba(45,212,191,0.08)]"
+                    : "border-white/5 hover:border-teal-500/25",
+                ].join(" ")}
               >
-                <motion.div
-                  className="w-full flex justify-center"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.9 }}
-                >
-                  <div className="w-12 h-12 rounded-lg bg-violet-500/20 flex items-center justify-center mb-4">
-                    <Mail className="text-violet-400" />
+                {/* Card glow */}
+                <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-teal-400/0 blur-2xl transition-all duration-300 group-hover:bg-teal-400/10" />
+
+                <div className="relative z-10">
+                  <div className="mb-6 flex items-center justify-between">
+                    <div
+                      className={[
+                        "flex h-11 w-11 items-center justify-center rounded-xl border",
+                        isPrimary
+                          ? "border-teal-500/30 bg-teal-400/10 text-teal-400"
+                          : "border-white/5 bg-black/30 text-teal-400",
+                      ].join(" ")}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </div>
+
+                    <span className="text-sm font-semibold text-zinc-600 group-hover:text-teal-400/80">
+                      {feature.step}
+                    </span>
                   </div>
-                </motion.div>
-                <motion.h3
-                  className="text-xl sm:text-2xl font-bold text-center mb-2"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.0 }}
-                >
-                  Automated Delivery
-                </motion.h3>
-                <motion.p
-                  className="text-sm sm:text-base text-gray-400 text-center"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.1 }}
-                >
-                  Send certificates directly to participants via email with customized messages and monitor each mail with 'One' Click.
-                </motion.p>
-                <motion.p
-                  className={`absolute text-sm sm:text-base bottom-4 text-yellow-600 text-center ${delius.className}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.2 }}
-                >
-                  Click the Send buttons only once :)
-                </motion.p>
-              </motion.div>
-            </CardSpotlight>
-          </AnimatePresence>
-        </motion.div>
-      </motion.div>
-    </motion.section>
+
+                  <h3
+                    className="mb-3 text-xl font-semibold text-white"
+                    style={{ fontFamily: spaceGrotesk.style.fontFamily }}
+                  >
+                    {feature.title}
+                  </h3>
+
+                  <p className="mb-5 min-h-[72px] text-sm leading-relaxed text-zinc-400">
+                    {feature.description}
+                  </p>
+
+                  <p className="text-sm font-medium text-teal-400/90">
+                    {feature.accentText}
+                  </p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 };
 

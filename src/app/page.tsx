@@ -1,102 +1,36 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import  Hero  from "@/components/landing/Hero";
+import React from "react";
+import Hero from "@/components/landing/Hero";
 import { Features } from "@/components/landing/Features";
-import { InteractivePreview } from "@/components/landing/InteractivePreview";
-import { Testimonials } from "@/components/landing/Testimonials";
+import InteractivePreview from "@/components/landing/InteractivePreview";
+import Testimonials from "@/components/landing/Testimonials";
 import { Pricing } from "@/components/landing/Pricing";
 import { FAQ } from "@/components/landing/FAQ";
-import { CTA } from "@/components/landing/CTA";
-import { CustomStyles } from "@/components/ui/CustomStyles";
-
-// Certificate template images - these are imported in the Hero component
-import template1 from '@/../public/1.png';
-import template2 from '@/../public/2.png';
-import template3 from '@/../public/3.png';
-import template4 from '@/../public/4.png';
+import  CTA  from "@/components/landing/CTA";
 import FeedbackForm from "@/components/feedbackForm";
-
-// Throttle function
-const throttle = (func: Function, delay: number) => {
-  let lastCall = 0;
-  return (...args: any[]) => {
-    const now = new Date().getTime();
-    if (now - lastCall < delay) {
-      return;
-    }
-    lastCall = now;
-    return func(...args);
-  };
-};
+import LandingMotionSection from "@/components/landing/LandingMotionSection";
 
 export default function LandingPage() {
-  const [currentTemplate, setCurrentTemplate] = useState(0);
-  const [previewName, setPreviewName] = useState("Your Name");
-  
-  // Templates array
-  const templates = [template1, template2, template3, template4];
-  
-  // Auto rotate templates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTemplate((prev) => (prev + 1) % templates.length);
-    }, 3000);
-    
-    return () => clearInterval(interval);
-  }, [templates.length]);
-
-  // Parallax effect on scroll
-  useEffect(() => {
-    const handleScroll = throttle(() => {
-      const scrollY = window.scrollY;
-      const elements = document.querySelectorAll('.parallax');
-      
-      elements.forEach((el) => {
-        const htmlElement = el as HTMLElement;
-        const speed = parseFloat(htmlElement.dataset.speed || '0.1');
-        htmlElement.style.transform = `translateY(${scrollY * speed}px)`;
-      });
-    }, 16); // ~60fps
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <div className="min-h-screen bg-[#151423] overflow-x-hidden text-white">
-      {/* Hero Section */}
-      <Hero 
-        previewName={previewName} 
-        templates={templates}
-        currentTemplate={currentTemplate}
-      />
-      
-      {/* Features Section */}
-      <Features />
-      
-      {/* Interactive Preview Section */}
-      <InteractivePreview 
-        previewName={previewName}
-        setPreviewName={setPreviewName}
-        currentTemplate={currentTemplate}
-        templates={templates}
-      />
-      
-      {/* Testimonials Section */}
-      <Testimonials />
-      
-      {/* Pricing Section */}
-      <Pricing />
-      
-      {/* FAQ Section */}
-      <FAQ />
-      
-      {/* CTA Section */}
-      <CTA />
-      <FeedbackForm/>
-      
-      {/* Custom styles for animations */}
-      <CustomStyles />
+    <div className=" min-h-screen  text-[var(--landing-text)]">
+      <Hero />
+      <LandingMotionSection delay={0.05}>
+        <Features />
+      </LandingMotionSection>
+      <LandingMotionSection delay={0.08}>
+        <InteractivePreview />
+      </LandingMotionSection>
+      <LandingMotionSection delay={0.1}>
+        <Testimonials />
+      </LandingMotionSection>
+      <LandingMotionSection delay={0.14}>
+        <FAQ />
+      </LandingMotionSection>
+      <LandingMotionSection delay={0.16}>
+        <CTA />
+      </LandingMotionSection>
+      <LandingMotionSection delay={0.18}>
+        <FeedbackForm />
+      </LandingMotionSection>
     </div>
   );
 }

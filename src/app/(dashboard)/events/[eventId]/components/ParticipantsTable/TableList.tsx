@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Eye,
   Download,
-  Mail,
   ArrowUpDown,
   CheckCircle,
   XCircle,
@@ -14,8 +13,6 @@ import {
   ChevronRight,
   Send,
 } from "lucide-react";
-import axios from "axios";
-import { useParams } from "next/navigation";
 
 interface Participant {
   id: string;
@@ -64,49 +61,17 @@ export default function TableList({
   const goToNextPage = () =>
     setCurrentPage((page) => Math.min(page + 1, totalPages));
   const goToPrevPage = () => setCurrentPage((page) => Math.max(page - 1, 1));
-  const params = useParams();
   const handleDownloadCertificate = async (participant: Participant) => {
     try {
-      if (participant.certificateUrl) {
-        const link = document.createElement("a");
-        link.href = participant.certificateUrl;
-        link.setAttribute("download", `${participant.name}_certificate.png`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        return;
-      }
-      const { eventId } = await params;
-      if (!eventId) {
-        console.error("Event ID is not available");
-        return;
-      }
-      const response = await axios.get(
-        `/api/events/${eventId}/certificate/${participant.id}`,
-        {
-          responseType: "blob",
-        }
-      );
-
-      const blob = new Blob([response.data], { type: "image/png" });
-      const url = window.URL.createObjectURL(blob);
-
       const link = document.createElement("a");
-      link.href = url;
-
-      const disposition = response.headers["content-disposition"];
-      const match = disposition?.match(/filename="?([^"]+)"?/);
-      const filename = match?.[1] || `${participant.name}_certificate.png`;
-
-      link.setAttribute("download", filename);
+      link.href = `/api/events/${eventId}/certificate/${participant.id}?download=1`;
+      link.setAttribute("download", `${participant.name}_certificate.png`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-
-      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading certificate:", error);
-      alert("Failed to download certificate. Please try again.");
+      window.open(`/api/events/${eventId}/certificate/${participant.id}`, "_blank");
     }
   };
 
@@ -114,26 +79,26 @@ export default function TableList({
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-[#4b3a70]/30">
-            <th className="pb-3 pl-4 text-left text-sm font-medium text-[#c5c3c4]/70">
+          <tr className="border-b border-zinc-800">
+            <th className="pb-3 pl-4 text-left text-sm font-medium text-zinc-400">
               <div className="flex items-center gap-1">
                 <span>Name</span>
                 <ArrowUpDown size={14} className="opacity-50" />
               </div>
             </th>
-            <th className="pb-3 text-left text-sm font-medium text-[#c5c3c4]/70">
+            <th className="pb-3 text-left text-sm font-medium text-zinc-400">
               <div className="flex items-center gap-1">
                 <span>Email</span>
                 <ArrowUpDown size={14} className="opacity-50" />
               </div>
             </th>
-            <th className="pb-3 text-left text-sm font-medium text-[#c5c3c4]/70">
+            <th className="pb-3 text-left text-sm font-medium text-zinc-400">
               <div className="flex items-center gap-1">
                 <span>Status</span>
                 <ArrowUpDown size={14} className="opacity-50" />
               </div>
             </th>
-            <th className="pb-3 text-right text-sm font-medium text-[#c5c3c4]/70">
+            <th className="pb-3 text-right text-sm font-medium text-zinc-400">
               Actions
             </th>
           </tr>
@@ -151,16 +116,16 @@ export default function TableList({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2, delay: index * 0.03 }}
-                  className={`group border-b border-[#4b3a70]/20 hover:bg-[#3a3c4a]/50 transition-colors ${
-                    index % 2 === 0 ? "bg-[#272936]/50" : "bg-transparent"
+                  className={`group border-b border-zinc-800 transition-colors hover:bg-zinc-900 ${
+                    index % 2 === 0 ? "bg-zinc-900/40" : "bg-transparent"
                   }`}
                 >
                   <td className="py-3 pl-4 pr-2">
-                    <div className="font-medium text-white group-hover:text-[#b7a2c9]">
+                    <div className="font-medium text-white group-hover:text-teal-300">
                       {participant.name}
                     </div>
                   </td>
-                  <td className="py-3 px-2 text-sm text-[#c5c3c4]/80">
+                  <td className="py-3 px-2 text-sm text-zinc-300">
                     {participant.email}
                   </td>
                   <td className="py-3 px-2">
@@ -207,7 +172,7 @@ export default function TableList({
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => onShowPreview(participant)}
-                        className="p-1.5 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors"
+                        className="rounded-md p-1.5 text-zinc-300 transition-colors hover:bg-zinc-800"
                         title="Preview Certificate"
                       >
                         <Eye size={16} />
@@ -215,7 +180,7 @@ export default function TableList({
 
                       <button
                         onClick={() => handleDownloadCertificate(participant)}
-                        className="p-1.5 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors"
+                        className="rounded-md p-1.5 text-zinc-300 transition-colors hover:bg-zinc-800"
                         title="Download Certificate"
                       >
                         <Download size={16} />
@@ -225,7 +190,7 @@ export default function TableList({
                         <button
                           onClick={() => onSendCertificate(participant.id)}
                           disabled={isSending || (participant.emailAttempts !== undefined && participant.emailAttempts >= 2)}
-                          className={`p-1.5 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors ${
+                          className={`rounded-md p-1.5 text-zinc-300 transition-colors hover:bg-zinc-800 ${
                             isSending || (participant.emailAttempts !== undefined && participant.emailAttempts >= 2) ? "opacity-50 cursor-not-allowed" : ""
                           }`}
                           title={
@@ -246,7 +211,7 @@ export default function TableList({
 
           {currentParticipants.length === 0 && (
             <tr>
-              <td colSpan={4} className="py-8 text-center text-[#c5c3c4]/60">
+              <td colSpan={4} className="py-8 text-center text-zinc-400">
                 No participants match your search criteria
               </td>
             </tr>
@@ -256,7 +221,7 @@ export default function TableList({
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-6 px-2">
-          <div className="text-sm text-[#c5c3c4]/70">
+          <div className="text-sm text-zinc-400">
             Showing <span className="font-medium">{indexOfFirstItem + 1}</span>{" "}
             to{" "}
             <span className="font-medium">
@@ -270,7 +235,7 @@ export default function TableList({
             <button
               onClick={goToPrevPage}
               disabled={currentPage === 1}
-              className={`p-2 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors ${
+              className={`rounded-md p-2 text-zinc-300 transition-colors hover:bg-zinc-800 ${
                 currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
               }`}
               aria-label="Previous page"
@@ -278,14 +243,14 @@ export default function TableList({
               <ChevronLeft size={18} />
             </button>
 
-            <div className="text-[#c5c3c4] font-medium px-2">
+            <div className="px-2 font-medium text-zinc-300">
               {currentPage} / {totalPages}
             </div>
 
             <button
               onClick={goToNextPage}
               disabled={currentPage === totalPages}
-              className={`p-2 rounded-md hover:bg-[#4b3a70]/30 text-[#c5c3c4] transition-colors ${
+              className={`rounded-md p-2 text-zinc-300 transition-colors hover:bg-zinc-800 ${
                 currentPage === totalPages
                   ? "opacity-50 cursor-not-allowed"
                   : ""

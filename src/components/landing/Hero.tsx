@@ -1,237 +1,267 @@
-"use client";
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ArrowRight } from "lucide-react";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import React from "react";
 import Image from "next/image";
+import { SignedIn, SignedOut, SignInButton } from "@/components/auth/clerk-client";
 import Link from "next/link";
-import { SparklesText } from "@/components/magicui/sparkles-text";
+import { Inter, Space_Grotesk, Poppins } from "next/font/google";
 
-import {
-  Dancing_Script,
-  Cookie,
-  Josefin_Sans,
-  Pacifico,
-  Merienda,
-  Leckerli_One,
-  Just_Another_Hand,
-  Titan_One,
-  Style_Script,
-  Delius,
-  Poppins,
-} from "next/font/google";
-
-export const cookieFont = Cookie({
+const inter = Inter({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-cookie",
+  weight: ["400", "500", "700"],
+  variable: "--font-inter",
 });
 
-export const josefinFont = Josefin_Sans({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-josefin",
+  weight: ["400", "500", "700"],
+  variable: "--font-space-grotesk",
 });
 
-export const dancingScript = Dancing_Script({
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-dancing-script",
-});
-export const poppinFont = Poppins({
-  weight: ["400", "700"],
-  subsets: ["latin"], // Add this line
-});
-export const delius = Delius({
-  weight: "400",
-  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-poppins",
 });
 
-export const titanOne = Titan_One({
-  weight: "400",
-  subsets: ["latin"],
-});
+const carouselImages = [
+  "/img1.webp",
+  "/img2.webp",
+  "/img3.webp",
+  "/img4.webp",
+  "/img5.webp",
+];
 
-export const pacifico = Pacifico({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-pacifico",
-});
-
-export const styleScript = Style_Script({
-  weight: "400",
-  subsets: ["latin"],
-});
-
-export const merienda = Merienda({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-merienda",
-});
-
-export const leckerliOne = Leckerli_One({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-leckerli-one",
-});
-
-export const justAnotherHand = Just_Another_Hand({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-just-another-hand",
-});
-
-// Certificate template images
-import template1 from "@/../public/ex1.jpg";
-import template2 from "@/../public/ex2.jpg";
-import template3 from "@/../public/ex3.jpg";
-import template4 from "@/../public/ex4.jpg";
-
-interface HeroProps {
-  previewName: string;
-  templates: string[];
-  currentTemplate: number;
-  setCurrentTemplate: (index: number) => void;
-}
-
-const Hero: React.FC<HeroProps> = ({
-  previewName,
-  templates,
-  currentTemplate,
-  setCurrentTemplate,
-}) => {
+const Hero = () => {
   return (
-    <section className="relative pt-12 md:pt-8 h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#1B262C] to-[#1B262C] animate-gradient-slow">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-purple-500/30 rounded-full filter blur-[60px] sm:blur-[100px] animate-float"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-48 h-48 sm:w-64 sm:h-64 bg-blue-500/20 rounded-full filter blur-[50px] sm:blur-[80px] animate-float-delay"></div>
-      </div>
+    <section
+      className={`${inter.variable} landing-hero relative min-h-screen overflow-hidden py-20 flex items-center justify-center`}
+      style={{ fontFamily: inter.style.fontFamily }}
+    >
+      {/* Lightweight ambient glows */}
+      <div className="pointer-events-none absolute left-[-12%] top-[28%] h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-10%] bottom-[16%] h-80 w-80 rounded-full bg-rose-500/10 blur-3xl" />
 
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-
-      <div className="container max-w-6xl mx-auto px-4 z-10 flex flex-col lg:flex-row gap-6 items-center">
-        {/* Hero content */}
-        <motion.div
-          className="space-y-6 text-center lg:text-left mx-2 w-full lg:w-1/2"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.h1
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-pink-300"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <SparklesText
-              className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl ${titanOne.className} font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-pink-300`}
+      <div className="container relative z-10 max-w-[1500px] mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[0.82fr_1.18fr] gap-14 xl:gap-20 items-center">
+        {/* Hero Content */}
+        <div className="space-y-5 text-center ml-10  lg:text-left lg:translate-y-14 xl:translate-y-10">
+          <div className="space-y-4 ">
+            <p
+              className="text-lg sm:text-sm ml-2 font-medium tracking-[0.16em] uppercase text-teal-400/90"
+              style={{ fontFamily: poppins.style.fontFamily }}
             >
-              Automate Your Event Certificates in Seconds
-            </SparklesText>
-          </motion.h1>
+              Certificates, without the chaos.
+            </p>
 
-          <motion.p
-            className={`text-base sm:text-lg md:text-xl ${josefinFont.className} text-gray-200 max-w-lg mx-auto lg:mx-0`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            Upload, customize, and send — no hardwork needed. Save hours with
-            bulk certificate generation.
-          </motion.p>
+            {/* Do not mess with the logo */}
+            <Image
+              src="/title-2.png"
+              alt="NameFrame"
+              width={420}
+              height={320}
+              priority
+              className="mx-auto lg:mx-0 z-20"
+            />
 
-          <motion.div
-            className="flex flex-col md:gap-y-0 sm:flex-row gap-4 justify-center lg:justify-start"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            <h1
+              className="text-2xl sm:text-3xl md:text-2xl font-bold text-[var(--landing-text)] leading-tight max-w-xl mx-auto lg:mx-0"
+              style={{ fontFamily: spaceGrotesk.style.fontFamily }}
+            >
+              Create and send certificates in minutes.
+            </h1>
+          </div>
+
+          <p
+            className="text-base sm:text-base text-zinc-500 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+            style={{ fontFamily: inter.style.fontFamily }}
           >
+            Upload participants, generate personalized certificates, and deliver
+            them by email from one clean event workspace.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-1">
             <SignedOut>
-              <Link href="/create">
-                <SignInButton forceRedirectUrl="/dashboard">
-                  <button className="px-6 sm:px-8 py-2 sm:py-3 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-lg font-medium text-gray-200 shadow-lg hover:shadow-violet-500/25 transform hover:scale-105 transition duration-300 text-sm sm:text-base">
-                    Get Started — It&apos;s Free
-                  </button>
-                </SignInButton>
-              </Link>
-            </SignedOut>
-            <SignedIn>
-              <div>
-                <Link href="/dashboard">
-                  <button className="px-6 sm:px-8 py-2 sm:py-3 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-lg font-bold text-gray-200 hover:text-white shadow-lg hover:shadow-violet-500/25 transform hover:scale-105 transition duration-300 text-sm sm:text-base">
-                    Go to Dashboard
-                  </button>
-                </Link>
-              </div>
-            </SignedIn>
-            <a href="#action">
-              <button className="px-6 sm:px-8 py-2 sm:py-3 border-2 bg-black/20 backdrop-blur-md border-[#c83E4d] rounded-lg font-bold text-gray-200 hover:text-white hover:bg-gradient-to-br hover:from-[#8c1f2c] hover:via-[#C83E4D] hover:to-[#ab2f3d] transition duration-200 text-sm sm:text-base">
-                See How It Works
-              </button>
-            </a>
-          </motion.div>
-        </motion.div>
-
-        {/* 3D Certificate Mockup */}
-        <motion.div
-          className="w-full  md:mt-0 lg:w-1/2"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <div className="relative perspective-1000">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentTemplate}
-                className="w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto transform rotate-y-10 rotate-x-5 shadow-2xl rounded-lg overflow-hidden"
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="relative backdrop-blur-md">
-                  <Image
-                    src={templates[currentTemplate]}
-                    alt="Certificate template"
-                    width={400}
-                    height={300}
-                    className="w-full h-auto"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <div
-                        className={`text-xl sm:text-2xl md:text-3xl ${poppinFont.className} text-black font-bold`}
-                      >
-                        {previewName}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            <div className="mt-4 sm:mt-6 flex justify-center gap-2">
-              {templates.map((_, index) => (
+              <SignInButton forceRedirectUrl="/dashboard">
                 <button
-                  key={index}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    currentTemplate === index
-                      ? "bg-violet-500 w-6"
-                      : "bg-gray-600"
-                  }`}
-                  onClick={() => setCurrentTemplate(index)}
-                />
-              ))}
+                  className="px-7 py-3 bg-[var(--landing-accent)] text-[var(--landing-text)] rounded-xl hover:bg-[var(--landing-accent-hover)] transition-colors text-sm sm:text-base font-medium shadow-md"
+                  style={{ fontFamily: poppins.style.fontFamily }}
+                >
+                  Get Started
+                </button>
+              </SignInButton>
+            </SignedOut>
+
+            <SignedIn>
+              <Link href="/dashboard">
+                <button
+                  className="px-7 py-3 bg-[var(--landing-accent)] text-[var(--landing-text)] rounded-xl hover:bg-[var(--landing-accent-hover)] transition-colors text-sm sm:text-base font-semibold shadow-md"
+                  style={{ fontFamily: poppins.style.fontFamily }}
+                >
+                  Go to Dashboard
+                </button>
+              </Link>
+            </SignedIn>
+
+            <Link href="#workflow">
+              <button
+                className="px-7 py-3 rounded-xl border border-white/30 bg-zinc-900/40 text-zinc-400 hover:text-white hover:border-teal-500/30 hover:bg-zinc-900/70 transition-colors text-sm sm:text-base font-medium"
+                style={{ fontFamily: poppins.style.fontFamily }}
+              >
+                See Workflow
+              </button>
+            </Link>
+          </div>
+
+        </div>
+
+        {/* Window-style CSS-only Carousel */}
+        <div className="relative mt-10 w-full max-w-4xl">
+          <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-teal-400/10 blur-3xl" />
+
+          <div className="relative overflow-hidden rounded-3xl border border-teal-500/20 bg-zinc-950/80 shadow-[0_0_70px_rgba(45,212,191,0.08)] backdrop-blur-xl">
+            {/* Mac-style top bar */}
+            <div className="flex h-11 items-center justify-between border-b border-white/5 bg-zinc-900/70 px-4">
+              <div className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-rose-500/90" />
+                <span className="h-3 w-3 rounded-full bg-amber-400/90" />
+                <span className="h-3 w-3 rounded-full bg-teal-400/90" />
+              </div>
+
+              <div className="hidden sm:block text-xs text-zinc-500 tracking-wide">
+                NameFrame Preview
+              </div>
+
+              <div className="h-3 w-16" />
+            </div>
+
+            <div className="relative bg-black/40 p-3 sm:p-4">
+              <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/5 bg-black">
+                {carouselImages.map((src, index) => (
+                  <div
+                    key={src}
+                    className="nf-slide absolute inset-0"
+                    style={{
+                      animationDelay: `${index * 8}s`,
+                    }}
+                  >
+                    <Image
+                      src={src}
+                      alt={`NameFrame product preview ${index + 1}`}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 860px"
+                      priority={index === 0}
+                      className="object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Dots */}
+              <div className="absolute bottom-7 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-black/60 px-3 py-2 backdrop-blur-md">
+                {carouselImages.map((_, index) => (
+                  <span
+                    key={index}
+                    className="nf-dot h-2 w-2 rounded-full bg-zinc-500"
+                    style={{
+                      animationDelay: `${index * 8}s`,
+                    }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
-      <div className="absolute invisible md:visible bottom-8 left-1/2 transform -translate-x-1/2 p-2 rounded-full animate-bounce">
-        <ArrowRight className="rotate-90 text-gray-400 w-6 h-6" />
-      </div>
+      <style>
+        {`
+          .nf-slide {
+            opacity: 0;
+            transform: scale(1.01);
+            animation: nfCarousel 40s infinite ease-in-out;
+          }
+
+          .nf-dot {
+            opacity: 0.45;
+            animation: nfDot 40s infinite ease-in-out;
+          }
+
+          @keyframes nfCarousel {
+            0% {
+              opacity: 0;
+              transform: scale(1.01);
+            }
+
+            4% {
+              opacity: 1;
+              transform: scale(1);
+            }
+
+            18% {
+              opacity: 1;
+              transform: scale(1.005);
+            }
+
+            22% {
+              opacity: 0;
+              transform: scale(1.01);
+            }
+
+            100% {
+              opacity: 0;
+              transform: scale(1.01);
+            }
+          }
+
+          @keyframes nfDot {
+            0% {
+              opacity: 0.45;
+              width: 0.5rem;
+              background: rgb(113 113 122);
+            }
+
+            4% {
+              opacity: 1;
+              width: 1.5rem;
+              background: rgb(45 212 191);
+            }
+
+            18% {
+              opacity: 1;
+              width: 1.5rem;
+              background: rgb(45 212 191);
+            }
+
+            22% {
+              opacity: 0.45;
+              width: 0.5rem;
+              background: rgb(113 113 122);
+            }
+
+            100% {
+              opacity: 0.45;
+              width: 0.5rem;
+              background: rgb(113 113 122);
+            }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .nf-slide,
+            .nf-dot {
+              animation: none;
+            }
+
+            .nf-slide:first-child {
+              opacity: 1;
+              transform: scale(1);
+            }
+
+            .nf-dot:first-child {
+              opacity: 1;
+              width: 1.5rem;
+              background: rgb(45 212 191);
+            }
+          }
+        `}
+      </style>
     </section>
   );
 };

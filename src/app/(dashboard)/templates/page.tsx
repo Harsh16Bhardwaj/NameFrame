@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Calendar, Download, Image as ImageIcon } from "lucide-react";
+import { Calendar, Download, Image as ImageIcon, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import ProtectedPage from "@/components/protectedPage";
 
@@ -11,14 +11,6 @@ interface Template {
   name: string;
   backgroundUrl: string;
   createdAt: string;
-  userId: string;
-  textPositionX: number;
-  textPositionY: number;
-  textWidth: number;
-  textHeight: number;
-  fontFamily: string;
-  fontSize: number;
-  fontColor: string;
 }
 
 export default function TemplatesPage() {
@@ -30,31 +22,19 @@ export default function TemplatesPage() {
       setLoading(true);
       const response = await fetch("/api/certificate-templates");
       const data = await response.json();
-      console.log("API Response:", data); // Debug log
-
       if (data.success && Array.isArray(data.data)) {
-        const transformedTemplates = data.data.map((template: any) => ({
-          id: template?.id || "",
-          name: template?.name || "Unnamed Template",
-          backgroundUrl: template?.backgroundUrl || "",
-          createdAt: template?.createdAt || new Date().toISOString(),
-          userId: template?.userId || "",
-          textPositionX: template?.textPositionX || 50,
-          textPositionY: template?.textPositionY || 50,
-          textWidth: template?.textWidth || 80,
-          textHeight: template?.textHeight || 15,
-          fontFamily: template?.fontFamily || "Arial",
-          fontSize: template?.fontSize || 16,
-          fontColor: template?.fontColor || "#000000",
-        }));
-        console.log("Transformed templates:", transformedTemplates); // Debug log
-        setTemplates(transformedTemplates);
+        setTemplates(
+          data.data.map((template: Template) => ({
+            id: template.id,
+            name: template.name,
+            backgroundUrl: template.backgroundUrl,
+            createdAt: template.createdAt,
+          }))
+        );
       } else {
-        console.error("Invalid data format:", data); // Debug log
         setTemplates([]);
       }
-    } catch (error) {
-      console.error("Error fetching templates:", error);
+    } catch {
       setTemplates([]);
     } finally {
       setLoading(false);
@@ -77,8 +57,8 @@ export default function TemplatesPage() {
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-    } catch (error) {
-      console.error("Error downloading template:", error);
+    } catch {
+      // no-op
     }
   };
 
@@ -87,104 +67,80 @@ export default function TemplatesPage() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="min-h-screen bg-gradient-to-r pt-24 from-[#0b1424] via-[#131f2d] to-[#090f17] text-white p-8"
+        className="min-h-screen bg-zinc-950 p-6 pt-24 text-zinc-100"
       >
-        <div className="max-w-6xl mx-auto">
-          {/* Header Section */}
-          <motion.div
-            initial={{ y: -20 }}
-            animate={{ y: 0 }}
-            className="flex justify-between items-center mb-8"
-          >
+        <div className="mx-auto max-w-6xl space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h1 className="text-5xl font-bold bg-gradient-to-r from-[#c7b9d3] via-[#ffffff] to-[#542082] text-transparent bg-clip-text">
-                Templates
-              </h1>
-              <p className="text-[#c5c3c4]/70 mt-2">
-                Browse and download certificate templates
-              </p>
+              <h1 className="text-3xl font-bold text-white">Templates</h1>
+              <p className="text-sm text-zinc-400">Download and reuse certificate backgrounds</p>
             </div>
-            <Link href="/create">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-4 py-2 cursor-pointer bg-gradient-to-r from-[#b7a2c9] via-[#e7e7e7] to-[#a894b9] hover:from-[#c9b8d7] hover:via-[#9d8db3] hover:to-[#c9b8d7] text-[#212531] font-medium rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-[#b7a2c9]/20"
+            <div className="flex items-center gap-2">
+              <button
+                onClick={fetchTemplates}
+                className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-200 transition hover:border-teal-400 hover:text-teal-300"
               >
-                <Calendar></Calendar>
+                <RefreshCw className="h-4 w-4" />
+                Refresh
+              </button>
+              <Link
+                href="/create"
+                className="inline-flex items-center gap-2 rounded-lg bg-teal-400 px-3 py-2 text-sm font-semibold text-black transition hover:bg-teal-300"
+              >
+                <Calendar className="h-4 w-4" />
                 New Event
-              </motion.button>
-            </Link>
-          </motion.div>
+              </Link>
+            </div>
+          </div>
 
-          {/* Templates Grid */}
           {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              >
-                <ImageIcon className="w-8 h-8 text-[#b7a2c9]" />
-              </motion.div>
+            <div className="flex h-56 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900">
+              <RefreshCw className="h-6 w-6 animate-spin text-teal-300" />
+            </div>
+          ) : templates.length === 0 ? (
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-10 text-center text-zinc-400">
+              No templates found.
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {templates.map((template) => (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {templates.map((template, idx) => (
                 <motion.div
                   key={template.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ scale: 1.02 }}
-                  className="group cursor-pointer relative bg-gradient-to-br from-[var(--bluey-text)] to-slate-800 text-black backdrop-blur-xl rounded-lg p-6 border border-[#4b3a70]/30 shadow-lg overflow-hidden"
+                  transition={{ delay: idx * 0.03 }}
+                  className="rounded-2xl border border-zinc-800 bg-zinc-900 p-4"
                 >
-                  {/* Template Image */}
-                  <div className="relative aspect-video mb-4 rounded-lg overflow-hidden bg-gray-100">
+                  <div className="mb-3 aspect-video overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950">
                     {template.backgroundUrl ? (
                       <img
                         src={template.backgroundUrl}
                         alt={template.name}
-                        className="w-full rounded-xl h-full object-cover"
+                        className="h-full w-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <ImageIcon className="w-12 h-12 text-gray-400" />
+                      <div className="flex h-full items-center justify-center">
+                        <ImageIcon className="h-8 w-8 text-zinc-500" />
                       </div>
                     )}
                   </div>
 
-                  {/* Template Info */}
-                  <div className="relative">
-                    <h3 className="text-xl font-bold text-gray-300 mb-1">
-                      {template.name}
-                    </h3>
-                    <p className="text-[#b6b6b6] text-sm mb-5">
-                      Created:{" "}
-                      {new Date(template.createdAt).toLocaleDateString()}
+                  <div className="mb-3">
+                    <h2 className="text-base font-semibold text-zinc-100">{template.name}</h2>
+                    <p className="text-xs text-zinc-400">
+                      Created {new Date(template.createdAt).toLocaleDateString()}
                     </p>
-
-                    {/* Download Button */}
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() =>
-                        handleDownload(template.backgroundUrl, template.name)
-                      }
-                      className="w-full cursor-pointer px-4 py-2 bg-gradient-to-r from-gray-900 to-slate-900 text-white rounded-lg flex items-center justify-center gap-2 hover:from-[#5c4b80] hover:to-[#3a3f4d] transition-all"
-                    >
-                      <Download className="w-4 h-4" />
-                      Download Template
-                    </motion.button>
                   </div>
+
+                  <button
+                    onClick={() => handleDownload(template.backgroundUrl, template.name)}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-200 transition hover:border-teal-500/50 hover:text-teal-300"
+                  >
+                    <Download className="h-4 w-4" />
+                    Download Template
+                  </button>
                 </motion.div>
               ))}
-            </div>
-          )}
-
-          {!loading && templates.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-[#c5c3c4]/70 text-lg">No templates found</p>
-              <p className="text-[#c5c3c4]/50 text-sm mt-1">
-                Create a new template to get started
-              </p>
             </div>
           )}
         </div>

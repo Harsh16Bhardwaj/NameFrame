@@ -4,7 +4,7 @@ import { FileUp, Move, AlertTriangle } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
 import TemplateUploadModal from '../TemplateUploadModal';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/components/auth/clerk-client';
 
 interface CertificatePreviewProps {
   templateUrl: string;

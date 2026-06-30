@@ -17,6 +17,9 @@ export function generateCertificateEmail({
 }) {
   const preheader = `Congratulations ${participantName}! Your certificate for "${eventTitle}" is here.`;
   const siteUrl = getSiteUrl();
+  const verifyUrl = verificationCode
+    ? `${siteUrl}/verify/${encodeURIComponent(verificationCode)}`
+    : `${siteUrl}/verify`;
 
   return `
   <!DOCTYPE html>
@@ -113,8 +116,8 @@ export function generateCertificateEmail({
               </div>
               <p style="margin-top: 15px; font-size: 14px; color: #666;">
                 Anyone can verify this certificate at: 
-                <a href="${siteUrl}/verify" style="color: #004080;">
-                  ${siteUrl}/verify
+                <a href="${verifyUrl}" style="color: #004080;">
+                  ${verifyUrl}
                 </a>
               </p>
             </div>

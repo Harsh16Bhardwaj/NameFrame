@@ -1,199 +1,241 @@
-# Sertify: Comprehensive Solution for Post Event Certification and AI Based Event Reports 
+<p align="center">
+  <img src="./public/nameframelogo.png" alt="NameFrame logo" width="96" />
+</p>
 
-![Hero Image](./public/Landing.png)
+<h1 align="center">NameFrame</h1>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/nameframe/nameframe.svg)](https://github.com/nameframe/nameframe/issues)
-[![GitHub stars](https://img.shields.io/github/stars/nameframe/nameframe.svg)](https://github.com/nameframe/nameframe/stars)
+<p align="center">
+  Professional certificate generation, participant management, and email delivery for event teams.
+</p>
 
-Tired of creating certificates manually? 😓 NameFrame is your solution! This dynamic certificate generator empowers event organizers to create and distribute personalized certificates effortlessly. Built with **Next.js**, **React**, and the **HTML5 Canvas API**, NameFrame offers unique certificate generation, content modification, and reliable mailing. Try it now and automate your workflow! ⭐
+<p align="center">
+  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs" />
+  <img alt="React" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=111" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=fff" />
+  <img alt="Prisma" src="https://img.shields.io/badge/Prisma-7-2D3748?logo=prisma" />
+  <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-Database-4169E1?logo=postgresql&logoColor=fff" />
+</p>
 
-## Quick Start 🚀
+NameFrame helps organizers create certificate templates, import participants, generate personalized certificates, verify issued certificates, and deliver certificates through a queue-backed mailing pipeline.
 
-Get started in minutes:
+## Project Status
 
-1. Visit the [NameFrame demo](/) (launching soon!).
-2. Upload a certificate template in **4:3 format** (1440x1080 pixels, PNG/JPEG).
-3. Upload an **Excel file** with participant details (columns: Name, Email).
-4. Generate and download personalized certificates!
+This project is under active refactor. The current focus is making the certificate editor, delivery pipeline, data model, and free/pro feature boundaries predictable enough for production deployment.
 
-**For Developers**: Jump to [Installation & Setup](#installation--setup) to run locally.
+For the current deployment, use https://name-frame.vercel.app/.
 
-## Features 🎉
+## Core Features
 
-- **Unique Certificate Generation** 🖼️  
-  Create one-of-a-kind certificates with dynamic text overlays using the HTML5 Canvas API.
+- Event creation with organizer metadata and certificate settings
+- Certificate template upload and role-based template binding
+- Participant import with preview and validation before database writes
+- Winner/position support for first, second, and third place certificates
+- On-demand certificate generation with Cloudinary-backed output
+- Unique verification codes and public certificate verification routes
+- Single-send, bulk-send, and scheduled-send delivery flows
+- Queue-backed delivery with retry tracking and per-participant status
+- Nodemailer-first email provider flow with Resend fallback support
+- Admin and dashboard analytics for events, participants, and delivery activity
+- Free/pro-ready schema with user roles, plan records, and queue tiers
 
-- **Content Modification** 🎨  
-  Customize text placement, font size, and style via an intuitive UI.
+## Tech Stack
 
-- **Reliable Mailing** 📨  
-  Scalable backend with rate limiting, sender rotation, and Kafka queues for bulk emailing.
+| Area | Technology |
+| --- | --- |
+| Framework | Next.js 15 App Router |
+| UI | React 19, Tailwind CSS, Framer Motion, Lucide Icons |
+| Auth | Clerk |
+| Database | PostgreSQL |
+| ORM | Prisma 7 |
+| Storage / media | Cloudinary |
+| Email | Nodemailer, Resend fallback |
+| Analytics UI | Recharts |
+| Imports | XLSX, PapaParse |
 
-- **Dashboard Management** 📊  
-  Monitor certificate generation and mailing status in a modern dashboard.  
-  ![Dashboard](./public/dash.jpg)
+## Architecture Overview
 
-- **Lead Generation** 📈  
-  Capture participant data for event analytics and follow-ups.
+NameFrame is built around the data model first:
 
-- **AI-Based Event Reports & Insights** 🤖  
-  Generate comprehensive event reports and lead insights using a RAG-based solution, powered by user data analysis, with an integrated chatbot for interactive issue resolution.
+- `Event` stores event metadata, email content, scheduling state, and template links.
+- `Participant` stores recipient identity, participation state, delivery state, and verification fields.
+- `CertificateTemplate` stores uploaded template metadata and editor configuration.
+- `DeliveryQueueEvent` represents a batch or scheduled send job.
+- `DeliveryQueueItem` stores per-participant delivery progress.
+- `DeliveryAttempt` stores individual provider attempts for auditability.
+- `SmtpCredentialPool` stores encrypted SMTP credentials for Nodemailer delivery.
 
-## Demo 🎥
+The certificate send flow is:
 
-Watch NameFrame generate personalized certificates in seconds! 🚀  
+1. Load the event, participant, and selected certificate template.
+2. Generate or reuse certificate verification data.
+3. Build a certificate URL from the active template and participant data.
+4. Fetch the generated certificate bytes for attachment.
+5. Compose the event email.
+6. Send through Nodemailer first.
+7. Fall back to Resend if the primary provider fails.
+8. Update queue item, attempt, and participant delivery state.
 
-[![NameFrame Demo](https://img.youtube.com/vi/placeholder/0.jpg)](https://youtube.com/watch?v=placeholder)  
-*Click to watch the demo on YouTube.*  
+## Getting Started
 
-![Certificate Preview](./public/ex4.jpg)  
-*Real-time certificate rendering with dynamic text overlay.*
+### Prerequisites
 
-## Certificate Template Specifications 📄
+- Node.js 20+
+- PostgreSQL database
+- Clerk application
+- Cloudinary account
+- SMTP account for Nodemailer delivery
+- Optional Resend account for fallback delivery
 
-- **Format**: 4:3 aspect ratio (1440x1080 pixels recommended).  
-- **Accepted Formats**: PNG or JPEG.  
-- **Text Placement**: Centered horizontally, at ~60% of template height (adjustable in UI).  
-- **Participant List**: Excel file with columns: **Name**, **Email**.  
+### Install
 
-![Text Placement Diagram](./public/cordi.jpg)  
-*Text placement coordinates for certificate templates.*
+```bash
+npm install
+```
 
-## Usage 🛠️
+### Configure Environment
 
-1. **Upload Template**: Upload a 4:3 PNG/JPEG template (1440x1080 pixels).  
-   ![Template Upload](./public/1.png)
+Create `.env` or `.env.local` in the project root.
 
-2. **Upload Participant List**: Provide an Excel file (columns: Name, Email).  
-   ![Excel Upload](./public/parti.jpg)
+```env
+DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."
 
-3. **Customize Text**: Adjust font size and placement using the preview.  
-   ![Text Customization](./public/screenshots/text-customization.png)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_..."
+CLERK_SECRET_KEY="sk_..."
+CLERK_WEBHOOK_SECRET="whsec_..."
 
-4. **Generate Certificates**: Preview and download as PNGs.  
-5. **Send Emails**: Use the mailing system to distribute certificates.
+CLOUDINARY_CLOUD_NAME="..."
+CLOUDINARY_API_KEY="..."
+CLOUDINARY_API_SECRET="..."
 
-**Tips**:  
-- Use high-contrast templates for better text visibility.  
-- Ensure Excel file has no empty rows in Name/Email columns.
+APP_CREDENTIAL_ENCRYPTION_KEY="use-a-long-stable-random-secret"
+NODEMAILER_FROM="NameFrame <your-sender@example.com>"
 
-## For Developers ⚙️
+RESEND_API_KEY="re_..."
+RESEND_FROM="NameFrame <noreply@example.com>"
 
-### Installation & Setup
+CRON_SECRET="use-a-private-cron-secret"
+DEV_PASS="use-a-private-admin-dev-password"
+```
 
-**Prerequisites**:  
-- **Node.js** (>= 14.x)  
-- **npm** or **yarn**  
-- **Cloudinary** account (optional for production)
+`APP_CREDENTIAL_ENCRYPTION_KEY` must stay stable. SMTP passwords are encrypted with this key before being stored in the database. If the key changes, previously saved SMTP credentials cannot be decrypted.
 
-**Quick Setup**:  
+## SMTP Credentials
 
-1. Clone the repository:  
-   ```bash
-   git clone https://github.com/nameframe/nameframe.git
-   cd nameframe
+Certificate delivery uses the `SmtpCredentialPool` table. Do not hardcode SMTP passwords in UI or delivery code.
 
-## For Developers ⚙️
+Credentials are saved through:
 
-### Installation & Setup
+```http
+POST /api/admin/smtp-credentials
+```
 
-**Prerequisites**:  
-- **Node.js** (>= 14.x)  
-- **npm** or **yarn**  
-- **Cloudinary** account (optional for production)
+Example body:
 
-**Quick Setup**:  
+```json
+{
+  "credentials": [
+    {
+      "label": "Primary Gmail",
+      "host": "smtp.gmail.com",
+      "port": 465,
+      "username": "your-email@gmail.com",
+      "password": "your-app-password",
+      "secure": true,
+      "sendLimit": 400,
+      "active": true
+    }
+  ]
+}
+```
 
-1. Clone the repository:  
-   ```bash
-   git clone https://github.com/nameframe/nameframe.git
-   cd nameframe
-   ```
+For Gmail, use an app password. A normal account password will usually fail.
 
-2. Install dependencies:  
-   ```bash
-   npm install
-   ```
+## Development
 
-3. Set up environment variables in `.env.local`:  
-   ```bash
-   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-   NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
-   NEXT_PUBLIC_API_URL=http://localhost:3000/api
-   ```
+```bash
+npm run dev
+```
 
-4. Run the development server:  
-   ```bash
-   npm run dev
-   ```
+The app runs with Turbopack in development.
 
-   Open [http://localhost:3000](http://localhost:3000).
+## Production Build
 
-**Advanced Setup** (click to expand):  
-<details>
-<summary>Production Build & Cloudinary</summary>
+```bash
+npm run build
+```
 
-- Build for production:  
-  ```bash
-  npm run build
-  npm run start
-  ```
+The build script runs:
 
-- Obtain Cloudinary credentials from [Cloudinary dashboard](https://cloudinary.com/).
+```bash
+prisma generate && next build
+```
 
-</details>
+Start the production server locally:
 
-**Troubleshooting**: Check [GitHub Issues](https://github.com/nameframe/nameframe/issues) for common problems.
+```bash
+npm run start
+```
 
-### Contributing 🤝
+## Deployment Notes
 
-We welcome contributions! To get started:  
+Vercel deployment requires the same environment variables listed above.
 
-1. Fork the repository.  
-2. Create a feature branch:  
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. Run tests:  
-   ```bash
-   npm test
-   ```
-4. Commit changes:  
-   ```bash
-   git commit -m "Add feature: your feature description"
-   ```
-5. Push and submit a pull request:  
-   ```bash
-   git push origin feature/your-feature-name
-   ```
+Recommended Vercel setup:
 
-Check [Good First Issues](https://github.com/nameframe/nameframe/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and follow our [Code of Conduct](CODE_OF_CONDUCT.md).
+- Add `DATABASE_URL` and `DIRECT_URL` from the production database.
+- Add Clerk production keys and webhook secret.
+- Add Cloudinary credentials.
+- Add `APP_CREDENTIAL_ENCRYPTION_KEY` before saving SMTP credentials.
+- Add `NODEMAILER_FROM` for the certificate sender identity.
+- Add `CRON_SECRET` if using the delivery cron endpoint.
+- Keep `npm run build` as the build command.
 
-### Workflow 📝
+The current `next.config.ts` skips TypeScript and ESLint validation during build. This allows deployment while the refactor is in progress, but type and lint issues should be cleaned up before treating the app as production-stable.
 
-We will update the workflow soon. Stay tuned!
+## Useful Routes
 
-### Roadmap 🛣️
+| Route | Purpose |
+| --- | --- |
+| `/` | Landing page |
+| `/dashboard` | Organizer dashboard |
+| `/events` | Event list |
+| `/events/[eventId]` | Event management, certificate preview, participant actions |
+| `/create` | Event creation |
+| `/participants` | Participant overview |
+| `/templates` | Certificate templates |
+| `/verify` | Public certificate verification |
+| `/download/[eventID]` | Certificate download experience |
 
-- Launching support for smaller screens (mobile-friendly UI).  
-- Integrating multiple send methods (e.g., WhatsApp, SMS).  
-- Adding backup queues for mailing reliability.  
+## API Highlights
 
-Track progress on [GitHub Issues](https://github.com/nameframe/nameframe/issues).
+| Endpoint | Purpose |
+| --- | --- |
+| `POST /api/events` | Create events |
+| `GET /api/events/[eventId]` | Fetch event details |
+| `POST /api/events/[eventId]/import-participants/preview` | Preview participant import |
+| `POST /api/events/[eventId]/import-participants/confirm` | Commit participant import |
+| `POST /api/send-email/single` | Send one participant certificate |
+| `POST /api/send-email/bulk` | Queue or process bulk certificate delivery |
+| `POST /api/send-email/schedule` | Schedule certificate delivery |
+| `GET /api/verify/[code]` | Verify certificate by code |
+| `POST /api/admin/smtp-credentials` | Save encrypted SMTP credentials |
+| `POST /api/cron/delivery/process` | Process scheduled or pending delivery queue work |
 
-### Tech Stack 🛠️
+## Current Caveats
 
-- **Frontend**: Next.js, React, HTML5 Canvas API  
-- **Backend**: Node.js, Kafka (for mailing)  
-- **Image Management**: Cloudinary  
+- The project is actively being refactored, so some UI and architecture boundaries are still being cleaned up.
+- Build currently ignores TypeScript and ESLint errors through `next.config.ts`.
+- Generated Prisma client files may change after `prisma generate`.
+- Certificate generation and delivery depend on valid Cloudinary, database, and email-provider configuration.
+- Queue processing requires either a pro-triggered immediate tick or a cron call to the delivery processor.
 
-## License 📜
+## Authors
 
-This project is licensed under the [MIT License](LICENSE).
+- Harsh Bhardwaj
+- Aryan Chauhan
+- Saumya Aggarwal
 
-## Acknowledgements 🙌
+## License
 
-- Built with [Next.js](https://nextjs.org/) and [React](https://reactjs.org/).  
-- Powered by [Cloudinary](https://cloudinary.com/) for image management.  
-- Inspired by modern certificate automation platforms.
+Private project. All rights reserved unless a license is added.
