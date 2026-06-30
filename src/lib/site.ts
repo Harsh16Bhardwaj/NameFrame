@@ -11,5 +11,5 @@ export function getSiteUrl() {
     return `https://${vercelUrl.replace(/\/$/, "")}`;
   }
 
-  return "http://localhost:3000";
+  return "https://name-frame.vercel.app";
 }

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/db";
 import { MAILING_SERVICE_DOWN_MESSAGE } from "@/lib/delivery/public-messages";
+import { getSiteUrl } from "@/lib/site";
 
 
 export async function POST(req: Request) {
@@ -36,7 +37,7 @@ export async function POST(req: Request) {
     }
 
     // Call the bulk email processing API
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/send-email/bulk`, {
+    const response = await fetch(`${getSiteUrl()}/api/send-email/bulk`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
