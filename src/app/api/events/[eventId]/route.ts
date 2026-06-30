@@ -18,7 +18,7 @@ export async function GET(_: Request, { params }: Params) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     
-    const { eventId } = await params;
+    const { eventId } = await  params;
     if (!eventId) {
       console.error("[API][Event GET] No eventId provided in params.");
       return NextResponse.json({ error: "No eventId provided." }, { status: 400 });
